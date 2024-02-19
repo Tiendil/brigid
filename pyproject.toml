@@ -49,4 +49,4 @@ autoflake = "2.3.*"
 mypy = "1.8.*"
 
 [tool.poetry.scripts]
-brigid = "brigid.cli"
+brigid = "brigid.cli.__main__:app"
