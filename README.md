@@ -1,2 +1,3 @@
-# brigid
-Simple yet powerful blog engine
+# Brigid
+
+Simple yet powerful blog engine.
