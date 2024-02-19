@@ -1,12 +1,13 @@
 import contextlib
 import pathlib
-
-from watchdog import events
-from watchdog.observers import Observer
+from typing import Generator
 
 from brigid.core import logging
 from brigid.library.discovering import load_article, load_page
 from brigid.library.storage import storage
+from watchdog import events
+from watchdog.observers import Observer
+
 
 _observer = None
 
@@ -61,7 +62,7 @@ def observer():
 
 
 @contextlib.contextmanager
-def observe_storage(directory: pathlib.Path) -> None:
+def observe_storage(directory: pathlib.Path) -> Generator[None, None, None]:
     logger.info("enable_storage_observer")
 
     observer().schedule(EventHandler(), directory.absolute(), recursive=True)

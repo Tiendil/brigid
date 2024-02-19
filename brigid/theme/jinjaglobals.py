@@ -44,7 +44,7 @@ def image_info(path: pathlib.Path) -> ImageInfo:
 
 
 @jinjaglobal
-def root_url(language: str) -> str:
+def root_url(language: str) -> UrlsRoot:
     return UrlsRoot(language=language)
 
 

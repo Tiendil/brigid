@@ -7,7 +7,6 @@ import toml
 from brigid.core import logging
 from brigid.library.entities import Article, Collection, Page, Redirects, Site, SiteLanguage
 from brigid.library.storage import storage
-from frontmatter.default_handlers import TOMLHandler
 
 
 logger = logging.get_module_logger()
@@ -25,7 +24,7 @@ def log_error(func):
     return wrapper
 
 
-class FrontmatterTOMLHandler(TOMLHandler):
+class FrontmatterTOMLHandler(frontmatter.TOMLHandler):
     FM_BOUNDARY = re.compile(r"^\-{3,}\s*$", re.MULTILINE)
     START_DELIMITER = END_DELIMITER = "---"
 
@@ -133,7 +132,7 @@ def load_articles(directory: pathlib.Path) -> None:
 def load_site(directory: pathlib.Path) -> None:  # noqa: CCR001
     languages = {}
     site = None
-    redirects = None
+    redirects = Redirects()
 
     for file_path in (directory / "site").glob("*.toml"):
         data = toml.loads(file_path.read_text())
@@ -151,6 +150,9 @@ def load_site(directory: pathlib.Path) -> None:  # noqa: CCR001
         for menu in languages[file_path.stem].menu:
             menu.language = file_path.stem
 
+    if site is None:
+        raise NotImplementedError("meta.toml has not found")
+
     if (directory / "site" / "footer.html").exists():
         site.footer_html = (directory / "site" / "footer.html").read_text()
 
@@ -160,6 +162,7 @@ def load_site(directory: pathlib.Path) -> None:  # noqa: CCR001
     site.languages.update(languages)
 
     storage.set_site(site)
+
     storage.set_redirects(redirects)
 
 

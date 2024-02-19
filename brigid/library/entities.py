@@ -225,7 +225,7 @@ class PageSimilarityScore(BaseEntity):
 
 
 class Redirects(BaseEntity):
-    permanent: dict[str, str]
+    permanent: dict[str, str] = pydantic.Field(default_factory=dict)
 
 
 class Collection(BaseEntity):

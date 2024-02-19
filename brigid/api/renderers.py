@@ -27,10 +27,10 @@ def render_index(language: str, raw_tags: str) -> HTMLResponse:  # noqa: CCR001
     parsed_tags = [tag for tag in parsed_tags if tag]
 
     if parsed_tags:
-        page = to_integer(parsed_tags[-1])
+        parsed_page_number = to_integer(parsed_tags[-1])
 
-        if page is not None and page > 0:
-            page_number = page
+        if parsed_page_number is not None and parsed_page_number > 0:
+            page_number = parsed_page_number
             parsed_tags.pop()
 
     for tag in parsed_tags:
@@ -43,7 +43,7 @@ def render_index(language: str, raw_tags: str) -> HTMLResponse:  # noqa: CCR001
 
     all_pages = storage.last_pages(language=language, require_tags=required, exclude_tags=excluded)
 
-    tags_count = Counter()
+    tags_count: Counter[str] = Counter()
 
     for page in all_pages:
         tags_count.update(page.tags)
