@@ -33,21 +33,15 @@ class ExternalLinkInlineProcessor(LinkInlineProcessor):
         # TODO: compare taking into account the default ports, aka example.com:90 = example.com
         # TODO: is this required, link could be to the same domain but in different project
         if parsed_site.netloc == parsed_url.netloc:
-            context.add_error(
-                failed_text=data, message="No need to start local link with domain"
-            )
+            context.add_error(failed_text=data, message="No need to start local link with domain")
             return result
 
         if parsed_url.scheme == "" and parsed_url.netloc != "":
-            context.add_error(
-                failed_text=data, message="Specify schema/protocol for external links"
-            )
+            context.add_error(failed_text=data, message="Specify schema/protocol for external links")
             return result
 
         if parsed_url.scheme != "" and parsed_url.netloc == "":
-            context.add_error(
-                failed_text=data, message="Specify domain for external links"
-            )
+            context.add_error(failed_text=data, message="Specify domain for external links")
             return result
 
         return result

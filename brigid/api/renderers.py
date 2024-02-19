@@ -3,11 +3,7 @@ from collections import Counter
 from fastapi.responses import HTMLResponse
 from feedgenerator import Atom1Feed
 
-from brigid.api.utils import (
-    construct_index_description,
-    construct_index_title,
-    to_integer,
-)
+from brigid.api.utils import construct_index_description, construct_index_title, to_integer
 from brigid.core import errors
 from brigid.domain.urls import UrlsFeedsAtom, UrlsPost, UrlsTags
 from brigid.library.similarity import get_similar_pages
@@ -46,18 +42,14 @@ def render_index(language: str, raw_tags: str) -> HTMLResponse:
 
     site = storage.get_site()
 
-    all_pages = storage.last_pages(
-        language=language, require_tags=required, exclude_tags=excluded
-    )
+    all_pages = storage.last_pages(language=language, require_tags=required, exclude_tags=excluded)
 
     tags_count = Counter()
 
     for page in all_pages:
         tags_count.update(page.tags)
 
-    pages = all_pages[
-        site.posts_per_page * (page_number - 1) : site.posts_per_page * page_number
-    ]
+    pages = all_pages[site.posts_per_page * (page_number - 1) : site.posts_per_page * page_number]
 
     filter_state = UrlsTags(
         language=language,
@@ -66,14 +58,10 @@ def render_index(language: str, raw_tags: str) -> HTMLResponse:
         excluded_tags=excluded,
     )
 
-    translated_tags_required = [
-        site.languages[language].tags_translations[tag] for tag in required
-    ]
+    translated_tags_required = [site.languages[language].tags_translations[tag] for tag in required]
     translated_tags_required.sort()
 
-    translated_tags_excluded = [
-        site.languages[language].tags_translations[tag] for tag in excluded
-    ]
+    translated_tags_excluded = [site.languages[language].tags_translations[tag] for tag in excluded]
     translated_tags_excluded.sort()
 
     seo_title = construct_index_title(
@@ -125,9 +113,7 @@ def render_index(language: str, raw_tags: str) -> HTMLResponse:
     return HTMLResponse(content=content)
 
 
-def render_page(
-    language: str, article_slug: str, status_code: int = 200
-) -> HTMLResponse:
+def render_page(language: str, article_slug: str, status_code: int = 200) -> HTMLResponse:
 
     site = storage.get_site()
 
@@ -144,9 +130,7 @@ def render_page(
 
     page = storage.get_page(id=article.pages[language])
 
-    similar_pages = get_similar_pages(
-        language=language, original_page=page, number=site.posts_in_similar
-    )
+    similar_pages = get_similar_pages(language=language, original_page=page, number=site.posts_in_similar)
 
     # TODO: default template for each page type
     template = page.template or site.default_page_template
@@ -160,9 +144,7 @@ def render_page(
 
     meta_info = MetaInfo(
         language=language,
-        allowed_languages=[
-            language for language in site.allowed_languages if language in article.pages
-        ],
+        allowed_languages=[language for language in site.allowed_languages if language in article.pages],
         title=page.title,
         description=page.description,
         author=site.languages[language].author,

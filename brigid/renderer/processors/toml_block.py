@@ -44,9 +44,7 @@ class TomlBlock(Block):
 
             context = render_context.get()
 
-            context.add_error(
-                failed_text="unknown", message=f"Error while rendering block: {e}"
-            )
+            context.add_error(failed_text="unknown", message=f"Error while rendering block: {e}")
 
     def process_data(self, data: Any) -> str:
         raise NotImplementedError()

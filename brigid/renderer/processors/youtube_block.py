@@ -35,9 +35,7 @@ class YouTubeBlock(TomlBlock):
 
         context = render_context.get()
 
-        return render(
-            "./blocks/youtube.html.j2", {"video": data, "article": context.article}
-        )
+        return render("./blocks/youtube.html.j2", {"video": data, "article": context.article})
 
 
 class YouTubeBlockExtension(BlocksExtension):

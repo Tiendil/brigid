@@ -46,9 +46,7 @@ class UrlsBase:
     def to_post(self, slug: str) -> "UrlsPost":
         return UrlsPost(language=self.language, slug=slug)
 
-    def to_filter(
-        self, page: int = 1, require: Iterable[str] = (), exclude: Iterable[str] = ()
-    ) -> "UrlsTags":
+    def to_filter(self, page: int = 1, require: Iterable[str] = (), exclude: Iterable[str] = ()) -> "UrlsTags":
         return UrlsTags(
             language=self.language,
             page=page,

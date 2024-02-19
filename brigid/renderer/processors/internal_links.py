@@ -70,13 +70,8 @@ class InternalLinkInlineProcessor(LinkInlineProcessor):
             for tag in parts[1:]:
                 normalized_tag = tag[1:] if tag[0] == "-" else tag
 
-                if (
-                    normalized_tag
-                    not in site.languages[context.page.language].tags_translations
-                ):
-                    context.add_error(
-                        failed_text=data, message="One of tags does not exist"
-                    )
+                if normalized_tag not in site.languages[context.page.language].tags_translations:
+                    context.add_error(failed_text=data, message="One of tags does not exist")
                     return result
 
                 if tag[0] != "-":
@@ -94,9 +89,7 @@ class InternalLinkInlineProcessor(LinkInlineProcessor):
         elif parts[0] == "absolute":
 
             if parts[1][0] != "/":
-                context.add_error(
-                    failed_text=data, message="Absolute link should start with /"
-                )
+                context.add_error(failed_text=data, message="Absolute link should start with /")
                 return result
 
             new_href = normalize_url(f"{site.url}/{parts[1]}")
@@ -105,9 +98,7 @@ class InternalLinkInlineProcessor(LinkInlineProcessor):
             new_href = UrlsFeedsAtom(language=context.page.language).url()
 
         elif parts[0] == "static":
-            post_url = UrlsPost(
-                language=context.page.language, slug=context.article.slug
-            )
+            post_url = UrlsPost(language=context.page.language, slug=context.article.slug)
 
             new_href = post_url.file_url(parts[1])
 

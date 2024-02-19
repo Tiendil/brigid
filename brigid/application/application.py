@@ -75,9 +75,7 @@ def create_app() -> fastapi.FastAPI:  # noqa: CCR001
                 await stack.enter_async_context(use_sentry())
 
             if settings.reload:
-                stack.enter_context(
-                    observer.observe_storage(directory=library_settings.directory)
-                )
+                stack.enter_context(observer.observe_storage(directory=library_settings.directory))
 
             await app.router.startup()
 

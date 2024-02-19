@@ -48,15 +48,9 @@ def _construct() -> markdown.Markdown:
     renderer.inlinePatterns.deregister("link")
 
     # add modified processors
-    renderer.inlinePatterns.register(
-        ImageInlineValidator(IMAGE_LINK_RE, renderer), "image_link_validator", 160
-    )
-    renderer.inlinePatterns.register(
-        ExternalLinkInlineProcessor(EXTERNAL_LINK_RE, renderer), "external_link", 160
-    )
-    renderer.inlinePatterns.register(
-        InternalLinkInlineProcessor(INTERNAL_LINK_RE, renderer), "internal_link", 160
-    )
+    renderer.inlinePatterns.register(ImageInlineValidator(IMAGE_LINK_RE, renderer), "image_link_validator", 160)
+    renderer.inlinePatterns.register(ExternalLinkInlineProcessor(EXTERNAL_LINK_RE, renderer), "external_link", 160)
+    renderer.inlinePatterns.register(InternalLinkInlineProcessor(INTERNAL_LINK_RE, renderer), "internal_link", 160)
 
     return renderer
 
@@ -84,9 +78,7 @@ def render(text: str) -> str:
 def render_page(page: Page) -> RenderContext:
     # TODO: reload only optionally
 
-    context = RenderContext(
-        page=page, article=storage.get_article(id=page.article_id), renderer=0
-    )
+    context = RenderContext(page=page, article=storage.get_article(id=page.article_id), renderer=0)
 
     with markdown_context(context):
         context.content = render(page.body)
@@ -97,9 +89,7 @@ def render_page(page: Page) -> RenderContext:
 def render_page_intro(page: Page) -> RenderContext:
     # TODO: reload only optionally
 
-    context = RenderContext(
-        page=page, article=storage.get_article(id=page.article_id), renderer=0
-    )
+    context = RenderContext(page=page, article=storage.get_article(id=page.article_id), renderer=0)
 
     with markdown_context(context):
         context.content = render(page.intro)

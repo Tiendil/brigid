@@ -42,11 +42,7 @@ class HeaderAnchorsProcessor(Treeprocessor):
 
         counter = AnchorCounter()
 
-        headers = [
-            tag
-            for tag in root.iter()
-            if tag.tag in ("h1", "h2", "h3", "h4", "h5", "h6")
-        ]
+        headers = [tag for tag in root.iter() if tag.tag in ("h1", "h2", "h3", "h4", "h5", "h6")]
 
         for header in headers:
 
@@ -63,9 +59,7 @@ class HeaderAnchorsProcessor(Treeprocessor):
 
             id = counter.anchor()
 
-            post_url = UrlsPost(
-                language=context.page.language, slug=context.article.slug
-            )
+            post_url = UrlsPost(language=context.page.language, slug=context.article.slug)
 
             url = f"{post_url.url()}#{id}"
 
@@ -83,6 +77,4 @@ class HeaderAnchorsExtension(Extension):
 
     def extendMarkdown(self, md):
         # TODO: which priority to set?
-        md.treeprocessors.register(
-            HeaderAnchorsProcessor(), "brigid_header_anchors", 175
-        )
+        md.treeprocessors.register(HeaderAnchorsProcessor(), "brigid_header_anchors", 175)

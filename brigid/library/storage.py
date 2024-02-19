@@ -130,9 +130,7 @@ class Storage:
         exclude_tags: Iterable[str] = (),
     ) -> list[Page]:
         pages = [
-            page
-            for page in self._pages.values()
-            if page.language == language and (not only_posts or page.is_post)
+            page for page in self._pages.values() if page.language == language and (not only_posts or page.is_post)
         ]
 
         if require_tags:

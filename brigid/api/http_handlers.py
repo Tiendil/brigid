@@ -1,12 +1,7 @@
 import pathlib
 
 import fastapi
-from fastapi.responses import (
-    FileResponse,
-    HTMLResponse,
-    PlainTextResponse,
-    RedirectResponse,
-)
+from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse, RedirectResponse
 
 from brigid.api import renderers
 from brigid.api.sitemaps import build_sitemap_xml
@@ -57,9 +52,7 @@ async def page_css() -> HTMLResponse:
 
 
 @router.get("/static/posts/{article_slug}/{filename:path}")
-async def static_file(
-    request: fastapi.Request, article_slug: str, filename: str
-) -> HTMLResponse:
+async def static_file(request: fastapi.Request, article_slug: str, filename: str) -> HTMLResponse:
     article = storage.get_article(slug=article_slug)
 
     # TODO: could it be a security breach?

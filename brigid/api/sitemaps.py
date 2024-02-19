@@ -70,9 +70,7 @@ def add_index_url(sitemap, language) -> None:
 def add_pagination_urls(sitemap, language) -> None:
 
     # add only index with no tags filter
-    pagination_urls = UrlsTags(
-        language=language, page=1, required_tags=[], excluded_tags=[]
-    )
+    pagination_urls = UrlsTags(language=language, page=1, required_tags=[], excluded_tags=[])
 
     if pagination_urls.total_pages == 1:
         return
@@ -119,9 +117,7 @@ def add_page_url(sitemap, page) -> None:
     site = storage.get_site()
 
     if len(article.pages) > 1:
-        languages = [
-            language for language in site.allowed_languages if language in article.pages
-        ]
+        languages = [language for language in site.allowed_languages if language in article.pages]
         add_language_variants(url, page_url, languages)
 
 

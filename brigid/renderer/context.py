@@ -23,11 +23,7 @@ class RenderContext(BaseEntity):
     errors: list[RenderError] = pydantic.Field(default_factory=list)
 
     def add_error(self, failed_text: str, message: str) -> None:
-        self.errors.append(
-            RenderError(
-                failed_text=failed_text, message=message, filepath=self.page.path
-            )
-        )
+        self.errors.append(RenderError(failed_text=failed_text, message=message, filepath=self.page.path))
 
     model_config = pydantic.ConfigDict(frozen=False)
 

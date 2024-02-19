@@ -5,9 +5,7 @@ from .storage import storage
 
 # TODO: collect data to explain similarity
 # TODO: add similarity by vector embedings?
-def get_similar_pages(
-    language: str, original_page: Page, number: int
-) -> list[PageSimilarityScore]:
+def get_similar_pages(language: str, original_page: Page, number: int) -> list[PageSimilarityScore]:
 
     site = storage.get_site()
 
@@ -29,9 +27,7 @@ def get_similar_pages(
                 continue
 
             if tag in page.tags:
-                page_score.add_score(
-                    site.similarity.common_tag_score, f'common tag "{tag}"'
-                )
+                page_score.add_score(site.similarity.common_tag_score, f'common tag "{tag}"')
 
     # add points for special tags
     for page_score in scores:
@@ -39,16 +35,12 @@ def get_similar_pages(
 
         for tag in page.tags:
             if tag in site.similarity.bonus_for_tags:
-                page_score.add_score(
-                    site.similarity.bonus_for_tags[tag], f'special tag "{tag}"'
-                )
+                page_score.add_score(site.similarity.bonus_for_tags[tag], f'special tag "{tag}"')
 
     # add points for linked articles
 
     for page_score in scores:
-        references_number = len(
-            connectivity.get_referenced_from(page_id=page_score.page_id)
-        )
+        references_number = len(connectivity.get_referenced_from(page_id=page_score.page_id))
         page_score.add_score(
             references_number * site.similarity.bonus_per_reference,
             f"bonus for {references_number} references",
@@ -63,9 +55,7 @@ def get_similar_pages(
                     f"referenced to {referenced_to_id}",
                 )
 
-    for referenced_from_id in connectivity.get_referenced_from(
-        page_id=original_page.id
-    ):
+    for referenced_from_id in connectivity.get_referenced_from(page_id=original_page.id):
         # TODO: optimize to map
         for page_score in scores:
             if page_score.page_id == referenced_from_id:

@@ -61,25 +61,19 @@ async def run() -> None:
             context = render_page(page=page)
 
             if parser(page.body):
-                context.add_error(
-                    "test is unknown", "the page has separated list items"
-                )
+                context.add_error("test is unknown", "the page has separated list items")
 
             errors.extend(context.errors)
 
         article_404 = storage.get_article(slug="404")
 
         if set(article_404.pages) != set(site.allowed_languages):
-            raise ValueError(
-                "404 article pages are not consistent with site allowed languages"
-            )
+            raise ValueError("404 article pages are not consistent with site allowed languages")
 
         article_500 = storage.get_article(slug="500")
 
         if set(article_500.pages) != set(site.allowed_languages):
-            raise ValueError(
-                "500 article pages are not consistent with site allowed languages"
-            )
+            raise ValueError("500 article pages are not consistent with site allowed languages")
 
     if not errors:
         logger.info("everything_is_ok")
