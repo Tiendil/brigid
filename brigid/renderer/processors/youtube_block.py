@@ -1,10 +1,10 @@
-
 from typing import Any
 
 import pydantic
+from pymdownx.blocks import BlocksExtension
+
 from brigid.core.entities import BaseEntity
 from brigid.renderer.context import render_context
-from pymdownx.blocks import BlocksExtension
 
 from .toml_block import TomlBlock
 
@@ -18,16 +18,16 @@ class YouTubeModel(BaseEntity):
 
     @property
     def url(self) -> str:
-        return f'https://www.youtube.com/embed/{self.id}'
+        return f"https://www.youtube.com/embed/{self.id}"
 
 
 class YouTubeBlock(TomlBlock):
-    NAME = 'brigid-youtube'
+    NAME = "brigid-youtube"
     models = YouTubeModel
-    root_tag = 'figure'
+    root_tag = "figure"
 
     def root_css_classes(self, data: Any) -> str:
-        classes = ['brigid-youtube', data.css_class]
+        classes = ["brigid-youtube", data.css_class]
         return [x for x in classes if x]
 
     def process_data(self, data: Any) -> str:
@@ -35,9 +35,9 @@ class YouTubeBlock(TomlBlock):
 
         context = render_context.get()
 
-        return render('./blocks/youtube.html.j2',
-                      {'video': data,
-                       'article': context.article})
+        return render(
+            "./blocks/youtube.html.j2", {"video": data, "article": context.article}
+        )
 
 
 class YouTubeBlockExtension(BlocksExtension):

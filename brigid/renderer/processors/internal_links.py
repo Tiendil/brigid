@@ -1,14 +1,14 @@
-
 import re
+
+from markdown.inlinepatterns import LinkInlineProcessor
 
 from brigid.domain.urls import UrlsFeedsAtom, UrlsPost, UrlsTags, normalize_url
 from brigid.library.storage import storage
 from brigid.renderer.context import render_context
-from markdown.inlinepatterns import LinkInlineProcessor
 
 
 class InternalLinkInlineProcessor(LinkInlineProcessor):
-    RE_LINK = re.compile(r'\{\s*(.*?)\s*\}', re.DOTALL | re.UNICODE)
+    RE_LINK = re.compile(r"\{\s*(.*?)\s*\}", re.DOTALL | re.UNICODE)
 
     # TODO: return errors instead of result
     def handleMatch(self, m, data):  # noqa # pylint: disable=all
@@ -19,7 +19,7 @@ class InternalLinkInlineProcessor(LinkInlineProcessor):
         if result[0] is None:
             return result
 
-        href = result[0].get('href')
+        href = result[0].get("href")
 
         if href is None:
             return result
@@ -28,81 +28,95 @@ class InternalLinkInlineProcessor(LinkInlineProcessor):
 
         context = render_context.get()
 
-        parts = href.split(':')
+        parts = href.split(":")
 
         new_href = None
 
         # TODO: support specifying language to easier give cross-language links
 
-        if parts[0] == 'post':
+        if parts[0] == "post":
             slug = parts[1]
 
             if not storage.has_article(slug=slug):
                 context = render_context.get()
 
-                context.add_error(failed_text=data,
-                                  message='Non-existing page slug specified for local link')
+                context.add_error(
+                    failed_text=data,
+                    message="Non-existing page slug specified for local link",
+                )
                 return result
 
             article = storage.get_article(slug=slug)
 
             if context.page.language not in article.pages:
-                context.add_error(failed_text=data,
-                                  message='Article does not have page in the current language')
+                context.add_error(
+                    failed_text=data,
+                    message="Article does not have page in the current language",
+                )
                 return result
 
-            connectivity.add_connection(target_page_id=article.pages[context.page.language],
-                                        reference_page_id=context.page.id)
+            connectivity.add_connection(
+                target_page_id=article.pages[context.page.language],
+                reference_page_id=context.page.id,
+            )
 
             new_href = UrlsPost(language=context.page.language, slug=slug).url()
 
-        elif parts[0] == 'tags':
+        elif parts[0] == "tags":
 
             required = set()
             excluded = set()
 
             for tag in parts[1:]:
-                normalized_tag = tag[1:] if tag[0] == '-' else tag
+                normalized_tag = tag[1:] if tag[0] == "-" else tag
 
-                if normalized_tag not in site.languages[context.page.language].tags_translations:
-                    context.add_error(failed_text=data,
-                                      message='One of tags does not exist')
+                if (
+                    normalized_tag
+                    not in site.languages[context.page.language].tags_translations
+                ):
+                    context.add_error(
+                        failed_text=data, message="One of tags does not exist"
+                    )
                     return result
 
-                if tag[0] != '-':
+                if tag[0] != "-":
                     required.add(normalized_tag)
                 else:
                     excluded.add(normalized_tag)
 
-            new_href = UrlsTags(page=1,
-                                required_tags=required,
-                                excluded_tags=excluded,
-                                language=context.page.language).url()
+            new_href = UrlsTags(
+                page=1,
+                required_tags=required,
+                excluded_tags=excluded,
+                language=context.page.language,
+            ).url()
 
-        elif parts[0] == 'absolute':
+        elif parts[0] == "absolute":
 
-            if parts[1][0] != '/':
-                context.add_error(failed_text=data,
-                                  message='Absolute link should start with /')
+            if parts[1][0] != "/":
+                context.add_error(
+                    failed_text=data, message="Absolute link should start with /"
+                )
                 return result
 
-            new_href = normalize_url(f'{site.url}/{parts[1]}')
+            new_href = normalize_url(f"{site.url}/{parts[1]}")
 
-        elif parts[0] == 'feed':
+        elif parts[0] == "feed":
             new_href = UrlsFeedsAtom(language=context.page.language).url()
 
-        elif parts[0] == 'static':
-            post_url = UrlsPost(language=context.page.language, slug=context.article.slug)
+        elif parts[0] == "static":
+            post_url = UrlsPost(
+                language=context.page.language, slug=context.article.slug
+            )
 
             new_href = post_url.file_url(parts[1])
 
         else:
-            context.add_error(failed_text=data,
-                              message='Unknown local link format')
+            context.add_error(failed_text=data, message="Unknown local link format")
             return result
 
         # set full url for rendering in feeds and other places
-        result[0].set('href', new_href)
+        result[0].set("href", new_href)
 
         return result
 

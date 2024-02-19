@@ -6,13 +6,13 @@ class BaseCache:
     __slots__ = ()
 
     def initialize(self) -> None:
-        raise NotImplementedError('initialize')
+        raise NotImplementedError("initialize")
 
     def clear(self) -> None:
-        raise NotImplementedError('clear')
+        raise NotImplementedError("clear")
 
     def set(self, cache_path: str, original_path) -> None:
-        raise NotImplementedError('set')
+        raise NotImplementedError("set")
 
 
 class DummyCache(BaseCache):
@@ -29,7 +29,7 @@ class DummyCache(BaseCache):
 
 
 class FileCache(BaseCache):
-    __slots__ = ('directory',)
+    __slots__ = ("directory",)
 
     def __init__(self, directory: pathlib.Path) -> None:
         super().__init__()
@@ -50,7 +50,7 @@ class FileCache(BaseCache):
 
     def set(self, cache_path: str, original_path) -> None:
 
-        if cache_path.startswith('/'):
+        if cache_path.startswith("/"):
             cache_path = cache_path[1:]
 
         cache_path = self.directory / cache_path

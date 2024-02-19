@@ -5,9 +5,9 @@ import re
 from typing import Literal
 
 import pydantic
+
 from brigid.core.entities import BaseEntity
 from brigid.domain import urls
-
 
 MORE_RE = re.compile(r"<!--\s*more\s*-->", re.IGNORECASE)
 
@@ -143,7 +143,7 @@ class Article(BaseEntity):
 
     @property
     def id(self) -> str:
-        return f'article#{self.slug}'
+        return f"article#{self.slug}"
 
 
 class Page(BaseEntity):
@@ -179,11 +179,13 @@ class Page(BaseEntity):
     @property
     def slug(self) -> str:
         from .storage import storage
+
         return storage.get_article(id=self.article_id).slug
 
     @property
     def is_post(self) -> str:
         from .storage import storage
+
         return storage.get_article(id=self.article_id).type == ArticleType.post
 
     @property
@@ -219,7 +221,7 @@ class PageSimilarityScore(BaseEntity):
 
     def add_score(self, score: int, explanation: str) -> None:
         self.score += score
-        self.explanations.append(f'{score}: {explanation}')
+        self.explanations.append(f"{score}: {explanation}")
 
 
 class Redirects(BaseEntity):

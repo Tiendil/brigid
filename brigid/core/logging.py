@@ -34,7 +34,9 @@ settings = Settings()
 
 
 class LogProcessorType(Protocol):
-    async def __call__(self, _: Any, __: Any, event_dict: dict[str, Any]) -> dict[str, Any]:
+    async def __call__(
+        self, _: Any, __: Any, event_dict: dict[str, Any]
+    ) -> dict[str, Any]:
         pass
 
 
@@ -146,8 +148,16 @@ def processors_list(use_sentry: bool) -> list[LogProcessorType]:
         sentry_processor,
         structlog.processors.TimeStamper(fmt="ISO", utc=True, key="timestamp"),
         create_formatter(),
-        structlog.dev.ConsoleRenderer() if settings.renderer == Renderer.console else None,
-        structlog.processors.JSONRenderer() if settings.renderer == Renderer.json else None,
+        (
+            structlog.dev.ConsoleRenderer()
+            if settings.renderer == Renderer.console
+            else None
+        ),
+        (
+            structlog.processors.JSONRenderer()
+            if settings.renderer == Renderer.json
+            else None
+        ),
     ]
 
     return [p for p in processors_list if p is not None]  # type: ignore
@@ -176,12 +186,16 @@ def bound_function(skip: Iterable[str] = ()) -> Callable[[FUNC], FUNC]:
     def wrapper(func: FUNC) -> FUNC:
         @functools.wraps(func)
         def wrapped(**kwargs: Any) -> Any:
-            with bound_contextvars(**{k: v for k, v in kwargs.items() if k not in skip}):
+            with bound_contextvars(
+                **{k: v for k, v in kwargs.items() if k not in skip}
+            ):
                 return func(**kwargs)
 
         @functools.wraps(func)
         async def async_wrapped(**kwargs: Any) -> Any:
-            with bound_contextvars(**{k: v for k, v in kwargs.items() if k not in skip}):
+            with bound_contextvars(
+                **{k: v for k, v in kwargs.items() if k not in skip}
+            ):
                 return await func(**kwargs)
 
         if inspect.iscoroutinefunction(func):

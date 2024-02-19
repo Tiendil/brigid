@@ -1,5 +1,5 @@
-
 import markdown
+
 from brigid.core import logging
 from brigid.library.entities import Page
 from brigid.library.storage import storage
@@ -13,7 +13,6 @@ from .processors.internal_links import INTERNAL_LINK_RE, InternalLinkInlineProce
 from .processors.old_image_markup_validation import IMAGE_LINK_RE, ImageInlineValidator
 from .processors.youtube_block import YouTubeBlockExtension
 
-
 logger = logging.get_module_logger()
 
 _renderers = []
@@ -21,33 +20,43 @@ _renderers = []
 
 def _construct() -> markdown.Markdown:
 
-    configs = {'pymdownx.tilde': {'smart_delete': True, 'subscript': True}}
+    configs = {"pymdownx.tilde": {"smart_delete": True, "subscript": True}}
 
-    renderer = markdown.Markdown(extensions=[ImagesBlockExtension(),
-                                             YouTubeBlockExtension(),
-                                             HeaderAnchorsExtension(),
-                                             CollectionBlockExtension(),
-                                             'md_in_html',
-                                             'pymdownx.betterem',
-                                             'pymdownx.superfences',
-                                             'pymdownx.saneheaders',
-                                             'pymdownx.tilde',
-                                             'pymdownx.blocks.details'],
-                                 extension_configs=configs)
+    renderer = markdown.Markdown(
+        extensions=[
+            ImagesBlockExtension(),
+            YouTubeBlockExtension(),
+            HeaderAnchorsExtension(),
+            CollectionBlockExtension(),
+            "md_in_html",
+            "pymdownx.betterem",
+            "pymdownx.superfences",
+            "pymdownx.saneheaders",
+            "pymdownx.tilde",
+            "pymdownx.blocks.details",
+        ],
+        extension_configs=configs,
+    )
 
     # all images must be processed by ImagesBlockExtension
     # because it gives more control over the output and more validation
-    renderer.inlinePatterns.deregister('image_link')
-    renderer.inlinePatterns.deregister('image_reference')
-    renderer.inlinePatterns.deregister('short_image_ref')
+    renderer.inlinePatterns.deregister("image_link")
+    renderer.inlinePatterns.deregister("image_reference")
+    renderer.inlinePatterns.deregister("short_image_ref")
 
     # remove classic links processor
-    renderer.inlinePatterns.deregister('link')
+    renderer.inlinePatterns.deregister("link")
 
     # add modified processors
-    renderer.inlinePatterns.register(ImageInlineValidator(IMAGE_LINK_RE, renderer), 'image_link_validator', 160)
-    renderer.inlinePatterns.register(ExternalLinkInlineProcessor(EXTERNAL_LINK_RE, renderer), 'external_link', 160)
-    renderer.inlinePatterns.register(InternalLinkInlineProcessor(INTERNAL_LINK_RE, renderer), 'internal_link', 160)
+    renderer.inlinePatterns.register(
+        ImageInlineValidator(IMAGE_LINK_RE, renderer), "image_link_validator", 160
+    )
+    renderer.inlinePatterns.register(
+        ExternalLinkInlineProcessor(EXTERNAL_LINK_RE, renderer), "external_link", 160
+    )
+    renderer.inlinePatterns.register(
+        InternalLinkInlineProcessor(INTERNAL_LINK_RE, renderer), "internal_link", 160
+    )
 
     return renderer
 
@@ -67,7 +76,7 @@ def render(text: str) -> str:
     if not context.errors:
         return content
 
-    logger.warning('markdown_render_errors', errors_number=len(context.errors))
+    logger.warning("markdown_render_errors", errors_number=len(context.errors))
 
     return repr(context.errors[0])
 
@@ -75,9 +84,9 @@ def render(text: str) -> str:
 def render_page(page: Page) -> RenderContext:
     # TODO: reload only optionally
 
-    context = RenderContext(page=page,
-                            article=storage.get_article(id=page.article_id),
-                            renderer=0)
+    context = RenderContext(
+        page=page, article=storage.get_article(id=page.article_id), renderer=0
+    )
 
     with markdown_context(context):
         context.content = render(page.body)
@@ -88,9 +97,9 @@ def render_page(page: Page) -> RenderContext:
 def render_page_intro(page: Page) -> RenderContext:
     # TODO: reload only optionally
 
-    context = RenderContext(page=page,
-                            article=storage.get_article(id=page.article_id),
-                            renderer=0)
+    context = RenderContext(
+        page=page, article=storage.get_article(id=page.article_id), renderer=0
+    )
 
     with markdown_context(context):
         context.content = render(page.intro)
@@ -104,9 +113,11 @@ def render_text(text: str) -> RenderContext:
     if prev_context is None:
         raise NotImplementedError("render_text must be called within render context")
 
-    context = RenderContext(page=prev_context.page,
-                            article=prev_context.article,
-                            renderer=prev_context.renderer + 1)
+    context = RenderContext(
+        page=prev_context.page,
+        article=prev_context.article,
+        renderer=prev_context.renderer + 1,
+    )
 
     with markdown_context(context):
         context.content = render(text)

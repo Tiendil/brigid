@@ -2,7 +2,6 @@ import asyncio
 
 import typer
 
-
 app = typer.Typer()
 
 

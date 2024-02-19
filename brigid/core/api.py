@@ -2,6 +2,7 @@ import enum
 from typing import Any
 
 import pydantic
+
 from brigid.core.entities import BaseEntity
 
 

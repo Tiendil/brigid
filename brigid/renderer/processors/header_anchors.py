@@ -1,11 +1,11 @@
 import re
 import xml.etree.ElementTree as etree
 
-from brigid.domain.urls import UrlsPost
-from brigid.renderer.context import render_context
 from markdown.extensions import Extension
 from markdown.treeprocessors import Treeprocessor
 
+from brigid.domain.urls import UrlsPost
+from brigid.renderer.context import render_context
 
 DISALLOWED_CHARS_PATTERN = re.compile(r"[^-a-zA-Z0-9]+")
 
@@ -16,8 +16,8 @@ class AnchorCounter:
         self.counts = [0, 0, 0, 0, 0]
 
     def count(self, tag: str) -> int:
-        if 'h1' == tag:
-            raise NotImplementedError('We do not expect h1 here')
+        if "h1" == tag:
+            raise NotImplementedError("We do not expect h1 here")
 
         index = int(tag[1]) - 2
 
@@ -42,13 +42,19 @@ class HeaderAnchorsProcessor(Treeprocessor):
 
         counter = AnchorCounter()
 
-        headers = [tag for tag in root.iter() if tag.tag in ('h1', 'h2', 'h3', 'h4', 'h5', 'h6')]
+        headers = [
+            tag
+            for tag in root.iter()
+            if tag.tag in ("h1", "h2", "h3", "h4", "h5", "h6")
+        ]
 
         for header in headers:
 
-            if header.tag == 'h1':
-                context.add_error(failed_text=str(header),
-                                  message='H1 headers are not allowed in articles, they are for titles only')
+            if header.tag == "h1":
+                context.add_error(
+                    failed_text=str(header),
+                    message="H1 headers are not allowed in articles, they are for titles only",
+                )
                 continue
 
             counter.count(header.tag)
@@ -57,14 +63,16 @@ class HeaderAnchorsProcessor(Treeprocessor):
 
             id = counter.anchor()
 
-            post_url = UrlsPost(language=context.page.language, slug=context.article.slug)
+            post_url = UrlsPost(
+                language=context.page.language, slug=context.article.slug
+            )
 
-            url = f'{post_url.url()}#{id}'
+            url = f"{post_url.url()}#{id}"
 
-            header.set('id', id)
+            header.set("id", id)
 
-            anchor = etree.Element('a')
-            anchor.set('href', url)
+            anchor = etree.Element("a")
+            anchor.set("href", url)
             anchor.text = text
 
             header.text = None
@@ -75,4 +83,6 @@ class HeaderAnchorsExtension(Extension):
 
     def extendMarkdown(self, md):
         # TODO: which priority to set?
-        md.treeprocessors.register(HeaderAnchorsProcessor(), 'brigid_header_anchors', 175)
+        md.treeprocessors.register(
+            HeaderAnchorsProcessor(), "brigid_header_anchors", 175
+        )

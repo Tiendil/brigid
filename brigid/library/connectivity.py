@@ -5,7 +5,7 @@ from brigid.renderer.markdown_render import render_page
 
 
 class Connectivity:
-    __slots__ = ('_connections', '_reverse_connections', '_processed_pages')
+    __slots__ = ("_connections", "_reverse_connections", "_processed_pages")
 
     def __init__(self) -> None:
         self._processed_pages: set[str] = set()

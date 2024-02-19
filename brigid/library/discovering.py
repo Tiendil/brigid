@@ -4,12 +4,12 @@ import re
 
 import frontmatter
 import toml
-from brigid.core import logging
 from frontmatter.default_handlers import TOMLHandler
+
+from brigid.core import logging
 
 from .entities import Article, Collection, Page, Redirects, Site, SiteLanguage
 from .storage import storage
-
 
 logger = logging.get_module_logger()
 
@@ -20,8 +20,9 @@ def log_error(func):
         try:
             return func(*args, **kwargs)
         except Exception:
-            logger.error(f'error_while_{func.__name__}', args=args, kwargs=kwargs)
+            logger.error(f"error_while_{func.__name__}", args=args, kwargs=kwargs)
             raise
+
     return wrapper
 
 
@@ -50,7 +51,7 @@ def find_article_paths(directory: pathlib.Path) -> list[pathlib.Path]:
 
     for root, _, files in directory.walk(follow_symlinks=True):
         for filename in files:
-            if filename == 'article.toml':
+            if filename == "article.toml":
                 article_paths.append((root / filename).resolve().absolute())
 
     logger.info("found_articles", count=len(article_paths))
@@ -69,29 +70,33 @@ def load_page(path: pathlib.Path) -> Page:
         article = storage.get_article(path=article_path)
 
     elif not article_path.exists():
-        raise NotImplementedError(f'article configs has not found at {article_path}')
+        raise NotImplementedError(f"article configs has not found at {article_path}")
 
     else:
-        raise NotImplementedError(f'article has not found for {article_path}')
+        raise NotImplementedError(f"article has not found for {article_path}")
 
     # page_data, page_content = frontmatter.parse(str(path), handler=TOMLHandler())
     with path.open() as f:
-        page_data, page_content = frontmatter.parse(f.read(), handler=FrontmatterTOMLHandler())
+        page_data, page_content = frontmatter.parse(
+            f.read(), handler=FrontmatterTOMLHandler()
+        )
 
-    if 'title' not in page_data:
-        page_data['title'] = article.title
+    if "title" not in page_data:
+        page_data["title"] = article.title
 
-    if 'tags' not in page_data:
-        page_data['tags'] = article.tags
+    if "tags" not in page_data:
+        page_data["tags"] = article.tags
 
-    if page_data['seo_image'] == '':
-        page_data['seo_image'] = None
+    if page_data["seo_image"] == "":
+        page_data["seo_image"] = None
 
-    page = Page(article_id=article.id,
-                path=path,
-                language=path.stem,
-                body=page_content,
-                **page_data)
+    page = Page(
+        article_id=article.id,
+        path=path,
+        language=path.stem,
+        body=page_content,
+        **page_data,
+    )
 
     return page
 
@@ -112,8 +117,7 @@ def load_article(path: pathlib.Path) -> Article:
     article_content = path.read_text()
 
     article_data = toml.loads(article_content)
-    article = Article(path=path,
-                      **article_data)
+    article = Article(path=path, **article_data)
 
     return article
 
@@ -135,15 +139,14 @@ def load_site(directory: pathlib.Path) -> None:
     site = None
     redirects = None
 
-    for file_path in (directory / 'site').glob('*.toml'):
+    for file_path in (directory / "site").glob("*.toml"):
         data = toml.loads(file_path.read_text())
 
-        if file_path.name == 'meta.toml':
-            site = Site(**data,
-                        path=file_path.resolve().absolute())
+        if file_path.name == "meta.toml":
+            site = Site(**data, path=file_path.resolve().absolute())
             continue
 
-        if file_path.name == 'redirects.toml':
+        if file_path.name == "redirects.toml":
             redirects = Redirects(**data)
             continue
 
@@ -152,11 +155,11 @@ def load_site(directory: pathlib.Path) -> None:
         for menu in languages[file_path.stem].menu:
             menu.language = file_path.stem
 
-    if (directory / 'site' / 'footer.html').exists():
-        site.footer_html = (directory / 'site' / 'footer.html').read_text()
+    if (directory / "site" / "footer.html").exists():
+        site.footer_html = (directory / "site" / "footer.html").read_text()
 
-    if (directory / 'site' / 'header.html').exists():
-        site.header_html = (directory / 'site' / 'header.html').read_text()
+    if (directory / "site" / "header.html").exists():
+        site.header_html = (directory / "site" / "header.html").read_text()
 
     site.languages.update(languages)
 
@@ -166,13 +169,12 @@ def load_site(directory: pathlib.Path) -> None:
 
 @log_error
 def load_collections(directory: pathlib.Path) -> None:
-    for file_path in (directory / 'collections').glob('*.toml'):
+    for file_path in (directory / "collections").glob("*.toml"):
         data = toml.loads(file_path.read_text())
 
         path = file_path.resolve().absolute()
 
-        collection = Collection(**data,
-                                path=path)
+        collection = Collection(**data, path=path)
 
         storage.add_collection(collection)
 

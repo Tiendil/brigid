@@ -1,15 +1,18 @@
 import pathlib
 
+from markupsafe import Markup
+
 from brigid.domain.urls import UrlsRoot
 from brigid.library.entities import Page
 from brigid.library.storage import Storage, storage
 from brigid.renderer.markdown_render import render_page as markdown_render_page
-from brigid.renderer.markdown_render import render_page_intro as markdown_render_page_intro
+from brigid.renderer.markdown_render import (
+    render_page_intro as markdown_render_page_intro,
+)
 from brigid.renderer.markdown_render import render_text as markdown_render_text
 from brigid.renderer.static_files import ImageInfo, files
 from brigid.theme.default_translations import translations
 from brigid.theme.settings import PhotoSwipe, settings
-from markupsafe import Markup
 
 from .utils import jinjafilter, jinjaglobal
 
@@ -66,7 +69,7 @@ def translate_theme(language: str, text_id: str) -> str:
         language = site.default_language
 
     if language not in translations:
-        language = 'en'
+        language = "en"
 
     if text_id in translations[language]:
         return translations[language][text_id]

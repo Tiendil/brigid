@@ -11,6 +11,6 @@ class MetaInfo(BaseEntity):
     description: str
     author: str
     tags: list[str]
-    published_at: datetime.datetime|None
+    published_at: datetime.datetime | None
 
-    seo_image_url: str|None
+    seo_image_url: str | None

@@ -1,11 +1,12 @@
 from typing import Any
 
 import fastapi
+from fastapi.responses import RedirectResponse
+from sentry_sdk import capture_exception
+
 from brigid.api import renderers
 from brigid.api.utils import choose_language
 from brigid.library.storage import storage
-from fastapi.responses import RedirectResponse
-from sentry_sdk import capture_exception
 
 
 async def process_404(request, error):
@@ -15,10 +16,10 @@ async def process_404(request, error):
 
     # normalize path
 
-    if not original_path.startswith('/'):
-        original_path = '/' + original_path
+    if not original_path.startswith("/"):
+        original_path = "/" + original_path
 
-    if original_path[-1] == '/':
+    if original_path[-1] == "/":
         original_path = original_path[:-1]
 
     if original_path in redirects.permanent:
@@ -29,17 +30,17 @@ async def process_404(request, error):
     # captute all unprocessed 404 errors
     capture_exception(error)
 
-    return renderers.render_page(language, '404', status_code=404)
+    return renderers.render_page(language, "404", status_code=404)
 
 
 async def remove_double_slashes(request: fastapi.Request, call_next: Any):
     path = request.url.path
 
-    if '//' not in path:
+    if "//" not in path:
         return await call_next(request)
 
-    while '//' in path:
-        path = path.replace('//', '/')
+    while "//" in path:
+        path = path.replace("//", "/")
 
     return RedirectResponse(path, status_code=301)
 
@@ -47,7 +48,7 @@ async def remove_double_slashes(request: fastapi.Request, call_next: Any):
 async def remove_trailing_slash(request: fastapi.Request, call_next: Any):
     path = request.url.path
 
-    if path != '/' and path[-1] == '/':
+    if path != "/" and path[-1] == "/":
         return RedirectResponse(path[:-1], status_code=301)
 
     return await call_next(request)
@@ -59,14 +60,14 @@ async def set_content_language(request: fastapi.Request, call_next: Any):
     if response.status_code != 200:
         return response
 
-    if 'content-language' in response.headers:
+    if "content-language" in response.headers:
         return response
 
     path = request.url.path
 
     for language in storage.get_site().allowed_languages:
-        if path.startswith(f'/{language}/') or path == f'/{language}':
-            response.headers['content-language'] = language
+        if path.startswith(f"/{language}/") or path == f"/{language}":
+            response.headers["content-language"] = language
             return response
 
     return response
@@ -77,4 +78,4 @@ async def process_expected_error(request, error):
 
     language = choose_language(request)
 
-    return renderers.render_page(language, '500', status_code=500)
+    return renderers.render_page(language, "500", status_code=500)
