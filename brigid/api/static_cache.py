@@ -72,5 +72,6 @@ def set_cache(cache: FileCache) -> None:
     _cache = cache
 
 
-def cache() -> FileCache | None:
+def cache() -> FileCache:
+    assert _cache is not None
     return _cache
