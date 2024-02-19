@@ -9,7 +9,6 @@ license = "BSD-3"
 [tool.poetry.dependencies]
 python = "^3.12"
 
-# uvicorn = {extras = ["standard"], version = "0.*"}
 fastapi = "0.109.*"
 structlog = "24.1.*"
 
@@ -27,9 +26,10 @@ feedgenerator = "2.1.*"
 
 sentry-sdk = "1.39.*"
 typer = "0.9.*"
-watchdog = "3.0.*"
 
 [tool.poetry.dev-dependencies]
+watchdog = "3.0.*"
+
 isort = "5.13.*"
 black = "24.2.*"
 

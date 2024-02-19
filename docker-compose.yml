@@ -12,7 +12,7 @@ services:
       - ${PWD}/:/repository
       - ${PWD}/.env:/repository/.env
 
-    environment:
+    # environment:
 
     ports:
       - "8000:8000"
