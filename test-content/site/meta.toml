@@ -1,0 +1,7 @@
+prod_url = "no-prod-url"
+test_url = "http://0.0.0.0:8000"
+default_language = 'en'
+allowed_languages = ['en', 'ru']
+posts_per_page = 5
+posts_in_feed = 10
+favicon = './images/favicon.ico'

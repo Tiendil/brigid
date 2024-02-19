@@ -1,0 +1,20 @@
+
+{% for image in images.images %}
+
+  {% set src = root_url(page.language).to_post(article.slug).file_url(image.src) %}
+
+  {% set image_info = image_info(image.url_file(article)) %}
+
+  <a href="{{src}}"
+     class="brigid-image-link"
+     data-pswp-width="{{image_info.width}}"
+     data-pswp-height="{{image_info.height}}"
+     target="_blank">
+     <img src="{{src}}" alt="{{image.alt}}" />
+  </a>
+
+{% endfor %}
+
+{% if images.caption %}
+  <figcaption>{{images.caption|render_text}}</figcaption>
+{% endif %}

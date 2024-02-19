@@ -1,0 +1,39 @@
+
+@layer components {
+
+    .brigid-article {
+
+        h1, h2, h3, h4, h5, h6 {
+            @apply clear-both my-2;
+
+            a {
+                @apply no-underline font-medium;
+            }
+        }
+
+        h1 {
+            @apply text-2xl my-0;
+        }
+
+        h2 {
+            @apply text-xl;
+        }
+
+        h3 {
+            @apply text-lg;
+        }
+
+        h4 {
+            @apply text-base;
+        }
+
+        h5 {
+            @apply text-sm;
+        }
+
+        h6 {
+            @apply text-sm;
+        }
+
+    }
+}

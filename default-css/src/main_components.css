@@ -1,0 +1,96 @@
+@layer components {
+
+    .brigid-side-block {
+        @apply prose prose-sm prose-a:font-normal prose-a:no-underline ml-4;
+        @apply hidden lg:block;
+
+        .brigid-side-block-caption {
+            @apply ml-6 text-lg my-0;
+        }
+
+        .brigid-tags-filter {
+            @apply border border-gray-400 rounded px-2 mt-2;
+        }
+
+        ul {
+            @apply my-2;
+        }
+    }
+
+    .brigid-tag {
+        .brigid-tag-required {
+            @apply text-green-800 font-medium;
+        }
+
+        .brigid-tag-excluded {
+            @apply text-red-800 font-medium;
+        }
+    }
+
+    .brigid-tag-hidden {
+        @apply hidden;
+    }
+
+    .brigid-index-navigation {
+
+        @apply prose border-b-4 border-double mb-4;
+
+        .brigid-index-navigation-item {
+            @apply inline-block;
+        }
+    }
+
+
+    #brigid-body {
+
+        @apply container mx-auto max-w-5xl font-sans p-4;
+
+        header {
+
+            @apply text-center max-w-2xl ;
+
+            .brigid-blog-title {
+                @apply text-3xl block;
+            }
+
+            nav {
+                @apply border-t border-b border-t-2 border-b-2 uppercase mt-2 mb-8;
+
+                a {
+                    @apply inline-block px-2 py-2;
+                }
+
+                .brigid-active-menu-item {
+                    @apply underline underline-offset-4;
+                }
+            }
+        }
+
+        .brigid-article-main {
+            @apply flex;
+        }
+
+        .brigid-index-main {
+            @apply flex;
+
+            .brigid-index-posts-container {
+                @apply grow max-w-2xl;
+            }
+        }
+
+        .brigid-languages-list {
+            @apply text-base;
+
+            a {
+                @apply font-normal;
+            }
+
+            .brigid-languages-list-active {
+            }
+
+            .brigid-languages-list-link {
+                @apply text-slate-400;
+            }
+        }
+    }
+}

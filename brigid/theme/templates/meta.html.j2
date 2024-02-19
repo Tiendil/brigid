@@ -1,0 +1,56 @@
+
+{% macro general_fields(meta_info, current_url) %}
+  <meta charset="UTF-8">
+
+  <link rel="icon" href="/favicon.ico">
+
+  <link rel="canonical" href="{{current_url.url()}}">
+  <link rel="alternate"
+        type="application/atom+xml"
+        title="{{meta_info.title}}"
+        href="{{current_url.to_feeds_atom().url()}}" />
+
+
+  {% for language in meta_info.allowed_languages %}
+    {% if language == meta_info.language %}
+      {% continue %}
+    {% endif %}
+    <link rel="alternate" hreflang="{{language}}" href="{{current_url.to_language(language).url()}}">
+  {% endfor %}
+
+  <title>{{meta_info.title}}</title>
+
+  <meta name="description" content="{{meta_info.description}}">
+
+  <meta name="keywords" content="{{', '.join(meta_info.tags|sort)}}">
+
+  <meta name="author" content="{{meta_info.author}}">
+
+  <meta name="referrer" content="unsafe-URL">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endmacro %}
+
+
+{% macro json_fd(meta_info, current_url) %}
+  {# TODO: separate blocks for special pages like "about", "best"? #}
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+    "headline": "{{meta_info.title}}",
+    {% if meta_info.seo_image_url %}
+      "image": [
+        "{{meta_info.seo_image_url}}",
+      ],
+    {% endif %}
+      "datePublished": "{{meta_info.published_at.isoformat()}}",
+    {# TODO: add dateModified #}
+      "author": [{
+          "@type": "Person",
+          "name": "{{meta_info.author}}",
+          "url": "{{current_url.to_author().url()}}"
+        }]
+    }
+    </script>
+{% endmacro %}

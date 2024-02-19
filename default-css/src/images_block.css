@@ -1,0 +1,170 @@
+
+@layer components {
+
+    .brigid-images {
+
+        @apply grid grid-cols-12 gap-2 mt-5;
+
+        figcaption {
+
+            @apply col-span-12;
+
+            p:first-child {
+                @apply mt-0;
+            }
+
+            p:last-child {
+                @apply mb-0;
+            }
+        }
+
+        img {
+            @apply mx-auto;
+        }
+
+        /* predefined galery styles */
+
+        &.brigid-images-circle {
+            img {
+                @apply rounded-full;
+            }
+        }
+
+        &.brigid-images-to-left {
+            @apply float-left;
+
+            a {
+                @apply col-span-12 mr-5;
+            }
+        }
+
+        &.brigid-images-1\/4 {
+            @apply w-1/4;
+        }
+
+        &.brigid-images-1-in-row a {
+            @apply col-span-12;
+        }
+
+        &.brigid-images-2-in-row a {
+            @apply col-span-6;
+        }
+
+        &.brigid-images-3-in-row a {
+            @apply col-span-4;
+        }
+
+        &.brigid-images-4-in-row a {
+            @apply col-span-3;
+        }
+
+        &.brigid-images-6-in-row a {
+            @apply col-span-2;
+        }
+
+        &.brigid-images-12-in-row a {
+            @apply col-span-1;
+        }
+
+        /* general galery styles */
+
+
+        &.brigid-images-1 a {
+            @apply col-span-12;
+        }
+
+        &.brigid-images-2 a,
+        &.brigid-images-8 a,
+        &.brigid-images-14 a,
+        &.brigid-images-20 a{
+            /* @apply col-span-6; */
+
+            @apply col-span-2;
+
+            &:nth-child(-n+2) {
+                @apply col-span-6;
+            }
+        }
+
+        &.brigid-images-3 a {
+            @apply col-span-6;
+
+            &:first-child {
+                @apply col-span-12;
+            }
+        }
+
+        &.brigid-images-4 a {
+            @apply col-span-4;
+
+            &:first-child {
+                @apply col-span-12;
+            }
+        }
+
+        &.brigid-images-5 a {
+            @apply col-span-4;
+
+            &:nth-child(-n+2) {
+                @apply col-span-6;
+            }
+        }
+
+        &.brigid-images-6 a,
+        &.brigid-images-10 a,
+        &.brigid-images-18 a {
+            @apply col-span-3;
+
+            &:nth-child(-n+2) {
+                @apply col-span-6;
+            }
+        }
+
+        &.brigid-images-7 a,
+        &.brigid-images-13 a,
+        &.brigid-images-19 a {
+            @apply col-span-2;
+
+            &:first-child {
+                @apply col-span-12;
+            }
+        }
+
+        &.brigid-images-9 a,
+        &.brigid-images-17 a {
+            @apply col-span-3;
+
+            &:first-child {
+                @apply col-span-12;
+            }
+        }
+
+        &.brigid-images-11 a {
+            @apply col-span-3;
+
+            &:nth-child(-n+3) {
+                @apply col-span-4;
+            }
+        }
+
+        &.brigid-images-12 a {
+            @apply col-span-4;
+        }
+
+        &.brigid-images-15 a {
+            @apply col-span-2;
+
+            &:nth-child(-n+3) {
+                @apply col-span-4;
+            }
+        }
+
+        &.brigid-images-16 a {
+            @apply col-span-2;
+
+            &:nth-child(-n+4) {
+                @apply col-span-3;
+            }
+        }
+    }
+}

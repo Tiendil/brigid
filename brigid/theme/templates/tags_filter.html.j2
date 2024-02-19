@@ -1,0 +1,70 @@
+
+{% from "utils.html.j2" import tags_url %}
+
+
+{% macro tags_filter(current_url, tags_count, site, pages_found) %}
+
+  <p class="brigid-side-block-caption">
+    {{ translate_theme(current_url.language, 'tags_filter_header') }}
+    {{pages_found}}
+  </p>
+
+  {% if current_url.selected_tags %}
+    <ul>
+      {% for tag in current_url.selected_tags | sort %}
+        <li class="brigid-tag">
+          {{tags_url("[X]", current_url.remove(tag), "")}}
+
+          {% if tag in current_url.required_tags %}
+            {{tags_url(translate_tag(current_url.language, tag), current_url.exclude(tag), "brigid-tag-required")}}
+          {% elif tag in current_url.excluded_tags %}
+            {{tags_url(translate_tag(current_url.language, tag), current_url.require(tag), "brigid-tag-excluded")}}
+          {% else %}
+            {{tag}}
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <input class="brigid-tags-filter" type="text" placeholder="tag to search" />
+
+  {% if tags_count %}
+    <ul class="brigid-unselected-tags">
+      {# TODO: sort alphabetically if numbers are equal #}
+      {% for tag, number in tags_count.items() | sort(attribute='1', reverse=true) %}
+        {% if tag in current_url.selected_tags %}
+          {% continue %}
+        {% endif %}
+
+        <li class="brigid-tag" data-brigid-filter-value="{{translate_tag(current_url.language,tag)}}">
+          [{{number}}]
+          {{tags_url(translate_tag(current_url.language, tag), current_url.require(tag), "")}}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <script>
+var tagsFilter = document.querySelector('.brigid-tags-filter');
+
+tagsFilter.addEventListener('input', function(event) {
+    var filterBy = event.target.value.toLowerCase();
+
+    var tags = document.querySelectorAll('.brigid-unselected-tags .brigid-tag');
+
+    tags.forEach(function(tag) {
+        var tagValue = tag.getAttribute('data-brigid-filter-value').toLowerCase();
+
+        if (tagValue.indexOf(filterBy) === -1) {
+            tag.classList.add('brigid-tag-hidden');
+        } else {
+            tag.classList.remove('brigid-tag-hidden');
+        }
+    });
+
+    console.log('Input value changed to: ', currentValue);
+});
+  </script>
+
+{% endmacro %}

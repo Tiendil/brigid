@@ -1,0 +1,55 @@
+{% from "utils.html.j2" import tags_url %}
+
+{% macro pagination(current_url) %}
+
+  {% if current_url.total_pages > 1 %}
+
+  <nav>
+    <ul class="brigid-index-navigation">
+      {% if current_url.page != 1 %}
+        <li class="brigid-index-navigation-item">
+          {% set item_name = translate_theme(current_url.language, 'pagination_first_page') %}
+          {{tags_url(item_name, current_url.first_page(), "") }}
+        </li>
+      {% endif %}
+
+      {% if current_url.page > 3 %}
+        <li class="brigid-index-navigation-item">
+          {{tags_url(current_url.page - 2, current_url.move_page(-2), "") }}
+        </li>
+      {% endif %}
+
+      {% if current_url.page > 2 %}
+        <li class="brigid-index-navigation-item">
+          {{tags_url(current_url.page - 1, current_url.move_page(-1), "") }}
+        </li>
+      {% endif %}
+
+      <li class="brigid-index-navigation-item">
+        {{ current_url.page }}
+      </li>
+
+      {% if current_url.page + 1 < current_url.total_pages %}
+        <li class="brigid-index-navigation-item">
+          {{tags_url(current_url.page + 1, current_url.move_page(+1), "") }}
+        </li>
+      {% endif %}
+
+      {% if current_url.page + 2 < current_url.total_pages %}
+        <li class="brigid-index-navigation-item">
+          {{tags_url(current_url.page + 2, current_url.move_page(+2), "") }}
+        </li>
+      {% endif %}
+
+      {% if current_url.page != current_url.total_pages %}
+        <li class="brigid-index-navigation-item">
+          {% set item_name = translate_theme(current_url.language, 'pagination_last_page') %}
+          {{tags_url(item_name, current_url.last_page(), "") }}
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+
+  {% endif %}
+
+{% endmacro %}

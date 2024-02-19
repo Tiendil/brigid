@@ -1,0 +1,56 @@
+{% from 'header.html.j2' import header %}
+{% import "meta.html.j2" as meta %}
+
+<!DOCTYPE html>
+<html lang="{{language}}">
+  <head>
+    {{ meta.general_fields(meta_info, current_url) }}
+
+    {% if article %}
+      {{ meta.json_fd(meta_info, current_url) }}
+    {% endif %}
+
+    <link rel="stylesheet" href="/static/css">
+
+    {% set photoswipe = photoswipe_settings() %}
+
+    <link rel="stylesheet" href="{{photoswipe.stylesheet}}" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    {% if site.header_html %}
+      {{ site.header_html | safe }}
+    {% endif %}
+
+  </head>
+  <body>
+    <div id="brigid-body">
+      {{ header(language, site, article) }}
+
+      {% block content %}{% endblock %}
+
+      <script type="module">
+        import Lightbox from '{{photoswipe.lightbox}}';
+
+        const pswpModule = () => import('{{photoswipe.pswp}}')
+
+        const galleries = document.querySelectorAll('.brigid-images');
+
+        galleries.forEach(gallery => {
+
+        const lightbox = new Lightbox({
+          gallery: gallery,
+          children: '.brigid-image-link',
+          pswpModule: pswpModule
+          });
+        lightbox.init();
+        });
+
+      </script>
+
+      {% if site.footer_html %}
+        {{ site.footer_html | safe }}
+      {% endif %}
+
+    </div>
+
+  </body>
+</html>

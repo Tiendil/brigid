@@ -1,0 +1,29 @@
+
+{% macro languages_links(language, site, article) %}
+  {% if article and not article.more_than_one_language%}
+
+  {% else %}
+
+    <span class="brigid-languages-list">
+      {% for allowed_language in site.allowed_languages %}
+        {% if article %}
+          {% if allowed_language not in article.pages %}
+            {% continue %}
+          {% endif %}
+        {% endif %}
+
+        {% if allowed_language == language %}
+          <span class="brigid-languages-list-active">{{allowed_language}}</span>
+        {% else %}
+          {% if article %}
+            {% set url = root_url(allowed_language).to_post(article.slug).url() %}
+          {% else %}
+            {% set url = root_url(allowed_language).url() %}
+          {% endif %}
+
+          <a href="{{url}}" class="brigid-languages-list-link">{{allowed_language}}</a>
+        {% endif %}
+      {% endfor %}
+    </span>
+  {% endif %}
+{% endmacro %}

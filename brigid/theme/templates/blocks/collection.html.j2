@@ -1,0 +1,21 @@
+
+{% set storage = get_storage() %}
+{% set collection = storage.get_collection(collection_data.id) %}
+
+{% set posts = storage.last_pages(language=current_page.language, require_tags=collection.required_tags, exclude_tags=collection.excluded_tags) %}
+
+{% if collection.order == 'asc' %}
+  {% set posts = posts|reverse %}
+{% endif %}
+
+<ul>
+  {% for post in posts %}
+    {% set article = storage.get_article(post.article_id) %}
+    {% set classes = collection.classes_for_tags(post.tags) %}
+    <li>
+      <a href="{{root_url(current_page.language).to_post(article.slug).url()}}" class="{{' '.join(classes)}}">
+        {{post.title}}
+      </a>
+    </li>
+  {% endfor %}
+</ul>

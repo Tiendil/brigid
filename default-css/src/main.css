@@ -1,0 +1,9 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@import "./main_components.css";
+@import "./article_base.css";
+@import "./article_headers.css";
+@import "./article_blocks.css";
+@import "./images_block.css";

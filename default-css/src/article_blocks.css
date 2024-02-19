@@ -1,0 +1,44 @@
+@layer components {
+
+    .brigid-article {
+
+        .brigid-youtube {
+            iframe {
+                @apply w-full aspect-video;
+            }
+        }
+
+        details {
+
+            @apply border border-gray-400 rounded px-2 my-6;
+
+            summary {
+                @apply font-medium cursor-pointer;
+            }
+        }
+
+        code:before, code:after {
+            content: none;
+        }
+
+        .brigid-article-footer {
+            @apply prose prose-sm prose-a:font-normal prose-a:no-underline max-w-none mt-4 flex flex-row;
+
+            .brigid-article-footer-date {
+                @apply w-20 flex-none;
+            }
+
+            .brigid-article-footer-tags {
+                @apply grow;
+            }
+        }
+
+        .brigid-similar-articles {
+            @apply mt-8;
+
+            .brigid-similar-articles-caption {
+                @apply font-medium;
+            }
+        }
+    }
+}

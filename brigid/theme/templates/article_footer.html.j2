@@ -1,0 +1,14 @@
+
+{% macro article_footer(page) %}
+  <div class="brigid-article-footer">
+    {# TODO: configure format of the date #}
+    <div class="brigid-article-footer-date">{{page.published_at.date()}}</div>
+
+    <div class="brigid-article-footer-tags">
+      {%- for tag in page.tags_in_translation_order -%}
+        {%- if not loop.first -%}, {%- endif %}
+        <a href="{{root_url(page.language).to_filter(require=[tag]).url()}}">{{translate_tag(page.language, tag)}}</a>
+      {%- endfor -%}
+    </div>
+  </div>
+{% endmacro %}

@@ -1,0 +1,52 @@
+
+from urllib.parse import urlparse
+
+from brigid.domain.urls import UrlsPost, UrlsTags
+from brigid.library.storage import storage
+from brigid.renderer.context import RenderError, render_context
+from markdown.inlinepatterns import LINK_RE as EXTERNAL_LINK_RE
+from markdown.inlinepatterns import LinkInlineProcessor
+
+
+class ExternalLinkInlineProcessor(LinkInlineProcessor):
+
+    # TODO: return errors instead of result
+    def handleMatch(self, m, data):  # noqa # pylint: disable=all
+        result = super().handleMatch(m, data)
+
+        if result[0] is None:
+            return result
+
+        href = result[0].get('href')
+
+        if href is None:
+            return result
+
+        parsed_url = urlparse(href)
+
+        site = storage.get_site()
+
+        context = render_context.get()
+
+        parsed_site = urlparse(site.url)
+
+        # validate external links
+
+        # TODO: compare taking into account the default ports, aka example.com:90 = example.com
+        # TODO: is this required, link could be to the same domain but in different project
+        if parsed_site.netloc == parsed_url.netloc:
+            context.add_error(failed_text=data,
+                              message='No need to start local link with domain')
+            return result
+
+        if parsed_url.scheme == '' and parsed_url.netloc != '':
+            context.add_error(failed_text=data,
+                              message='Specify schema/protocol for external links')
+            return result
+
+        if parsed_url.scheme != '' and parsed_url.netloc == '':
+            context.add_error(failed_text=data,
+                              message='Specify domain for external links')
+            return result
+
+        return result

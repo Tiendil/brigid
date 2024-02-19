@@ -1,0 +1,20 @@
+{% extends 'base.html.j2' %}
+{% from 'last_posts.html.j2' import last_posts %}
+{% from 'languages_links.html.j2' import languages_links %}
+
+{% block content %}
+  <div class="brigid-article-main">
+
+    <article class="brigid-article brigid-article-wide">
+      <h1>
+        <a href="{{root_url(language).to_post(article.slug).url()}}">{{page.title}}</a>
+        {{languages_links(language, site, article)}}
+      </h1>
+
+      {{page|render_page}}
+
+    </article>
+
+  </div>
+
+{% endblock %}

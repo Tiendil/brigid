@@ -1,0 +1,11 @@
+
+{% macro last_posts(language, number) %}
+  <ul>
+    {% for page in get_storage().last_pages(language=language, number=number) %}
+      {% set article = get_storage().get_article(id=page.article_id) %}
+      <li>
+        <a href="{{root_url(language).to_post(article.slug).url()}}">{{page.title}}</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endmacro %}

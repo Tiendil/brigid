@@ -1,0 +1,24 @@
+title = "Test/Example site"
+subtitle = "Site to test theme, css, layout, rendering rules, etc."
+author = "Aliaksei Yaletski (Tiendil)"
+
+[[menu]]
+type = "blog"
+name = "Blog"
+
+[[menu]]
+type = "feed"
+name = "RSS"
+
+[[menu]]
+type = "external"
+name = "GitHub"
+url = "TODO: place link to repository here"
+
+[tags_translations]
+example = "example"
+wide = "wide"
+basic = "basic"
+images = "images"
+
+[theme_translations]

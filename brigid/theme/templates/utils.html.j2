@@ -1,0 +1,8 @@
+
+{% macro tags_url(name, url, class) %}
+  <a class="{{class}}"
+     {% if url.is_nofollow %}rel="nofollow"{% endif %}
+     href="{{url.url()}}">
+    {{name}}
+  </a>
+{% endmacro %}

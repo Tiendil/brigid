@@ -1,0 +1,6 @@
+
+<iframe src="{{video.url}}" frameborder="0" allowfullscreen></iframe>
+
+{% if video.caption %}
+  <figcaption>{{video.caption|render_text}}</figcaption>
+{% endif %}

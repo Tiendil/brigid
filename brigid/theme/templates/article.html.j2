@@ -1,0 +1,41 @@
+{% extends 'base.html.j2' %}
+{% from 'last_posts.html.j2' import last_posts %}
+{% from 'article_footer.html.j2' import article_footer %}
+{% from 'languages_links.html.j2' import languages_links %}
+{% from 'similar_pages.html.j2' import similar_pages as render_similar_pages %}
+
+{% block content %}
+  <div class="brigid-article-main">
+
+    <article class="brigid-article">
+      <h1>
+        <a href="{{root_url(language).to_post(article.slug).url()}}">{{page.title}}</a>
+        {{languages_links(language, site, article)}}
+      </h1>
+
+      {{page|render_page}}
+
+      {% if page.is_post %}
+        <div class="brigid-similar-articles">
+          <h2 class="brigid-similar-articles-caption">
+            {{translate_theme(current_url.language, 'article_similar_header')}}
+          </h2>
+          {{ render_similar_pages(language, similar_pages) }}
+        </div>
+
+        {{ article_footer(page) }}
+
+      {% endif %}
+
+    </article>
+
+    <nav class="brigid-side-block">
+      <p class="brigid-side-block-caption">
+        {{ translate_theme(current_url.language, 'last_posts_header') }}
+      </p>
+      {{ last_posts(language=language, number=site.posts_in_latest) }}
+    </nav>
+
+  </div>
+
+{% endblock %}

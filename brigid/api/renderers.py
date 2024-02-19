@@ -1,0 +1,216 @@
+import uuid
+from collections import Counter
+from importlib import metadata
+from typing import Any, Iterable
+
+import fastapi
+from brigid.api.utils import (construct_index_description, construct_index_title, parse_accept_language,
+                              select_language, to_integer)
+from brigid.core import errors, logging
+from brigid.domain.urls import UrlsFeedsAtom, UrlsPost, UrlsTags
+from brigid.library.settings import settings as library_settings
+from brigid.library.similarity import get_similar_pages
+from brigid.library.storage import storage
+from brigid.theme.entities import MetaInfo
+from brigid.theme.jinjaglobals import render_page_intro
+from brigid.theme.templates import render
+from fastapi.openapi.docs import get_swagger_ui_html
+from fastapi.openapi.utils import get_openapi
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
+from feedgenerator import Atom1Feed
+from starlette.exceptions import HTTPException as StarletteHTTPException
+
+
+def render_index(language: str, raw_tags: str) -> HTMLResponse:
+    site = storage.get_site()
+
+    if language not in site.allowed_languages:
+        raise errors.PageNotFound()
+
+    required = set()
+    excluded = set()
+    page_number = 1
+
+    parsed_tags = raw_tags.split('/')
+
+    parsed_tags = [tag for tag in parsed_tags if tag]
+
+    if parsed_tags:
+        page = to_integer(parsed_tags[-1])
+
+        if page is not None and page > 0:
+            page_number = page
+            parsed_tags.pop()
+
+    for tag in parsed_tags:
+        if tag.startswith('-'):
+            excluded.add(tag[1:])
+        else:
+            required.add(tag)
+
+    site = storage.get_site()
+
+    all_pages = storage.last_pages(language=language,
+                                   require_tags=required,
+                                   exclude_tags=excluded)
+
+    tags_count = Counter()
+
+    for page in all_pages:
+        tags_count.update(page.tags)
+
+    pages = all_pages[site.posts_per_page * (page_number - 1):site.posts_per_page * page_number]
+
+    filter_state = UrlsTags(language=language,
+                            page=page_number,
+                            required_tags=required,
+                            excluded_tags=excluded)
+
+    translated_tags_required = [site.languages[language].tags_translations[tag] for tag in required]
+    translated_tags_required.sort()
+
+    translated_tags_excluded = [site.languages[language].tags_translations[tag] for tag in excluded]
+    translated_tags_excluded.sort()
+
+    seo_title = construct_index_title(language=language,
+                                      title=site.languages[language].title,
+                                      page=page_number,
+                                      tags_required=translated_tags_required,
+                                      tags_excluded=translated_tags_excluded)
+
+    seo_description = construct_index_description(language=language,
+                                                  subtitle=site.languages[language].subtitle,
+                                                  page=page_number,
+                                                  tags_required=translated_tags_required,
+                                                  tags_excluded=translated_tags_excluded)
+
+    meta_info = MetaInfo(language=language,
+                         # TODO: construct language urls for filters
+                         #       it is complicated, because
+                         #       - we need to reset page number to 1 when changing language
+                         #       - we need to reapply filters to pages to calculate total pages
+                         allowed_languages=[],
+                         title=seo_title,
+                         description=seo_description,
+                         author=site.languages[language].author,
+                         tags=translated_tags_required,
+                         published_at=None,
+                         seo_image_url=None)
+
+    # TODO: template names should have prefixes
+    content = render('./blog_index.html.j2',
+                     {'language': language,
+                      'meta_info': meta_info,
+                      'site': site,
+                      'pages': pages,
+                      'current_url': filter_state,
+                      'article': None,
+                      'pages_found': len(all_pages),
+                      'tags_count': tags_count})
+
+    return HTMLResponse(content=content)
+
+
+def render_page(language: str, article_slug: str, status_code: int = 200) -> HTMLResponse:
+
+    site = storage.get_site()
+
+    if language not in site.allowed_languages:
+        raise errors.PageNotFound()
+
+    if not storage.has_article(slug=article_slug):
+        raise errors.PageNotFound()
+
+    article = storage.get_article(slug=article_slug)
+
+    if language not in article.pages:
+        raise errors.PageNotFound()
+
+    page = storage.get_page(id=article.pages[language])
+
+    similar_pages = get_similar_pages(language=language,
+                                      original_page=page,
+                                      number=site.posts_in_similar)
+
+    # TODO: default template for each page type
+    template = page.template or site.default_page_template
+
+    post_url = UrlsPost(language=page.language, slug=article.slug)
+
+    seo_image_url = None
+
+    if page.seo_image:
+        seo_image_url = post_url.file_url(page.seo_image)
+
+    meta_info = MetaInfo(language=language,
+                         allowed_languages=[language
+                                            for language in site.allowed_languages
+                                            if language in article.pages],
+                         title=page.title,
+                         description=page.description,
+                         author=site.languages[language].author,
+                         tags=[site.languages[language].tags_translations[tag] for tag in page.tags],
+                         published_at=page.published_at,
+
+                         seo_image_url=seo_image_url)
+
+    content = render(template,
+                     {'language': language,
+                      'meta_info': meta_info,
+                      'site': storage.get_site(),
+                      'article': article,
+                      'similar_pages': similar_pages,
+                      'page': page,
+                      'current_url': post_url})
+
+    return HTMLResponse(content=content, status_code=status_code)
+
+
+# TODO: cache?
+def render_atom_feed(language: str) -> HTMLResponse:
+    site = storage.get_site()
+
+    if language not in site.allowed_languages:
+        raise errors.PageNotFound()
+
+    author = site.languages[language].author
+
+    feed = Atom1Feed(
+        title=site.languages[language].title,
+        # TODO: what is to use: subtitle or description?
+        subtitle=site.languages[language].subtitle,
+        description=site.languages[language].subtitle,
+
+        link=site.url,
+        language=language,
+        feed_url=UrlsFeedsAtom(language=language).url(),
+        author_name=author,
+
+        # 'image' TODO: favicon?
+        # 'author_email': to_unicode(author_email),
+        # 'author_link': iri_to_uri(author_link),
+    )
+
+    all_pages = storage.last_pages(language=language)
+
+    for page in all_pages[:site.posts_in_feed]:
+        article = storage.get_article(id=page.article_id)
+
+        post_url = UrlsPost(language=language, slug=article.slug)
+
+        feed.add_item(
+            # TODO: do we need to render title as markdown?
+            title=page.title,
+            link=post_url.url(),
+            description=render_page_intro(page),
+            author_name=author,
+            pubdate=page.published_at,
+
+            # TODO: now unique_id is constructed automatically like tag URI, which is expected by ATOM spec
+            #       check if it is ok
+        )
+
+    xml = feed.writeString('utf-8')
+
+    return HTMLResponse(content=xml,
+                        media_type=feed.mime_type)
