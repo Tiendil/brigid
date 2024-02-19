@@ -2,11 +2,9 @@ import traceback
 import xml.etree.ElementTree as etree
 from typing import Any
 
-import markdown
 import pydantic
 import toml
-from brigid.renderer.context import RenderError, render_context
-from pymdownx.blocks import BlocksExtension
+from brigid.renderer.context import render_context
 from pymdownx.blocks.block import Block
 
 

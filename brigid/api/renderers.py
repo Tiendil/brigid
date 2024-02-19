@@ -1,24 +1,15 @@
-import uuid
 from collections import Counter
-from importlib import metadata
-from typing import Any, Iterable
 
-import fastapi
-from brigid.api.utils import (construct_index_description, construct_index_title, parse_accept_language,
-                              select_language, to_integer)
-from brigid.core import errors, logging
+from brigid.api.utils import (construct_index_description, construct_index_title, to_integer)
+from brigid.core import errors
 from brigid.domain.urls import UrlsFeedsAtom, UrlsPost, UrlsTags
-from brigid.library.settings import settings as library_settings
 from brigid.library.similarity import get_similar_pages
 from brigid.library.storage import storage
 from brigid.theme.entities import MetaInfo
 from brigid.theme.jinjaglobals import render_page_intro
 from brigid.theme.templates import render
-from fastapi.openapi.docs import get_swagger_ui_html
-from fastapi.openapi.utils import get_openapi
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
+from fastapi.responses import HTMLResponse
 from feedgenerator import Atom1Feed
-from starlette.exceptions import HTTPException as StarletteHTTPException
 
 
 def render_index(language: str, raw_tags: str) -> HTMLResponse:

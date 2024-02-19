@@ -1,7 +1,7 @@
 
 from .connectivity import connectivity
-from .entities import Article, Page, PageSimilarityScore
-from .storage import Storage, storage
+from .entities import Page, PageSimilarityScore
+from .storage import storage
 
 
 # TODO: collect data to explain similarity

@@ -3,7 +3,6 @@ from typing import Any
 
 import pydantic
 from brigid.core.entities import BaseEntity
-from brigid.library.entities import Article
 from brigid.renderer.context import render_context
 from pymdownx.blocks import BlocksExtension
 

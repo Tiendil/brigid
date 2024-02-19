@@ -1,6 +1,4 @@
 
-import posixpath
-from urllib.parse import urlparse, urlunparse
 
 
 def jinjaglobal(f):

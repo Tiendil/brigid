@@ -1,10 +1,8 @@
 
 from urllib.parse import urlparse
 
-from brigid.domain.urls import UrlsPost, UrlsTags
 from brigid.library.storage import storage
-from brigid.renderer.context import RenderError, render_context
-from markdown.inlinepatterns import LINK_RE as EXTERNAL_LINK_RE
+from brigid.renderer.context import render_context
 from markdown.inlinepatterns import LinkInlineProcessor
 
 

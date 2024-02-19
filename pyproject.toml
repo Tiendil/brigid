@@ -50,3 +50,9 @@ mypy = "1.8.*"
 
 [tool.poetry.scripts]
 brigid = "brigid.cli.__main__:app"
+
+[tool.autoflake]
+in_place = true
+remove_all_unused_imports = true
+remove_unused_variables = true
+recursive = true

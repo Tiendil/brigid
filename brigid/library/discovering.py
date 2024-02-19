@@ -1,7 +1,6 @@
 import functools
 import pathlib
 import re
-import uuid
 
 import frontmatter
 import toml

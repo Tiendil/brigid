@@ -1,5 +1,4 @@
 
-import html
 from typing import Any
 
 import pydantic

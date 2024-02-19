@@ -1,6 +1,5 @@
 import jinja2
 from brigid.theme.settings import settings
-from markupsafe import Markup
 
 
 def get_jinjaglobals(module):

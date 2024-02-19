@@ -1,6 +1,6 @@
 
-from brigid.renderer.context import RenderError, render_context
-from markdown.inlinepatterns import IMAGE_LINK_RE, IMAGE_REFERENCE_RE, ImageInlineProcessor
+from brigid.renderer.context import render_context
+from markdown.inlinepatterns import ImageInlineProcessor
 
 
 class ImageInlineValidator(ImageInlineProcessor):

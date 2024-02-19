@@ -2,8 +2,7 @@ import datetime
 import enum
 import pathlib
 import re
-import uuid
-from typing import Any, Literal
+from typing import Literal
 
 import pydantic
 from brigid.core.entities import BaseEntity
