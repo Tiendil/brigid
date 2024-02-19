@@ -30,7 +30,23 @@ typer = "0.9.*"
 watchdog = "3.0.*"
 
 [tool.poetry.dev-dependencies]
+isort = "5.13.*"
+black = "24.2.*"
 
+flake8 = "7.0.*"
+flake8-docstrings = "1.7.*"
+flake8-functions = "0.0.*"
+flake8-annotations-complexity = "0.0.*"
+flake8-cognitive-complexity = "0.1.*"
+flake8-pytest = "1.4.*"
+flake8-bandit = "4.1.*"
+flake8-absolute-import = "1.0.*"
+flake8-print = "5.0.*"
+flake8-pyproject = "1.2.*"
+flake8-eradicate = "1.5.*"
+autoflake = "2.3.*"
+
+mypy = "1.8.*"
 
 [tool.poetry.scripts]
 brigid = "brigid.cli"
