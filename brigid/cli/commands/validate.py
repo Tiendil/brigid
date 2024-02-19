@@ -1,25 +1,21 @@
-
 import asyncio
-from html.parser import HTMLParser
 
 from brigid.application.application import with_app
 from brigid.cli.application import app
 from brigid.core import logging
-from brigid.library.storage import Storage, storage
-from brigid.renderer.context import RenderError
+from brigid.library.storage import storage
 from brigid.renderer.markdown_render import render_page
-
 
 logger = logging.get_module_logger()
 
 
 def is_list_line(line: str) -> bool:
-    if line.startswith('**'):
+    if line.startswith("**"):
         return False
 
     line = line.lstrip()
 
-    return line.startswith('-') or line.startswith('*') or line.startswith('+')
+    return line.startswith("-") or line.startswith("*") or line.startswith("+")
 
 
 def is_line_empty(line: str) -> bool:
@@ -35,7 +31,7 @@ def parser(text: str) -> bool:
 
     can_has_problem = False
 
-    for line in text.split('\n'):
+    for line in text.split("\n"):
         if is_list_line(line):
             if can_has_problem:
                 return True
@@ -69,27 +65,29 @@ async def run() -> None:
 
             errors.extend(context.errors)
 
-        article_404 = storage.get_article(slug='404')
+        article_404 = storage.get_article(slug="404")
 
         if set(article_404.pages) != set(site.allowed_languages):
-            raise ValueError('404 article pages are not consistent with site allowed languages')
+            raise ValueError("404 article pages are not consistent with site allowed languages")
 
-        article_500 = storage.get_article(slug='500')
+        article_500 = storage.get_article(slug="500")
 
         if set(article_500.pages) != set(site.allowed_languages):
-            raise ValueError('500 article pages are not consistent with site allowed languages')
+            raise ValueError("500 article pages are not consistent with site allowed languages")
 
     if not errors:
-        logger.info('everything_is_ok')
+        logger.info("everything_is_ok")
         return
 
     for error in errors:
-        logger.error('markdown_render_error',
-                     filepath=str(error.filepath),
-                     failed_text=error.failed_text,
-                     message=error.message)
+        logger.error(
+            "markdown_render_error",
+            filepath=str(error.filepath),
+            failed_text=error.failed_text,
+            message=error.message,
+        )
 
-    logger.error('markdown_render_errors', errors_number=len(errors))
+    logger.error("markdown_render_errors", errors_number=len(errors))
 
 
 @app.command()

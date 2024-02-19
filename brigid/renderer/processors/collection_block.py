@@ -1,11 +1,10 @@
-
 from typing import Any
 
 import pydantic
-from brigid.core.entities import BaseEntity
-from brigid.library.entities import Article
-from brigid.renderer.context import render_context
 from pymdownx.blocks import BlocksExtension
+
+from brigid.core.entities import BaseEntity
+from brigid.renderer.context import render_context
 
 from .toml_block import TomlBlock
 
@@ -18,12 +17,12 @@ class CollectionModel(BaseEntity):
 
 
 class CollectionBlock(TomlBlock):
-    NAME = 'brigid-collection'
+    NAME = "brigid-collection"
     models = CollectionModel
-    root_tag = 'div'
+    root_tag = "div"
 
     def root_css_classes(self, data: Any) -> str:
-        classes = ['brigid-collection', data.css_class]
+        classes = ["brigid-collection", data.css_class]
         return [x for x in classes if x]
 
     def process_data(self, data: Any) -> str:
@@ -31,12 +30,16 @@ class CollectionBlock(TomlBlock):
 
         context = render_context.get()
 
-        return render('./blocks/collection.html.j2',
-                      {'collection_data': data,
-                       # TODO: rename all arguments in all blogs to "current_"
-                       # TODO: add current_page everywhere
-                       'current_article': context.article,
-                       'current_page': context.page})
+        return render(
+            "./blocks/collection.html.j2",
+            {
+                "collection_data": data,
+                # TODO: rename all arguments in all blogs to "current_"
+                # TODO: add current_page everywhere
+                "current_article": context.article,
+                "current_page": context.page,
+            },
+        )
 
 
 class CollectionBlockExtension(BlocksExtension):

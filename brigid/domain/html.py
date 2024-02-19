@@ -1,4 +1,3 @@
-
 from html.parser import HTMLParser
 
 
@@ -14,7 +13,7 @@ class MLStripper(HTMLParser):
         self.fed.append(data)
 
     def get_data(self):
-        return ''.join(self.fed)
+        return "".join(self.fed)
 
 
 def strip_html(html):

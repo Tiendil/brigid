@@ -1,7 +1,8 @@
 import pathlib
 
-from brigid.core.entities import BaseEntity
 from PIL import Image
+
+from brigid.core.entities import BaseEntity
 
 
 class ImageInfo(BaseEntity):
@@ -11,7 +12,7 @@ class ImageInfo(BaseEntity):
 
 
 class FilesInfo:
-    __slots__ = ('_images',)
+    __slots__ = ("_images",)
 
     def __init__(self) -> None:
         self._images: dict[str, ImageInfo] = {}

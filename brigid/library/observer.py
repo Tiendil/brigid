@@ -1,12 +1,12 @@
 import contextlib
 import pathlib
 
-from brigid.core import logging
-from brigid.library.discovering import load_article, load_page
-from brigid.library.storage import storage
 from watchdog import events
 from watchdog.observers import Observer
 
+from brigid.core import logging
+from brigid.library.discovering import load_article, load_page
+from brigid.library.storage import storage
 
 _observer = None
 

@@ -1,25 +1,15 @@
 import pathlib
-import uuid
-from collections import Counter
-from importlib import metadata
-from typing import Any, Iterable
 
 import fastapi
+from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse, RedirectResponse
+
 from brigid.api import renderers
 from brigid.api.sitemaps import build_sitemap_xml
 from brigid.api.static_cache import cache
 from brigid.api.utils import choose_language
-from brigid.core import errors, logging
+from brigid.core import logging
 from brigid.domain.urls import UrlsRoot
-from brigid.library.settings import settings as library_settings
-from brigid.library.similarity import get_similar_pages
 from brigid.library.storage import storage
-from brigid.theme.templates import render
-from fastapi.openapi.docs import get_swagger_ui_html
-from fastapi.openapi.utils import get_openapi
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, PlainTextResponse, RedirectResponse
-from starlette.exceptions import HTTPException as StarletteHTTPException
-
 
 router = fastapi.APIRouter()
 
@@ -30,16 +20,17 @@ logger = logging.get_module_logger()
 # Static files
 ####################
 
+
 @router.get("/favicon.ico")
 async def favicon() -> HTMLResponse:
 
     site = storage.get_site()
 
     if site.favicon is None:
-        return HTMLResponse(content='')
+        return HTMLResponse(content="")
 
     path = site.path.parent / site.favicon
-    cache().set('/favicon.ico', path)
+    cache().set("/favicon.ico", path)
 
     return FileResponse(path)
 
@@ -48,16 +39,16 @@ async def favicon() -> HTMLResponse:
 async def site_map() -> HTMLResponse:
     content = build_sitemap_xml()
 
-    return PlainTextResponse(content, media_type='application/xml')
+    return PlainTextResponse(content, media_type="application/xml")
 
 
 @router.get("/static/css")
 async def page_css() -> HTMLResponse:
-    css_file = pathlib.Path(__file__).parent.parent / 'theme' / 'static' / 'main.css'
+    css_file = pathlib.Path(__file__).parent.parent / "theme" / "static" / "main.css"
 
-    cache().set('/static/css', css_file)
+    cache().set("/static/css", css_file)
 
-    return FileResponse(css_file, media_type='text/css')
+    return FileResponse(css_file, media_type="text/css")
 
 
 @router.get("/static/posts/{article_slug}/{filename:path}")
@@ -77,6 +68,7 @@ async def static_file(request: fastapi.Request, article_slug: str, filename: str
 # Technical routers
 ####################
 
+
 @router.get("/{language}/feeds/atom")
 async def feed_atom(language: str) -> HTMLResponse:
     return renderers.render_atom_feed(language)
@@ -88,7 +80,7 @@ async def feed_atom(language: str) -> HTMLResponse:
 @router.get("/robots.txt")
 async def robots() -> PlainTextResponse:
     # language is not important here
-    root_url = UrlsRoot(language='en')
+    root_url = UrlsRoot(language="en")
 
     content = f"""\
 User-agent: *
@@ -101,6 +93,7 @@ Sitemap: {root_url.to_site_map_full().url()}
 ####################
 # Content routers
 ####################
+
 
 @router.get("/test-error")
 async def test_error() -> HTMLResponse:
@@ -116,7 +109,7 @@ async def root(request: fastapi.Request) -> HTMLResponse:
 
 @router.get("/{language}")
 async def blog_index(language: str) -> HTMLResponse:
-    return renderers.render_index(language=language, raw_tags='')
+    return renderers.render_index(language=language, raw_tags="")
 
 
 @router.get("/{language}/tags")
@@ -125,7 +118,7 @@ async def tags_index_zero(language: str) -> HTMLResponse:
 
 
 @router.get("/{language}/tags/{tags:path}")
-async def tags_index(language: str, tags: str = '') -> HTMLResponse:
+async def tags_index(language: str, tags: str = "") -> HTMLResponse:
     return renderers.render_index(language=language, raw_tags=tags)
 
 

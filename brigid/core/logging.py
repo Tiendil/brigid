@@ -146,8 +146,8 @@ def processors_list(use_sentry: bool) -> list[LogProcessorType]:
         sentry_processor,
         structlog.processors.TimeStamper(fmt="ISO", utc=True, key="timestamp"),
         create_formatter(),
-        structlog.dev.ConsoleRenderer() if settings.renderer == Renderer.console else None,
-        structlog.processors.JSONRenderer() if settings.renderer == Renderer.json else None,
+        (structlog.dev.ConsoleRenderer() if settings.renderer == Renderer.console else None),
+        (structlog.processors.JSONRenderer() if settings.renderer == Renderer.json else None),
     ]
 
     return [p for p in processors_list if p is not None]  # type: ignore

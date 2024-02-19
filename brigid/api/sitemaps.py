@@ -5,7 +5,7 @@ from brigid.domain.urls import UrlsPost, UrlsRoot, UrlsTags
 from brigid.library.storage import storage
 
 
-def get_last_published_at(language) -> datetime.datetime|None:
+def get_last_published_at(language) -> datetime.datetime | None:
     last_published_at = None
 
     # TODO: here we look at all posts, but we should look at all sources of blog
@@ -21,9 +21,13 @@ def build_sitemap_xml() -> str:
 
     site = storage.get_site()
 
-    sitemap = ET.Element("urlset",
-                         **{'xmlns': "http://www.sitemaps.org/schemas/sitemap/0.9",
-                            'xmlns:xhtml': "http://www.w3.org/1999/xhtml"})
+    sitemap = ET.Element(
+        "urlset",
+        **{
+            "xmlns": "http://www.sitemaps.org/schemas/sitemap/0.9",
+            "xmlns:xhtml": "http://www.w3.org/1999/xhtml",
+        }
+    )
 
     for language in site.allowed_languages:
         for page in storage.last_pages(language=language, only_posts=False):
@@ -113,16 +117,16 @@ def add_page_url(sitemap, page) -> None:
     site = storage.get_site()
 
     if len(article.pages) > 1:
-        languages = [language
-                     for language in site.allowed_languages
-                     if language in article.pages]
+        languages = [language for language in site.allowed_languages if language in article.pages]
         add_language_variants(url, page_url, languages)
 
 
 def add_language_variants(url, page_url, languages) -> None:
     for language in languages:
-        ET.SubElement(url,
-                      "xhtml:link",
-                      rel="alternate",
-                      hreflang=language,
-                      href=page_url.to_language(language).url())
+        ET.SubElement(
+            url,
+            "xhtml:link",
+            rel="alternate",
+            hreflang=language,
+            href=page_url.to_language(language).url(),
+        )

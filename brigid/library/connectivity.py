@@ -1,13 +1,11 @@
 from collections import defaultdict
 
-import pydantic
-from brigid.core.entities import BaseEntity
 from brigid.library.storage import storage
 from brigid.renderer.markdown_render import render_page
 
 
 class Connectivity:
-    __slots__ = ('_connections', '_reverse_connections', '_processed_pages')
+    __slots__ = ("_connections", "_reverse_connections", "_processed_pages")
 
     def __init__(self) -> None:
         self._processed_pages: set[str] = set()

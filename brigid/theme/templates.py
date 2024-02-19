@@ -1,6 +1,6 @@
 import jinja2
+
 from brigid.theme.settings import settings
-from markupsafe import Markup
 
 
 def get_jinjaglobals(module):
@@ -11,10 +11,10 @@ def get_jinjaglobals(module):
     for func_name in dir(module):
         func = getattr(module, func_name)
 
-        if getattr(func, '_is_jinjaglobal', False):
+        if getattr(func, "_is_jinjaglobal", False):
             global_functions[func_name] = func
 
-        if getattr(func, '_is_jinjafilter', False):
+        if getattr(func, "_is_jinjafilter", False):
             filter_functions[func_name] = func
 
     return global_functions, filter_functions
@@ -33,12 +33,14 @@ def fill_globals(environment):
 def environment():
     loader = jinja2.FileSystemLoader(settings.templates.directory, followlinks=True)
 
-    environment = jinja2.Environment(autoescape=True,
-                                     trim_blocks=True,
-                                     auto_reload=settings.templates.reload,
-                                     undefined=jinja2.StrictUndefined,
-                                     loader=loader,
-                                     extensions=['jinja2.ext.loopcontrols'])
+    environment = jinja2.Environment(
+        autoescape=True,
+        trim_blocks=True,
+        auto_reload=settings.templates.reload,
+        undefined=jinja2.StrictUndefined,
+        loader=loader,
+        extensions=["jinja2.ext.loopcontrols"],
+    )
 
     fill_globals(environment)
 

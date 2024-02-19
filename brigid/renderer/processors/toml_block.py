@@ -2,13 +2,11 @@ import traceback
 import xml.etree.ElementTree as etree
 from typing import Any
 
-import markdown
 import pydantic
 import toml
-from brigid.renderer.context import RenderError, render_context
-from pymdownx.blocks import BlocksExtension
 from pymdownx.blocks.block import Block
 
+from brigid.renderer.context import render_context
 
 _renderer = None
 
@@ -16,7 +14,7 @@ _renderer = None
 class TomlBlock(Block):
     NAME = NotImplemented
     models = NotImplemented
-    root_tag = 'div'
+    root_tag = "div"
 
     def root_css_classes(self, data: Any) -> str:
         return []
@@ -25,7 +23,7 @@ class TomlBlock(Block):
         return etree.SubElement(parent, self.root_tag)
 
     def on_markdown(self) -> str:
-        return 'raw'
+        return "raw"
 
     def on_end(self, block: etree.Element) -> None:
         try:
@@ -39,15 +37,14 @@ class TomlBlock(Block):
             block.text = self.md.htmlStash.store(new_text)
 
             if model:
-                block.set("class", ' '.join(self.root_css_classes(model)))
+                block.set("class", " ".join(self.root_css_classes(model)))
 
         except Exception as e:
-            new_text = f'Error: {traceback.format_exc()}'.replace('\n', '<br>')
+            new_text = f"Error: {traceback.format_exc()}".replace("\n", "<br>")
 
             context = render_context.get()
 
-            context.add_error(failed_text='unknown',
-                              message=f'Error while rendering block: {e}')
+            context.add_error(failed_text="unknown", message=f"Error while rendering block: {e}")
 
     def process_data(self, data: Any) -> str:
         raise NotImplementedError()

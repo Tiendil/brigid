@@ -1,19 +1,19 @@
-import datetime
 import pathlib
 
 import pydantic
 import pydantic_settings
+
 from brigid.core.settings import BaseSettings
 
 
 class PhotoSwipe(pydantic.BaseModel):
-    stylesheet: str = 'https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.2/photoswipe.min.css'
-    lightbox: str = 'https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.2/photoswipe-lightbox.esm.min.js'
-    pswp: str = 'https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.2/photoswipe.esm.min.js'
+    stylesheet: str = "https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.2/photoswipe.min.css"
+    lightbox: str = "https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.2/photoswipe-lightbox.esm.min.js"
+    pswp: str = "https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.2/photoswipe.esm.min.js"
 
 
 class Templates(pydantic.BaseModel):
-    directory: pathlib.Path = pathlib.Path(__file__).parent / 'templates'
+    directory: pathlib.Path = pathlib.Path(__file__).parent / "templates"
     reload: bool = True
 
 

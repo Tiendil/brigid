@@ -5,7 +5,15 @@ from .entities import Article, Collection, Page, Redirects, Site
 
 
 class Storage:
-    __slots__ = ('_pages', '_articles', '_articles_by_path', '_articles_by_slug', '_site', '_redirects', '_collections')
+    __slots__ = (
+        "_pages",
+        "_articles",
+        "_articles_by_path",
+        "_articles_by_slug",
+        "_site",
+        "_redirects",
+        "_collections",
+    )
 
     def __init__(self) -> None:
         self._pages: dict[str, Page] = {}
@@ -18,10 +26,12 @@ class Storage:
         self._site = None
         self._redirects = None
 
-
-    def get_article(self, id: str|None = None,
-                    path: pathlib.Path|None = None,
-                    slug: str|None = None) -> Article:
+    def get_article(
+        self,
+        id: str | None = None,
+        path: pathlib.Path | None = None,
+        slug: str | None = None,
+    ) -> Article:
 
         if sum(1 for x in (id, path, slug) if x is not None) != 1:
             raise NotImplementedError("id, path and slug are mutually exclusive")
@@ -35,9 +45,12 @@ class Storage:
         if slug is not None:
             return self._articles[self._articles_by_slug[slug]]
 
-    def has_article(self, id: str|None = None,
-                    path: pathlib.Path|None = None,
-                    slug: str|None = None) -> bool:
+    def has_article(
+        self,
+        id: str | None = None,
+        path: pathlib.Path | None = None,
+        slug: str | None = None,
+    ) -> bool:
 
         if sum(1 for x in (id, path, slug) if x is not None) != 1:
             raise NotImplementedError("id, path and slug are mutually exclusive")
@@ -94,7 +107,7 @@ class Storage:
 
     def add_collection(self, collection: Collection) -> None:
         if collection.id in self._collections:
-            raise NotImplementedError('collection already added')
+            raise NotImplementedError("collection already added")
 
         self._collections[collection.id] = collection
 
@@ -108,14 +121,17 @@ class Storage:
         return sum(1 for page in self._pages.values() if page.language == language)
 
     # TODO: cache
-    def last_pages(self,
-                   language: str,
-                   number: int|None = None,
-                   only_posts: bool = True,
-                   require_tags: Iterable[str] = (),
-                   exclude_tags: Iterable[str] = ()) -> list[Page]:
-        pages = [page for page in self._pages.values()
-                 if page.language == language and (not only_posts or page.is_post)]
+    def last_pages(
+        self,
+        language: str,
+        number: int | None = None,
+        only_posts: bool = True,
+        require_tags: Iterable[str] = (),
+        exclude_tags: Iterable[str] = (),
+    ) -> list[Page]:
+        pages = [
+            page for page in self._pages.values() if page.language == language and (not only_posts or page.is_post)
+        ]
 
         if require_tags:
             require_tags = set(require_tags)
