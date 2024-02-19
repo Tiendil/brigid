@@ -5,9 +5,9 @@ import re
 from typing import Literal
 
 import pydantic
-
 from brigid.core.entities import BaseEntity
 from brigid.domain import urls
+
 
 MORE_RE = re.compile(r"<!--\s*more\s*-->", re.IGNORECASE)
 
@@ -178,13 +178,13 @@ class Page(BaseEntity):
 
     @property
     def slug(self) -> str:
-        from .storage import storage
+        from brigid.library.storage import storage
 
         return storage.get_article(id=self.article_id).slug
 
     @property
     def is_post(self) -> str:
-        from .storage import storage
+        from brigid.library.storage import storage
 
         return storage.get_article(id=self.article_id).type == ArticleType.post
 
@@ -201,7 +201,7 @@ class Page(BaseEntity):
 
     @property
     def tags_in_translation_order(self) -> list[str]:
-        from .storage import storage
+        from brigid.library.storage import storage
 
         translations = storage.get_site().languages[self.language].tags_translations
 

@@ -1,5 +1,5 @@
 import datetime
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ET  # noqa: S405
 
 from brigid.domain.urls import UrlsPost, UrlsRoot, UrlsTags
 from brigid.library.storage import storage

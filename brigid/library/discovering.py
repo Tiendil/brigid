@@ -4,12 +4,11 @@ import re
 
 import frontmatter
 import toml
+from brigid.core import logging
+from brigid.library.entities import Article, Collection, Page, Redirects, Site, SiteLanguage
+from brigid.library.storage import storage
 from frontmatter.default_handlers import TOMLHandler
 
-from brigid.core import logging
-
-from .entities import Article, Collection, Page, Redirects, Site, SiteLanguage
-from .storage import storage
 
 logger = logging.get_module_logger()
 
@@ -75,7 +74,6 @@ def load_page(path: pathlib.Path) -> Page:
     else:
         raise NotImplementedError(f"article has not found for {article_path}")
 
-    # page_data, page_content = frontmatter.parse(str(path), handler=TOMLHandler())
     with path.open() as f:
         page_data, page_content = frontmatter.parse(f.read(), handler=FrontmatterTOMLHandler())
 
@@ -132,7 +130,7 @@ def load_articles(directory: pathlib.Path) -> None:
 # TODO: exclude 'site' directory from pages search
 #       or freeze all highl-level directories?
 @log_error
-def load_site(directory: pathlib.Path) -> None:
+def load_site(directory: pathlib.Path) -> None:  # noqa: CCR001
     languages = {}
     site = None
     redirects = None

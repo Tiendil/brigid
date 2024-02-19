@@ -1,7 +1,6 @@
 from typing import Iterable
 
 import fastapi
-
 from brigid.api.default_translations import translations
 
 
@@ -87,7 +86,7 @@ def translate_seo(language: str, text_id: str) -> str:
     return text_id
 
 
-def construct_index_title(
+def construct_index_title(  # noqa: CCR001
     language: str,
     title: str,
     page: int,
@@ -139,7 +138,7 @@ def construct_index_title(
     return "".join(title_parts)
 
 
-def construct_index_description(
+def construct_index_description(  # noqa: CCR001
     language: str,
     subtitle: str,
     page: int,

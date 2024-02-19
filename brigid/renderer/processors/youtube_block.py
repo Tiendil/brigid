@@ -1,12 +1,10 @@
 from typing import Any
 
 import pydantic
-from pymdownx.blocks import BlocksExtension
-
 from brigid.core.entities import BaseEntity
 from brigid.renderer.context import render_context
-
-from .toml_block import TomlBlock
+from brigid.renderer.processors.toml_block import TomlBlock
+from pymdownx.blocks import BlocksExtension
 
 
 class YouTubeModel(BaseEntity):

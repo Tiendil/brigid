@@ -1,6 +1,5 @@
 from typing import Any
 
-# from brigid.core.errors import Error
 from sentry_sdk import init as initialize_sentry
 from sentry_sdk.integrations.fastapi import FastApiIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration
@@ -12,9 +11,6 @@ def improve_fingerprint(event: dict[str, Any], hint: dict[str, Any]) -> dict[str
         return event
 
     _, e, _ = hint["exc_info"]
-
-    # if isinstance(e, Error) and e.fingerprint is not None:
-    #     event["fingerprint"] = ["{{ default }}", e.fingerprint]
 
     return event
 

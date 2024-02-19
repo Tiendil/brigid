@@ -51,7 +51,6 @@ mypy = "1.8.*"
 [tool.poetry.scripts]
 brigid = "brigid.cli.__main__:app"
 
-
 [tool.isort]
 profile = "black"
 line_length = 119
@@ -64,3 +63,22 @@ in_place = true
 remove_all_unused_imports = true
 remove_unused_variables = true
 recursive = true
+
+[tool.flake8]
+ignore = [
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "D104",
+    "D105",
+    "D107",
+    "D200",
+    "D400",
+    "S101",
+    "S311",
+    "W503",
+    "CFQ004",
+    "E203",  # blake formats [x:y] with spaves
+]
+max-line-length = 119

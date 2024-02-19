@@ -1,8 +1,5 @@
 from collections import Counter
 
-from fastapi.responses import HTMLResponse
-from feedgenerator import Atom1Feed
-
 from brigid.api.utils import construct_index_description, construct_index_title, to_integer
 from brigid.core import errors
 from brigid.domain.urls import UrlsFeedsAtom, UrlsPost, UrlsTags
@@ -11,9 +8,11 @@ from brigid.library.storage import storage
 from brigid.theme.entities import MetaInfo
 from brigid.theme.jinjaglobals import render_page_intro
 from brigid.theme.templates import render
+from fastapi.responses import HTMLResponse
+from feedgenerator import Atom1Feed
 
 
-def render_index(language: str, raw_tags: str) -> HTMLResponse:
+def render_index(language: str, raw_tags: str) -> HTMLResponse:  # noqa: CCR001
     site = storage.get_site()
 
     if language not in site.allowed_languages:
@@ -188,8 +187,8 @@ def render_atom_feed(language: str) -> HTMLResponse:
         feed_url=UrlsFeedsAtom(language=language).url(),
         author_name=author,
         # 'image' TODO: favicon?
-        # 'author_email': to_unicode(author_email),
-        # 'author_link': iri_to_uri(author_link),
+        # 'author_email': to_unicode(author_email),  # noqa: E800
+        # 'author_link': iri_to_uri(author_link),    # noqa: E800
     )
 
     all_pages = storage.last_pages(language=language)

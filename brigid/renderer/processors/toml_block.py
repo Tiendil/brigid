@@ -1,12 +1,12 @@
 import traceback
-import xml.etree.ElementTree as etree
+import xml.etree.ElementTree as etree  # noqa: S405
 from typing import Any
 
 import pydantic
 import toml
+from brigid.renderer.context import render_context
 from pymdownx.blocks.block import Block
 
-from brigid.renderer.context import render_context
 
 _renderer = None
 

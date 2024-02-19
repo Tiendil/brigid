@@ -1,7 +1,7 @@
 import pathlib
 from typing import Iterable
 
-from .entities import Article, Collection, Page, Redirects, Site
+from brigid.library.entities import Article, Collection, Page, Redirects, Site
 
 
 class Storage:
