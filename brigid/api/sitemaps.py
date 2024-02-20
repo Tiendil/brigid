@@ -4,6 +4,10 @@ import xml.etree.ElementTree as ET  # noqa: S405
 from brigid.domain.urls import UrlsPost, UrlsRoot, UrlsTags
 from brigid.library.storage import storage
 
+# Google does not like too old dates like 0001-01-01
+# => we do not create lastmod for pages with date less than MIN_DATE
+MIN_DATE = datetime.datetime(1980, 1, 1, tzinfo=datetime.timezone.utc)
+
 
 def get_last_published_at(language) -> datetime.datetime | None:
     last_published_at = None
@@ -15,6 +19,17 @@ def get_last_published_at(language) -> datetime.datetime | None:
             last_published_at = page.published_at
 
     return last_published_at
+
+
+def add_lastmod(url: ET.Element, date: datetime.datetime | None) -> None:
+    if date is None:
+        return
+
+    if date < MIN_DATE:
+        return
+
+    lastmod = ET.SubElement(url, "lastmod")
+    lastmod.text = date.isoformat()
 
 
 def build_sitemap_xml() -> str:
@@ -54,10 +69,7 @@ def add_index_url(sitemap, language) -> None:
 
     last_published_at = get_last_published_at(language)
 
-    # could be none for a new blog
-    if last_published_at is not None:
-        lastmod = ET.SubElement(url, "lastmod")
-        lastmod.text = last_published_at.isoformat()
+    add_lastmod(url, last_published_at)
 
     priority = ET.SubElement(url, "priority")
     priority.text = "1.0"
@@ -84,9 +96,7 @@ def add_pagination_urls(sitemap, language) -> None:
         loc = ET.SubElement(url, "loc")
         loc.text = pagination_urls.url()
 
-        if last_published_at is not None:
-            lastmod = ET.SubElement(url, "lastmod")
-            lastmod.text = last_published_at.isoformat()
+        add_lastmod(url, last_published_at)
 
         priority = ET.SubElement(url, "priority")
         priority.text = "1.0"
@@ -107,8 +117,7 @@ def add_page_url(sitemap, page) -> None:
     loc = ET.SubElement(url, "loc")
     loc.text = page_url.url()
 
-    lastmod = ET.SubElement(url, "lastmod")
-    lastmod.text = page.published_at.isoformat()
+    add_lastmod(url, page.published_at)
 
     priority = ET.SubElement(url, "priority")
     priority.text = "1.0"
