@@ -48,12 +48,12 @@ class FileCache(BaseCache):
             else:
                 entry.unlink()
 
-    def set(self, cache_path: str, original_path) -> None:
+    def set(self, raw_cache_path: str, original_path) -> None:
 
-        if cache_path.startswith("/"):
-            cache_path = cache_path[1:]
+        if raw_cache_path.startswith("/"):
+            raw_cache_path = raw_cache_path[1:]
 
-        cache_path = self.directory / cache_path
+        cache_path = self.directory / raw_cache_path
 
         if not cache_path.parent.exists():
             cache_path.parent.mkdir(parents=True)
@@ -61,7 +61,7 @@ class FileCache(BaseCache):
         shutil.copy(original_path, cache_path)
 
 
-_cache = DummyCache()
+_cache: BaseCache = DummyCache()
 
 
 def set_cache(cache: FileCache) -> None:
@@ -72,6 +72,6 @@ def set_cache(cache: FileCache) -> None:
     _cache = cache
 
 
-def cache() -> FileCache:
+def cache() -> BaseCache:
     assert _cache is not None
     return _cache
