@@ -1,5 +1,6 @@
 import re
 
+from markdown.inlinepatterns import LINK_RE as INTERNAL_LINK_RE
 from markdown.inlinepatterns import LinkInlineProcessor
 
 from brigid.domain.urls import UrlsFeedsAtom, UrlsPost, UrlsTags, normalize_url
@@ -115,8 +116,11 @@ class InternalLinkInlineProcessor(LinkInlineProcessor):
         match = self.RE_LINK.match(data, index)
 
         if match is None:
-            return None, None, -1, False
+            return "", None, -1, False
 
         href = match.group(1)
 
         return href, None, match.end(), True
+
+
+__all__ = ["InternalLinkInlineProcessor", "INTERNAL_LINK_RE"]

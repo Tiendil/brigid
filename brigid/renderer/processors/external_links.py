@@ -1,5 +1,6 @@
 from urllib.parse import urlparse
 
+from markdown.inlinepatterns import LINK_RE as EXTERNAL_LINK_RE
 from markdown.inlinepatterns import LinkInlineProcessor
 
 from brigid.library.storage import storage
@@ -45,3 +46,6 @@ class ExternalLinkInlineProcessor(LinkInlineProcessor):
             return result
 
         return result
+
+
+__all__ = ["ExternalLinkInlineProcessor", "EXTERNAL_LINK_RE"]

@@ -1,6 +1,7 @@
 import contextlib
 import contextvars
 import pathlib
+from typing import Generator
 
 import pydantic
 from sentry_sdk import capture_message
@@ -28,11 +29,11 @@ class RenderContext(BaseEntity):
     model_config = pydantic.ConfigDict(frozen=False)
 
 
-render_context = contextvars.ContextVar("brigid_markdown_context")
+render_context: contextvars.ContextVar[RenderContext] = contextvars.ContextVar("brigid_markdown_context")
 
 
 @contextlib.contextmanager
-def markdown_context(context: RenderContext):
+def markdown_context(context: RenderContext) -> Generator[None, None, None]:
 
     token = render_context.set(context)
 

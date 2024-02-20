@@ -5,8 +5,7 @@ from pymdownx.blocks import BlocksExtension
 
 from brigid.core.entities import BaseEntity
 from brigid.renderer.context import render_context
-
-from .toml_block import TomlBlock
+from brigid.renderer.processors.toml_block import TomlBlock
 
 
 class CollectionModel(BaseEntity):
@@ -21,7 +20,7 @@ class CollectionBlock(TomlBlock):
     models = CollectionModel
     root_tag = "div"
 
-    def root_css_classes(self, data: Any) -> str:
+    def root_css_classes(self, data: Any) -> list[str]:
         classes = ["brigid-collection", data.css_class]
         return [x for x in classes if x]
 

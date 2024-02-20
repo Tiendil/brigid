@@ -56,6 +56,7 @@ class MenuItemFeed(MenuItemBase):
 
     @property
     def url(self) -> str:
+        assert self.language is not None
         return urls.UrlsFeedsAtom(language=self.language).url()
 
 
@@ -72,6 +73,7 @@ class MenuItemBlog(MenuItemBase):
 
     @property
     def url(self) -> str:
+        assert self.language is not None
         return urls.UrlsRoot(language=self.language).url()
 
 
@@ -178,13 +180,13 @@ class Page(BaseEntity):
 
     @property
     def slug(self) -> str:
-        from .storage import storage
+        from brigid.library.storage import storage
 
         return storage.get_article(id=self.article_id).slug
 
     @property
-    def is_post(self) -> str:
-        from .storage import storage
+    def is_post(self) -> bool:
+        from brigid.library.storage import storage
 
         return storage.get_article(id=self.article_id).type == ArticleType.post
 
@@ -201,7 +203,7 @@ class Page(BaseEntity):
 
     @property
     def tags_in_translation_order(self) -> list[str]:
-        from .storage import storage
+        from brigid.library.storage import storage
 
         translations = storage.get_site().languages[self.language].tags_translations
 
@@ -225,7 +227,7 @@ class PageSimilarityScore(BaseEntity):
 
 
 class Redirects(BaseEntity):
-    permanent: dict[str, str]
+    permanent: dict[str, str] = pydantic.Field(default_factory=dict)
 
 
 class Collection(BaseEntity):

@@ -11,8 +11,7 @@ from brigid.renderer.markdown_render import render_text as markdown_render_text
 from brigid.renderer.static_files import ImageInfo, files
 from brigid.theme.default_translations import translations
 from brigid.theme.settings import PhotoSwipe, settings
-
-from .utils import jinjafilter, jinjaglobal
+from brigid.theme.utils import jinjafilter, jinjaglobal
 
 
 @jinjafilter
@@ -46,7 +45,7 @@ def image_info(path: pathlib.Path) -> ImageInfo:
 
 
 @jinjaglobal
-def root_url(language: str) -> str:
+def root_url(language: str) -> UrlsRoot:
     return UrlsRoot(language=language)
 
 

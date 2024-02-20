@@ -22,7 +22,7 @@ logger = logging.get_module_logger()
 
 
 @router.get("/favicon.ico")
-async def favicon() -> HTMLResponse:
+async def favicon() -> FileResponse | HTMLResponse:
 
     site = storage.get_site()
 
@@ -36,14 +36,14 @@ async def favicon() -> HTMLResponse:
 
 
 @router.get("/sitemap.xml")
-async def site_map() -> HTMLResponse:
+async def site_map() -> PlainTextResponse:
     content = build_sitemap_xml()
 
     return PlainTextResponse(content, media_type="application/xml")
 
 
 @router.get("/static/css")
-async def page_css() -> HTMLResponse:
+async def page_css() -> FileResponse:
     css_file = pathlib.Path(__file__).parent.parent / "theme" / "static" / "main.css"
 
     cache().set("/static/css", css_file)
@@ -52,7 +52,7 @@ async def page_css() -> HTMLResponse:
 
 
 @router.get("/static/posts/{article_slug}/{filename:path}")
-async def static_file(request: fastapi.Request, article_slug: str, filename: str) -> HTMLResponse:
+async def static_file(request: fastapi.Request, article_slug: str, filename: str) -> FileResponse:
     article = storage.get_article(slug=article_slug)
 
     # TODO: could it be a security breach?
@@ -98,10 +98,11 @@ Sitemap: {root_url.to_site_map_full().url()}
 @router.get("/test-error")
 async def test_error() -> HTMLResponse:
     1 / 0
+    return HTMLResponse(content="This should not be shown")
 
 
 @router.get("/")
-async def root(request: fastapi.Request) -> HTMLResponse:
+async def root(request: fastapi.Request) -> RedirectResponse:
     language = choose_language(request)
     # TODO: show info to the user that language was chosen automatically
     return RedirectResponse(UrlsRoot(language=language).url(), status_code=302)
@@ -113,7 +114,7 @@ async def blog_index(language: str) -> HTMLResponse:
 
 
 @router.get("/{language}/tags")
-async def tags_index_zero(language: str) -> HTMLResponse:
+async def tags_index_zero(language: str) -> RedirectResponse:
     return RedirectResponse(UrlsRoot(language=language).url(), status_code=301)
 
 

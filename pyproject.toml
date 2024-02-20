@@ -21,7 +21,7 @@ pillow = "10.2.*"
 jinja2 = "3.1.*"
 markdown = "3.5.*"
 pymdown-extensions = "10.7.*"
-python-frontmatter = "1.0.*"
+python-frontmatter = "1.1.*"
 feedgenerator = "2.1.*"
 
 sentry-sdk = "1.39.*"
@@ -48,9 +48,12 @@ autoflake = "2.3.*"
 
 mypy = "1.8.*"
 
+types-toml = "0.10.*"
+types-Markdown = "3.5.*"
+types-Pillow = "10.2.*"
+
 [tool.poetry.scripts]
 brigid = "brigid.cli.__main__:app"
-
 
 [tool.isort]
 profile = "black"
@@ -64,3 +67,34 @@ in_place = true
 remove_all_unused_imports = true
 remove_unused_variables = true
 recursive = true
+
+[tool.flake8]
+ignore = [
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "D104",
+    "D105",
+    "D107",
+    "D200",
+    "D400",
+    "S101",
+    "S311",
+    "W503",
+    "CFQ004",
+    "E203",  # blake formats [x:y] with spaves
+]
+max-line-length = 119
+
+[[tool.mypy.overrides]]
+module = "feedgenerator.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "frontmatter.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "pymdownx.*"
+ignore_missing_imports = true

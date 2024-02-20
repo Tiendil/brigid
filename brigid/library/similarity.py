@@ -1,11 +1,11 @@
-from .connectivity import connectivity
-from .entities import Page, PageSimilarityScore
-from .storage import storage
+from brigid.library.connectivity import connectivity
+from brigid.library.entities import Page, PageSimilarityScore
+from brigid.library.storage import storage
 
 
 # TODO: collect data to explain similarity
 # TODO: add similarity by vector embedings?
-def get_similar_pages(language: str, original_page: Page, number: int) -> list[PageSimilarityScore]:
+def get_similar_pages(language: str, original_page: Page, number: int) -> list[PageSimilarityScore]:  # noqa: CCR001
 
     site = storage.get_site()
 

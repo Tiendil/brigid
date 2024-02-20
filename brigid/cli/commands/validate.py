@@ -25,7 +25,7 @@ def is_line_empty(line: str) -> bool:
 # TODO: what with nested lists?
 # TODO: what with numbered lists?
 # TODO: make difference for different list types (-, *, +, digit)
-def parser(text: str) -> bool:
+def parser(text: str) -> bool:  # noqa: CCR001
 
     is_in_list = False
 

@@ -1,5 +1,5 @@
 import datetime
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ET  # noqa: S405
 
 from brigid.domain.urls import UrlsPost, UrlsRoot, UrlsTags
 from brigid.library.storage import storage
@@ -21,13 +21,12 @@ def build_sitemap_xml() -> str:
 
     site = storage.get_site()
 
-    sitemap = ET.Element(
-        "urlset",
-        **{
-            "xmlns": "http://www.sitemaps.org/schemas/sitemap/0.9",
-            "xmlns:xhtml": "http://www.w3.org/1999/xhtml",
-        }
-    )
+    attributes = {
+        "xmlns": "http://www.sitemaps.org/schemas/sitemap/0.9",
+        "xmlns:xhtml": "http://www.w3.org/1999/xhtml",
+    }
+
+    sitemap = ET.Element("urlset", **attributes)  # type: ignore[arg-type]
 
     for language in site.allowed_languages:
         for page in storage.last_pages(language=language, only_posts=False):

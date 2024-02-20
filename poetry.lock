@@ -1005,13 +1005,13 @@ cli = ["click (>=5.0)"]
 
 [[package]]
 name = "python-frontmatter"
-version = "1.0.1"
+version = "1.1.0"
 description = "Parse and manage posts with YAML (or other) frontmatter"
 optional = false
 python-versions = "*"
 files = [
-    {file = "python-frontmatter-1.0.1.tar.gz", hash = "sha256:a6a082844fc601f34e4dd576bed8fcb5ef19112166e087629e4d6ba9bf4f7c35"},
-    {file = "python_frontmatter-1.0.1-py3-none-any.whl", hash = "sha256:0599198cc01b445e5d0be74ff35be0a6c7442dddbdb0803e018be4e055397f6a"},
+    {file = "python-frontmatter-1.1.0.tar.gz", hash = "sha256:7118d2bd56af9149625745c58c9b51fb67e8d1294a0c76796dafdc72c36e5f6d"},
+    {file = "python_frontmatter-1.1.0-py3-none-any.whl", hash = "sha256:335465556358d9d0e6c98bbeb69b1c969f2a4a21360587b9873bfc3b213407c1"},
 ]
 
 [package.dependencies]
@@ -1019,7 +1019,7 @@ PyYAML = "*"
 
 [package.extras]
 docs = ["sphinx"]
-test = ["pyaml", "pytest", "toml"]
+test = ["mypy", "pyaml", "pytest", "toml", "types-PyYAML", "types-toml"]
 
 [[package]]
 name = "pytz"
@@ -1292,6 +1292,39 @@ doc = ["cairosvg (>=2.5.2,<3.0.0)", "mdx-include (>=1.4.1,<2.0.0)", "mkdocs (>=1
 test = ["black (>=22.3.0,<23.0.0)", "coverage (>=6.2,<7.0)", "isort (>=5.0.6,<6.0.0)", "mypy (==0.910)", "pytest (>=4.4.0,<8.0.0)", "pytest-cov (>=2.10.0,<5.0.0)", "pytest-sugar (>=0.9.4,<0.10.0)", "pytest-xdist (>=1.32.0,<4.0.0)", "rich (>=10.11.0,<14.0.0)", "shellingham (>=1.3.0,<2.0.0)"]
 
 [[package]]
+name = "types-markdown"
+version = "3.5.0.20240129"
+description = "Typing stubs for Markdown"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "types-Markdown-3.5.0.20240129.tar.gz", hash = "sha256:9acd36fef264d9ed5a96345c45f7d80f0d967059e92213998b3046fbb64f67fc"},
+    {file = "types_Markdown-3.5.0.20240129-py3-none-any.whl", hash = "sha256:d6861d9d68e8268a5346d8a43d14727e6c636ebc6d49f2b8fc034c25996d35dd"},
+]
+
+[[package]]
+name = "types-pillow"
+version = "10.2.0.20240213"
+description = "Typing stubs for Pillow"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "types-Pillow-10.2.0.20240213.tar.gz", hash = "sha256:4800b61bf7eabdae2f1b17ade0d080709ed33e9f26a2e900e470e8b56ebe2387"},
+    {file = "types_Pillow-10.2.0.20240213-py3-none-any.whl", hash = "sha256:062c5a0f20301a30f2df4db583f15b3c2a1283a12518d1f9d81396154e12c1af"},
+]
+
+[[package]]
+name = "types-toml"
+version = "0.10.8.7"
+description = "Typing stubs for toml"
+optional = false
+python-versions = "*"
+files = [
+    {file = "types-toml-0.10.8.7.tar.gz", hash = "sha256:58b0781c681e671ff0b5c0319309910689f4ab40e8a2431e205d70c94bb6efb1"},
+    {file = "types_toml-0.10.8.7-py3-none-any.whl", hash = "sha256:61951da6ad410794c97bec035d59376ce1cbf4453dc9b6f90477e81e4442d631"},
+]
+
+[[package]]
 name = "typing-extensions"
 version = "4.9.0"
 description = "Backported and Experimental Type Hints for Python 3.8+"
@@ -1361,4 +1394,4 @@ watchmedo = ["PyYAML (>=3.10)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "6be6ebc6bff1e9bfd57dd63590d65292ee23cc42330f59d13c88b0afb4834939"
+content-hash = "0a78b0c03cb77ff29c9e5daf139a55af84837b733a094be55a56e040d4fa0b95"

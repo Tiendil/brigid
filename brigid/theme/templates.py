@@ -59,6 +59,8 @@ def env() -> jinja2.Environment:
     if _env is None:
         initialize()
 
+    assert _env is not None
+
     return _env
 
 

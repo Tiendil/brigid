@@ -4,12 +4,10 @@ import re
 
 import frontmatter
 import toml
-from frontmatter.default_handlers import TOMLHandler
 
 from brigid.core import logging
-
-from .entities import Article, Collection, Page, Redirects, Site, SiteLanguage
-from .storage import storage
+from brigid.library.entities import Article, Collection, Page, Redirects, Site, SiteLanguage
+from brigid.library.storage import storage
 
 logger = logging.get_module_logger()
 
@@ -26,7 +24,7 @@ def log_error(func):
     return wrapper
 
 
-class FrontmatterTOMLHandler(TOMLHandler):
+class FrontmatterTOMLHandler(frontmatter.TOMLHandler):
     FM_BOUNDARY = re.compile(r"^\-{3,}\s*$", re.MULTILINE)
     START_DELIMITER = END_DELIMITER = "---"
 
@@ -75,7 +73,6 @@ def load_page(path: pathlib.Path) -> Page:
     else:
         raise NotImplementedError(f"article has not found for {article_path}")
 
-    # page_data, page_content = frontmatter.parse(str(path), handler=TOMLHandler())
     with path.open() as f:
         page_data, page_content = frontmatter.parse(f.read(), handler=FrontmatterTOMLHandler())
 
@@ -132,10 +129,10 @@ def load_articles(directory: pathlib.Path) -> None:
 # TODO: exclude 'site' directory from pages search
 #       or freeze all highl-level directories?
 @log_error
-def load_site(directory: pathlib.Path) -> None:
+def load_site(directory: pathlib.Path) -> None:  # noqa: CCR001
     languages = {}
     site = None
-    redirects = None
+    redirects = Redirects()
 
     for file_path in (directory / "site").glob("*.toml"):
         data = toml.loads(file_path.read_text())
@@ -153,6 +150,9 @@ def load_site(directory: pathlib.Path) -> None:
         for menu in languages[file_path.stem].menu:
             menu.language = file_path.stem
 
+    if site is None:
+        raise NotImplementedError("meta.toml has not found")
+
     if (directory / "site" / "footer.html").exists():
         site.footer_html = (directory / "site" / "footer.html").read_text()
 
@@ -162,6 +162,7 @@ def load_site(directory: pathlib.Path) -> None:
     site.languages.update(languages)
 
     storage.set_site(site)
+
     storage.set_redirects(redirects)
 
 

@@ -13,7 +13,7 @@ from brigid.theme.jinjaglobals import render_page_intro
 from brigid.theme.templates import render
 
 
-def render_index(language: str, raw_tags: str) -> HTMLResponse:
+def render_index(language: str, raw_tags: str) -> HTMLResponse:  # noqa: CCR001
     site = storage.get_site()
 
     if language not in site.allowed_languages:
@@ -28,10 +28,10 @@ def render_index(language: str, raw_tags: str) -> HTMLResponse:
     parsed_tags = [tag for tag in parsed_tags if tag]
 
     if parsed_tags:
-        page = to_integer(parsed_tags[-1])
+        parsed_page_number = to_integer(parsed_tags[-1])
 
-        if page is not None and page > 0:
-            page_number = page
+        if parsed_page_number is not None and parsed_page_number > 0:
+            page_number = parsed_page_number
             parsed_tags.pop()
 
     for tag in parsed_tags:
@@ -44,7 +44,7 @@ def render_index(language: str, raw_tags: str) -> HTMLResponse:
 
     all_pages = storage.last_pages(language=language, require_tags=required, exclude_tags=excluded)
 
-    tags_count = Counter()
+    tags_count: Counter[str] = Counter()
 
     for page in all_pages:
         tags_count.update(page.tags)
@@ -188,8 +188,8 @@ def render_atom_feed(language: str) -> HTMLResponse:
         feed_url=UrlsFeedsAtom(language=language).url(),
         author_name=author,
         # 'image' TODO: favicon?
-        # 'author_email': to_unicode(author_email),
-        # 'author_link': iri_to_uri(author_link),
+        # 'author_email': to_unicode(author_email),  # noqa: E800
+        # 'author_link': iri_to_uri(author_link),    # noqa: E800
     )
 
     all_pages = storage.last_pages(language=language)

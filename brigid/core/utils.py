@@ -3,9 +3,6 @@ import pathlib
 import sys
 import types
 
-# def now() -> datetime.datetime:
-#     return datetime.datetime.now(tz=datetime.timezone.utc)
-
 
 def discover_submodules(parent_module: str) -> list[types.ModuleType]:
     parent = sys.modules.get(parent_module)
