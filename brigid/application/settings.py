@@ -1,6 +1,5 @@
 import pydantic
 import pydantic_settings
-
 from brigid.core.settings import BaseSettings
 
 
@@ -18,8 +17,6 @@ class Settings(BaseSettings):
     environment: str = "local"
 
     sentry: Sentry = Sentry()
-
-    reload: bool = False
 
     origins: tuple[str, ...] = _development_origins
 
