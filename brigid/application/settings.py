@@ -19,8 +19,6 @@ class Settings(BaseSettings):
 
     sentry: Sentry = Sentry()
 
-    reload: bool = False
-
     origins: tuple[str, ...] = _development_origins
 
     @pydantic.model_validator(mode="after")

@@ -10,7 +10,7 @@ from brigid.api import static_cache as api_static_cache
 from brigid.api.settings import settings as api_settings
 from brigid.application.settings import settings
 from brigid.core import logging, sentry
-from brigid.library import discovering, observer
+from brigid.library import discovering
 from brigid.library.settings import settings as library_settings
 
 logger = logging.get_module_logger()
@@ -73,9 +73,6 @@ def create_app() -> fastapi.FastAPI:  # noqa: CCR001
         async with contextlib.AsyncExitStack() as stack:
             if settings.sentry.enabled:
                 await stack.enter_async_context(use_sentry())
-
-            if settings.reload:
-                stack.enter_context(observer.observe_storage(directory=library_settings.directory))
 
             await app.router.startup()
 
