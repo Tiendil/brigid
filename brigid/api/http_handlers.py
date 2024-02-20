@@ -21,7 +21,7 @@ logger = logging.get_module_logger()
 ####################
 
 
-@router.get("/favicon.ico")
+@router.get("/favicon.ico", response_model=None)
 async def favicon() -> FileResponse | HTMLResponse:
 
     site = storage.get_site()
