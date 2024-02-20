@@ -1,8 +1,6 @@
 import pathlib
 
 import fastapi
-from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse, RedirectResponse
-
 from brigid.api import renderers
 from brigid.api.sitemaps import build_sitemap_xml
 from brigid.api.static_cache import cache
@@ -10,6 +8,8 @@ from brigid.api.utils import choose_language
 from brigid.core import logging
 from brigid.domain.urls import UrlsRoot
 from brigid.library.storage import storage
+from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse, RedirectResponse
+
 
 router = fastapi.APIRouter()
 
@@ -42,11 +42,11 @@ async def site_map() -> PlainTextResponse:
     return PlainTextResponse(content, media_type="application/xml")
 
 
-@router.get("/static/css")
+@router.get("/static/main.css")
 async def page_css() -> FileResponse:
     css_file = pathlib.Path(__file__).parent.parent / "theme" / "static" / "main.css"
 
-    cache().set("/static/css", css_file)
+    cache().set("/static/main.css", css_file)
 
     return FileResponse(css_file, media_type="text/css")
 
