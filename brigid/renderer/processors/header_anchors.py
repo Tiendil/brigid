@@ -15,7 +15,7 @@ class AnchorCounter:
     def __init__(self):
         self.counts = [0, 0, 0, 0, 0]
 
-    def count(self, tag: str) -> int:
+    def count(self, tag: str) -> None:
         if "h1" == tag:
             raise NotImplementedError("We do not expect h1 here")
 
@@ -55,7 +55,10 @@ class HeaderAnchorsProcessor(Treeprocessor):
 
             counter.count(header.tag)
 
-            text = header.text.strip()
+            if header.text is None:
+                text = None
+            else:
+                text = header.text.strip()
 
             id = counter.anchor()
 

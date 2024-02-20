@@ -1,3 +1,4 @@
+import pathlib
 from typing import Any
 
 import pydantic
@@ -30,7 +31,7 @@ class Image(ImageMixing, BaseEntity):
 
     model_config = pydantic.ConfigDict(frozen=False)
 
-    def url_file(self, article: Article) -> str:
+    def url_file(self, article: Article) -> pathlib.Path:
         return article.path.parent / self.src
 
 
@@ -93,7 +94,7 @@ class ImagesBlock(TomlBlock):
     models = ImageModel | ImagesModel
     root_tag = "figure"
 
-    def root_css_classes(self, data: Any) -> str:
+    def root_css_classes(self, data: Any) -> list[str]:
         return ["brigid-images", data.galery_class]
 
     def process_data(self, data: Any) -> str:

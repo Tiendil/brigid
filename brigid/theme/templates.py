@@ -1,5 +1,4 @@
 import jinja2
-
 from brigid.theme.settings import settings
 
 
@@ -58,6 +57,8 @@ def initialize():
 def env() -> jinja2.Environment:
     if _env is None:
         initialize()
+
+    assert _env is not None
 
     return _env
 

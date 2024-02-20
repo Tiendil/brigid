@@ -93,3 +93,7 @@ ignore_missing_imports = true
 [[tool.mypy.overrides]]
 module = "frontmatter.*"
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "pymdownx.*"
+ignore_missing_imports = true

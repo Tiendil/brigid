@@ -24,7 +24,7 @@ class YouTubeBlock(TomlBlock):
     models = YouTubeModel
     root_tag = "figure"
 
-    def root_css_classes(self, data: Any) -> str:
+    def root_css_classes(self, data: Any) -> list[str]:
         classes = ["brigid-youtube", data.css_class]
         return [x for x in classes if x]
 

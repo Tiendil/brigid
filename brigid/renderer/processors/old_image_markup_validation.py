@@ -1,6 +1,5 @@
-from markdown.inlinepatterns import ImageInlineProcessor
-
 from brigid.renderer.context import render_context
+from markdown.inlinepatterns import IMAGE_LINK_RE, ImageInlineProcessor
 
 
 class ImageInlineValidator(ImageInlineProcessor):
@@ -11,3 +10,6 @@ class ImageInlineValidator(ImageInlineProcessor):
         context.add_error(failed_text=data, message="Classic markdown image syntax is not allowed")
 
         return (None, None, None)
+
+
+__all__ = ["ImageInlineValidator", "IMAGE_LINK_RE", "IMAGE_REFERENCE_RE"]

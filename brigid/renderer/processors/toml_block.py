@@ -12,11 +12,11 @@ _renderer = None
 
 
 class TomlBlock(Block):
-    NAME = NotImplemented
-    models = NotImplemented
-    root_tag = "div"
+    NAME: str = NotImplemented
+    models: type[pydantic.BaseModel] = NotImplemented
+    root_tag: str = "div"
 
-    def root_css_classes(self, data: Any) -> str:
+    def root_css_classes(self, data: Any) -> list[str]:
         return []
 
     def on_create(self, parent):
@@ -27,6 +27,9 @@ class TomlBlock(Block):
 
     def on_end(self, block: etree.Element) -> None:
         try:
+            if block.text is None:
+                raise NotImplementedError("Block text is None")
+
             data = toml.loads(block.text)
 
             model = None

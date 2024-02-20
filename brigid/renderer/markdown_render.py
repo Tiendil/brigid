@@ -14,7 +14,7 @@ from brigid.renderer.processors.youtube_block import YouTubeBlockExtension
 
 logger = logging.get_module_logger()
 
-_renderers = []
+_renderers: list[markdown.Markdown] = []
 
 
 def _construct() -> markdown.Markdown:
