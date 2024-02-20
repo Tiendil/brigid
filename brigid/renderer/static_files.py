@@ -1,7 +1,8 @@
 import pathlib
 
-from brigid.core.entities import BaseEntity
 from PIL import Image
+
+from brigid.core.entities import BaseEntity
 
 
 class ImageInfo(BaseEntity):

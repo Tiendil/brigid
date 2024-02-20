@@ -1,5 +1,8 @@
 from collections import Counter
 
+from fastapi.responses import HTMLResponse
+from feedgenerator import Atom1Feed
+
 from brigid.api.utils import construct_index_description, construct_index_title, to_integer
 from brigid.core import errors
 from brigid.domain.urls import UrlsFeedsAtom, UrlsPost, UrlsTags
@@ -8,8 +11,6 @@ from brigid.library.storage import storage
 from brigid.theme.entities import MetaInfo
 from brigid.theme.jinjaglobals import render_page_intro
 from brigid.theme.templates import render
-from fastapi.responses import HTMLResponse
-from feedgenerator import Atom1Feed
 
 
 def render_index(language: str, raw_tags: str) -> HTMLResponse:  # noqa: CCR001

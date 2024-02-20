@@ -1,5 +1,6 @@
-from brigid.renderer.context import render_context
 from markdown.inlinepatterns import IMAGE_LINK_RE, ImageInlineProcessor
+
+from brigid.renderer.context import render_context
 
 
 class ImageInlineValidator(ImageInlineProcessor):
@@ -12,4 +13,4 @@ class ImageInlineValidator(ImageInlineProcessor):
         return (None, None, None)
 
 
-__all__ = ["ImageInlineValidator", "IMAGE_LINK_RE", "IMAGE_REFERENCE_RE"]
+__all__ = ["ImageInlineValidator", "IMAGE_LINK_RE"]

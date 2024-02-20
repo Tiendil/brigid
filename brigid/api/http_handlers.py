@@ -1,6 +1,8 @@
 import pathlib
 
 import fastapi
+from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse, RedirectResponse
+
 from brigid.api import renderers
 from brigid.api.sitemaps import build_sitemap_xml
 from brigid.api.static_cache import cache
@@ -8,8 +10,6 @@ from brigid.api.utils import choose_language
 from brigid.core import logging
 from brigid.domain.urls import UrlsRoot
 from brigid.library.storage import storage
-from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse, RedirectResponse
-
 
 router = fastapi.APIRouter()
 
@@ -22,7 +22,7 @@ logger = logging.get_module_logger()
 
 
 @router.get("/favicon.ico")
-async def favicon() -> FileResponse|HTMLResponse:
+async def favicon() -> FileResponse | HTMLResponse:
 
     site = storage.get_site()
 

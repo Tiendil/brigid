@@ -6,7 +6,6 @@ from brigid.core import logging
 from brigid.library.storage import storage
 from brigid.renderer.markdown_render import render_page
 
-
 logger = logging.get_module_logger()
 
 

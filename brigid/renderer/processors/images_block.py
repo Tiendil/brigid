@@ -2,13 +2,13 @@ import pathlib
 from typing import Any
 
 import pydantic
+from pymdownx.blocks import BlocksExtension
+
 from brigid.core.entities import BaseEntity
 from brigid.domain.html import strip_html
 from brigid.library.entities import Article
 from brigid.renderer.context import render_context
 from brigid.renderer.processors.toml_block import TomlBlock
-from pymdownx.blocks import BlocksExtension
-
 
 # TODO: remove duplicated code
 

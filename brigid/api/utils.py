@@ -1,6 +1,7 @@
 from typing import Iterable
 
 import fastapi
+
 from brigid.api.default_translations import translations
 
 

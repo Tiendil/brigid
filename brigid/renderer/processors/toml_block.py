@@ -4,9 +4,9 @@ from typing import Any
 
 import pydantic
 import toml
-from brigid.renderer.context import render_context
 from pymdownx.blocks.block import Block
 
+from brigid.renderer.context import render_context
 
 _renderer = None
 

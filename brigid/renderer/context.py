@@ -4,9 +4,10 @@ import pathlib
 from typing import Generator
 
 import pydantic
+from sentry_sdk import capture_message
+
 from brigid.core.entities import BaseEntity
 from brigid.library.entities import Article, Page
-from sentry_sdk import capture_message
 
 
 class RenderError(BaseEntity):

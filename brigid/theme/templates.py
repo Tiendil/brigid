@@ -1,4 +1,5 @@
 import jinja2
+
 from brigid.theme.settings import settings
 
 
