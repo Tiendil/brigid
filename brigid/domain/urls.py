@@ -143,6 +143,10 @@ class UrlsTags(UrlsBase):
         # because there are infinite number of them
         return bool(self.selected_tags)
 
+    @is_nofollow.setter
+    def is_nofollow(self, value: str) -> None:
+        raise AttributeError("attribute is read-only")
+
     def url(self) -> str:
         tags = list(self.required_tags | self.excluded_tags)
 

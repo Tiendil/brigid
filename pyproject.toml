@@ -50,6 +50,7 @@ mypy = "1.8.*"
 
 types-toml = "0.10.*"
 types-Markdown = "3.5.*"
+types-Pillow = "10.2.*"
 
 [tool.poetry.scripts]
 brigid = "brigid.cli.__main__:app"

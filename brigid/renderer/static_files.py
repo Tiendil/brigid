@@ -1,8 +1,7 @@
 import pathlib
 
-from PIL import Image
-
 from brigid.core.entities import BaseEntity
+from PIL import Image
 
 
 class ImageInfo(BaseEntity):
@@ -15,7 +14,7 @@ class FilesInfo:
     __slots__ = ("_images",)
 
     def __init__(self) -> None:
-        self._images: dict[str, ImageInfo] = {}
+        self._images: dict[pathlib.Path, ImageInfo] = {}
 
     def image_info(self, path: pathlib.Path) -> ImageInfo:
         if path in self._images:

@@ -56,6 +56,7 @@ class MenuItemFeed(MenuItemBase):
 
     @property
     def url(self) -> str:
+        assert self.language is not None
         return urls.UrlsFeedsAtom(language=self.language).url()
 
 
@@ -72,6 +73,7 @@ class MenuItemBlog(MenuItemBase):
 
     @property
     def url(self) -> str:
+        assert self.language is not None
         return urls.UrlsRoot(language=self.language).url()
 
 
@@ -183,7 +185,7 @@ class Page(BaseEntity):
         return storage.get_article(id=self.article_id).slug
 
     @property
-    def is_post(self) -> str:
+    def is_post(self) -> bool:
         from brigid.library.storage import storage
 
         return storage.get_article(id=self.article_id).type == ArticleType.post

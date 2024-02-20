@@ -23,8 +23,8 @@ class Storage:
         self._articles_by_path: dict[pathlib.Path, str] = {}
         self._articles_by_slug: dict[str, str] = {}
 
-        self._site = None
-        self._redirects = None
+        self._site: Site | None = None
+        self._redirects: Redirects | None = None
 
     def get_article(
         self,
@@ -45,6 +45,8 @@ class Storage:
         if slug is not None:
             return self._articles[self._articles_by_slug[slug]]
 
+        raise NotImplementedError("One of id, path or slug must be provided")
+
     def has_article(
         self,
         id: str | None = None,
@@ -63,6 +65,8 @@ class Storage:
 
         if slug is not None:
             return slug in self._articles_by_slug
+
+        raise NotImplementedError("One of id, path or slug must be provided")
 
     def add_article(self, article: Article, replace: bool = False) -> None:
         if not replace and article.id in self._articles:
