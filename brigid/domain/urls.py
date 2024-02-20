@@ -12,8 +12,13 @@ def base_url() -> str:
 
 
 def normalize_url(url: str) -> str:
-    while "//" in url:
-        url = url.replace("//", "/")
+
+    schema, tail = url.split("://")
+
+    while "//" in tail:
+        tail = tail.replace("//", "/")
+
+    url = f"{schema}://{tail}"
 
     parsed_url = urlparse(url)
     normalized_path = posixpath.normpath(parsed_url.path)
