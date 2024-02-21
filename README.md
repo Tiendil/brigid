@@ -21,6 +21,7 @@ poetry install
 - Multi-language support by design.
 - Mobile-friendly.
 - SEO-friendly.
+- No cookies.
 - Monolithic design: install and run. No need to look for plugins and themes.
 
 ### Some specific features
