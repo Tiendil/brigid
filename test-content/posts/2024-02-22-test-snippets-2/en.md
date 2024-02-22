@@ -11,3 +11,11 @@ Hi!
 Here goes the first snippet with the same name as in the [Example of snippets 1]{post:test-snippets-1}.
 
 --8<-- "./relative_snippet_1.md"
+
+<!-- more -->
+
+And here goes section snippet
+
+```
+--8<-- "./example.py:function_to_show"
+```
