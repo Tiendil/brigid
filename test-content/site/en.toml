@@ -20,5 +20,6 @@ example = "example"
 wide = "wide"
 basic = "basic"
 images = "images"
+snippets = "snippets"
 
 [theme_translations]

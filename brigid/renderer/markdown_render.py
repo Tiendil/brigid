@@ -10,6 +10,7 @@ from brigid.renderer.processors.header_anchors import HeaderAnchorsExtension
 from brigid.renderer.processors.images_block import ImagesBlockExtension
 from brigid.renderer.processors.internal_links import INTERNAL_LINK_RE, InternalLinkInlineProcessor
 from brigid.renderer.processors.old_image_markup_validation import IMAGE_LINK_RE, ImageInlineValidator
+from brigid.renderer.processors.snippets import SnippetExtension
 from brigid.renderer.processors.youtube_block import YouTubeBlockExtension
 
 logger = logging.get_module_logger()
@@ -19,7 +20,9 @@ _renderers: list[markdown.Markdown] = []
 
 def _construct() -> markdown.Markdown:
 
-    configs = {"pymdownx.tilde": {"smart_delete": True, "subscript": True}}
+    configs = {
+        "pymdownx.tilde": {"smart_delete": True, "subscript": True},
+    }
 
     renderer = markdown.Markdown(
         extensions=[
@@ -27,6 +30,7 @@ def _construct() -> markdown.Markdown:
             YouTubeBlockExtension(),
             HeaderAnchorsExtension(),
             CollectionBlockExtension(),
+            SnippetExtension(dedent_subsections=True),
             "md_in_html",
             "pymdownx.betterem",
             "pymdownx.superfences",
