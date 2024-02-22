@@ -20,7 +20,9 @@ _renderers: list[markdown.Markdown] = []
 
 def _construct() -> markdown.Markdown:
 
-    configs = {"pymdownx.tilde": {"smart_delete": True, "subscript": True}}
+    configs = {
+        "pymdownx.tilde": {"smart_delete": True, "subscript": True},
+    }
 
     renderer = markdown.Markdown(
         extensions=[
@@ -28,7 +30,7 @@ def _construct() -> markdown.Markdown:
             YouTubeBlockExtension(),
             HeaderAnchorsExtension(),
             CollectionBlockExtension(),
-            SnippetExtension(),
+            SnippetExtension(dedent_subsections=True),
             "md_in_html",
             "pymdownx.betterem",
             "pymdownx.superfences",

@@ -19,3 +19,9 @@ And here goes section snippet
 ```
 --8<-- "./example.py:function_to_show"
 ```
+
+And here should be dedented code snippet
+
+```
+--8<-- "./example.py:function_to_dedent"
+```
