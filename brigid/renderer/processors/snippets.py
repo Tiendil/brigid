@@ -1,6 +1,6 @@
-from brigid.renderer.context import render_context
-from markdown import Extension
 from pymdownx import snippets
+
+from brigid.renderer.context import render_context
 
 
 class BrigidSnippetPreprocessor(snippets.SnippetPreprocessor):
