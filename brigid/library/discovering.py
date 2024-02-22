@@ -30,7 +30,7 @@ class FrontmatterTOMLHandler(frontmatter.TOMLHandler):
 
 
 @log_error
-def find_page_paths(directory: pathlib.Path) -> list[pathlib.Path]:
+def find_page_paths(directory: pathlib.Path) -> list[pathlib.Path]:  # noqa: CCR001
 
     site = storage.get_site()
 
