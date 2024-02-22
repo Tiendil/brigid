@@ -4,10 +4,10 @@ import re
 
 import frontmatter
 import toml
-
 from brigid.core import logging
 from brigid.library.entities import Article, Collection, Page, Redirects, Site, SiteLanguage
 from brigid.library.storage import storage
+
 
 logger = logging.get_module_logger()
 
@@ -31,12 +31,20 @@ class FrontmatterTOMLHandler(frontmatter.TOMLHandler):
 
 @log_error
 def find_page_paths(directory: pathlib.Path) -> list[pathlib.Path]:
+
+    site = storage.get_site()
+
     page_paths = []
 
     for root, _, files in directory.walk(follow_symlinks=True):
         for filename in files:
-            if filename.endswith(".md"):
-                page_paths.append((root / filename).resolve().absolute())
+            if not filename.endswith(".md"):
+                continue
+
+            if filename[:-3] not in site.allowed_languages:
+                continue
+
+            page_paths.append((root / filename).resolve().absolute())
 
     logger.info("found_pages", count=len(page_paths))
 
@@ -182,9 +190,11 @@ def load_collections(directory: pathlib.Path) -> None:
 def load(directory: pathlib.Path) -> None:
     from brigid.library.connectivity import connectivity
 
+    # goes fiest, because other loaders depend on it
+    load_site(directory=directory)
+
     load_articles(directory=directory)
     load_pages(directory=directory)
-    load_site(directory=directory)
     load_collections(directory=directory)
 
     connectivity.initialize()
