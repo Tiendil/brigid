@@ -33,7 +33,7 @@
 
 {% macro json_fd(meta_info, current_url) %}
   {# TODO: separate blocks for special pages like "about", "best"? #}
-
+  {# TODO: prepare as a dict in Python and just dump to JSON #}
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -41,7 +41,7 @@
     "headline": "{{meta_info.title}}",
     {% if meta_info.seo_image_url %}
       "image": [
-        "{{meta_info.seo_image_url}}",
+        "{{meta_info.seo_image_url}}"
       ],
     {% endif %}
       "datePublished": "{{meta_info.published_at.isoformat()}}",
