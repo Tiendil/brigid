@@ -1,6 +1,10 @@
 import pathlib
 import shutil
 
+from brigid.core import logging
+
+logger = logging.get_module_logger()
+
 
 class BaseCache:
     __slots__ = ()
@@ -48,7 +52,7 @@ class FileCache(BaseCache):
             else:
                 entry.unlink()
 
-    def set(self, raw_cache_path: str, original_path) -> None:
+    def set(self, raw_cache_path: str, original_path: str) -> None:
 
         if raw_cache_path.startswith("/"):
             raw_cache_path = raw_cache_path[1:]
@@ -56,7 +60,10 @@ class FileCache(BaseCache):
         cache_path = self.directory / raw_cache_path
 
         if not cache_path.parent.exists():
-            cache_path.parent.mkdir(parents=True)
+            try:
+                cache_path.parent.mkdir(parents=True)
+            except FileExistsError:
+                logger.warning("cache_directory_created_in_parallel")
 
         shutil.copy(original_path, cache_path)
 
