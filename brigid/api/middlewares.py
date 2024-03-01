@@ -9,7 +9,7 @@ from brigid.api.utils import choose_language
 from brigid.library.storage import storage
 
 
-async def process_404(request, error):
+async def process_404(request, _):
     redirects = storage.get_redirects()
 
     original_path = request.url.path
@@ -26,9 +26,6 @@ async def process_404(request, error):
         return RedirectResponse(redirects.permanent[original_path], status_code=301)
 
     language = choose_language(request)
-
-    # captute all unprocessed 404 errors
-    capture_exception(error)
 
     return renderers.render_page(language, "404", status_code=404)
 
