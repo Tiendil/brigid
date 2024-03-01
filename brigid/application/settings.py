@@ -8,6 +8,7 @@ class Sentry(pydantic.BaseModel):
     enabled: bool = False
     dsn: str = ""
     sample_rate: float = 1.0
+    enable_tracing: bool = False
     traces_sample_rate: float = 1.0
 
 
