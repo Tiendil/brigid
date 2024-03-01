@@ -45,7 +45,7 @@ async def remove_double_slashes(request: fastapi.Request, call_next: Any):
 async def remove_trailing_slash(request: fastapi.Request, call_next: Any):
     path = request.url.path
 
-    if path != "/" and path[-1] == "/":
+    if path != "" and path != "/" and path[-1] == "/":
         return RedirectResponse(path[:-1], status_code=301)
 
     return await call_next(request)
