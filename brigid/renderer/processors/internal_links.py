@@ -114,6 +114,13 @@ class InternalLinkInlineProcessor(LinkInlineProcessor):
 
             new_href = UrlsPost(language=link_language, slug=slug).url()
 
+            if link_language != context.page.language:
+                # add `[language]` to the text in link
+                language_element = etree.Element("span")
+                language_element.text = f" [{link_language}]"
+                language_element.set("class", "brigid-link-language")
+                result[0].insert(0, language_element)
+
         elif link_type == "tags":
 
             required = set()
