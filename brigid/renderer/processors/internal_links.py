@@ -1,6 +1,6 @@
 import enum
 import re
-import xml.etree.ElementTree as etree
+import xml.etree.ElementTree as etree  # noqa: S405
 from typing import Any
 
 from markdown.inlinepatterns import LINK_RE as INTERNAL_LINK_RE
@@ -38,9 +38,9 @@ class InternalLinkInlineProcessor(LinkInlineProcessor):
     RE_LINK = re.compile(r"\{\s*(.*?)\s*\}", re.DOTALL | re.UNICODE)
 
     # TODO: return errors instead of result
-    def handleMatch(
+    def handleMatch(  # type: ignore  # noqa  # pylint: disable=all
         self, m: re.Match[str], data: str
-    ) -> tuple[etree.Element | None, int | None, int | None]:  # noqa # pylint: disable=all
+    ) -> tuple[etree.Element | None, int | None, int | None]:
         from brigid.library.connectivity import connectivity
 
         result = super().handleMatch(m, data)
@@ -94,7 +94,6 @@ class InternalLinkInlineProcessor(LinkInlineProcessor):
                 link_language = article.first_language(
                     context.page.language, site.default_language, *site.allowed_languages
                 )
-                print(context.page.language, link_language)
             else:
                 link_language = context.page.language
 
