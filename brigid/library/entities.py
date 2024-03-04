@@ -147,6 +147,13 @@ class Article(BaseEntity):
     def id(self) -> str:
         return f"article#{self.slug}"
 
+    def first_language(self, *languages: str) -> str | None:
+        for language in languages:
+            if language in self.pages:
+                return language
+
+        return None
+
 
 class Page(BaseEntity):
     article_id: str
