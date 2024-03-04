@@ -11,6 +11,10 @@
 
         a {
             @apply underline-offset-2 decoration-from-font decoration-orange-600;
+
+            .brigid-link-language {
+                @apply text-red-600;
+            }
         }
 
         a.brigid-important-link {

@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-    content: ['../brigid/brigid/theme/templates/*.j2',
-             '../brigid/brigid/theme/templates/**/*.j2'],
+    content: ['../brigid/theme/templates/*.j2',
+              '../brigid/theme/templates/**/*.j2'],
     theme: {
         extend: {
             typography: (theme) => ({

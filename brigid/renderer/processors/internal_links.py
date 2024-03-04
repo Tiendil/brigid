@@ -3,12 +3,11 @@ import re
 import xml.etree.ElementTree as etree  # noqa: S405
 from typing import Any
 
-from markdown.inlinepatterns import LINK_RE as INTERNAL_LINK_RE
-from markdown.inlinepatterns import LinkInlineProcessor
-
 from brigid.domain.urls import UrlsFeedsAtom, UrlsPost, UrlsTags, normalize_url
 from brigid.library.storage import storage
 from brigid.renderer.context import render_context
+from markdown.inlinepatterns import LINK_RE as INTERNAL_LINK_RE
+from markdown.inlinepatterns import LinkInlineProcessor
 
 
 class Option(enum.StrEnum):
@@ -113,6 +112,13 @@ class InternalLinkInlineProcessor(LinkInlineProcessor):
                 )
 
             new_href = UrlsPost(language=link_language, slug=slug).url()
+
+            if link_language != context.page.language:
+                # add `[language]` to the text in link
+                language_element = etree.Element('span')
+                language_element.text = f' [{link_language}]'
+                language_element.set('class', "brigid-link-language")
+                result[0].insert(0, language_element)
 
         elif link_type == "tags":
 

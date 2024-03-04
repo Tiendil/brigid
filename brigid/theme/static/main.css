@@ -2562,6 +2562,12 @@ video {
   a {
     text-underline-offset: 2px;
   }
+  a {
+    .brigid-link-language {
+      --tw-text-opacity: 1;
+      color: rgb(220 38 38 / var(--tw-text-opacity));
+    }
+  }
   a.brigid-important-link {
     font-weight: 500;
   }
