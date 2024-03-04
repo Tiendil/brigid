@@ -3,11 +3,12 @@ import re
 import xml.etree.ElementTree as etree
 from typing import Any
 
+from markdown.inlinepatterns import LINK_RE as INTERNAL_LINK_RE
+from markdown.inlinepatterns import LinkInlineProcessor
+
 from brigid.domain.urls import UrlsFeedsAtom, UrlsPost, UrlsTags, normalize_url
 from brigid.library.storage import storage
 from brigid.renderer.context import render_context
-from markdown.inlinepatterns import LINK_RE as INTERNAL_LINK_RE
-from markdown.inlinepatterns import LinkInlineProcessor
 
 
 class Option(enum.StrEnum):
@@ -37,7 +38,9 @@ class InternalLinkInlineProcessor(LinkInlineProcessor):
     RE_LINK = re.compile(r"\{\s*(.*?)\s*\}", re.DOTALL | re.UNICODE)
 
     # TODO: return errors instead of result
-    def handleMatch(self, m: re.Match[str], data: str) -> tuple[etree.Element | None, int | None, int | None]:  # noqa # pylint: disable=all
+    def handleMatch(
+        self, m: re.Match[str], data: str
+    ) -> tuple[etree.Element | None, int | None, int | None]:  # noqa # pylint: disable=all
         from brigid.library.connectivity import connectivity
 
         result = super().handleMatch(m, data)
@@ -88,9 +91,9 @@ class InternalLinkInlineProcessor(LinkInlineProcessor):
             article = storage.get_article(slug=slug)
 
             if options.get(Option.choose_nearest_language, False):
-                link_language = article.first_language(context.page.language,
-                                                       site.default_language,
-                                                       *site.allowed_languages)
+                link_language = article.first_language(
+                    context.page.language, site.default_language, *site.allowed_languages
+                )
                 print(context.page.language, link_language)
             else:
                 link_language = context.page.language
