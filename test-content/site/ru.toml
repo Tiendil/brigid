@@ -1,0 +1,26 @@
+title = "Сайт-приме"
+subtitle = "Сайт чтобы тестить тему, CSS, лэйаут, правила рендера, etc."
+author = "Елецкий Алексей (Tiendil)"
+
+[[menu]]
+type = "blog"
+name = "Блог"
+
+[[menu]]
+type = "feed"
+name = "RSS"
+
+[[menu]]
+type = "external"
+name = "GitHub"
+url = "https://github.com/Tiendil/brigid"
+
+[tags_translations]
+example = "пример"
+wide = "широкая страница"
+basic = "базовый рендер"
+images = "картинки"
+snippets = "сниппеты"
+languages = "языки/переводы"
+
+[theme_translations]
