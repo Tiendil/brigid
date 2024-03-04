@@ -5,9 +5,9 @@ import re
 from typing import Literal
 
 import pydantic
-
 from brigid.core.entities import BaseEntity
 from brigid.domain import urls
+
 
 MORE_RE = re.compile(r"<!--\s*more\s*-->", re.IGNORECASE)
 
@@ -146,6 +146,13 @@ class Article(BaseEntity):
     @property
     def id(self) -> str:
         return f"article#{self.slug}"
+
+    def best_language(self, *languages: str) -> str | None:
+        for language in self.pages:
+            if language in languages:
+                return language
+
+        return None
 
 
 class Page(BaseEntity):
