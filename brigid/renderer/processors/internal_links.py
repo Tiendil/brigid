@@ -14,13 +14,14 @@ class Option(enum.StrEnum):
     choose_nearest_language = "choose-nearest-language"
 
 
-def extract_options(parts: list[str]) -> dict[str, Any]:
-    context = render_context.get()
-
+def extract_options(parts: list[str]) -> tuple[str, list[str], dict[Option, Any]]:
     options = {}
 
-    for part in parts:
+    tail = []
+
+    for part in parts[1:]:
         if not part.startswith("@"):
+            tail.append(part)
             continue
 
         if part[1:] == Option.choose_nearest_language:
@@ -29,7 +30,7 @@ def extract_options(parts: list[str]) -> dict[str, Any]:
 
         raise ValueError(f"Unknown option in local link: {part}")
 
-    return options
+    return parts[0], tail, options
 
 
 class InternalLinkInlineProcessor(LinkInlineProcessor):
@@ -61,10 +62,9 @@ class InternalLinkInlineProcessor(LinkInlineProcessor):
             context.add_error(failed_text=data, message="Invalid local link format")
             return result  # type: ignore
 
-        link_type = parts[0]
-
         try:
-            options = extract_options(parts)
+            # TODO: move here all parsing?
+            link_type, link_tail, options = extract_options(parts)
         except ValueError as e:
             context.add_error(failed_text=data, message=str(e))
             return result  # type: ignore
@@ -74,7 +74,7 @@ class InternalLinkInlineProcessor(LinkInlineProcessor):
         # TODO: support specifying language to easier give cross-language links
 
         if link_type == "post":
-            slug = parts[1]
+            slug = link_tail[0]
 
             if not storage.has_article(slug=slug):
                 context = render_context.get()
@@ -88,9 +88,10 @@ class InternalLinkInlineProcessor(LinkInlineProcessor):
             article = storage.get_article(slug=slug)
 
             if options.get(Option.choose_nearest_language, False):
-                link_language = article.best_language(context.page.language,
-                                                      site.default_language,
-                                                      *site.allowed_languages)
+                link_language = article.first_language(context.page.language,
+                                                       site.default_language,
+                                                       *site.allowed_languages)
+                print(context.page.language, link_language)
             else:
                 link_language = context.page.language
 
@@ -101,19 +102,22 @@ class InternalLinkInlineProcessor(LinkInlineProcessor):
                 )
                 return result  # type: ignore
 
-            connectivity.add_connection(
-                target_page_id=article.pages[context.page.language],
-                reference_page_id=context.page.id,
-            )
+            if link_language == context.page.language:
+                # we track connection only for the same language
+                # otherwise the "similar" section will be a mess
+                connectivity.add_connection(
+                    target_page_id=article.pages[link_language],
+                    reference_page_id=context.page.id,
+                )
 
-            new_href = UrlsPost(language=context.page.language, slug=slug).url()
+            new_href = UrlsPost(language=link_language, slug=slug).url()
 
         elif link_type == "tags":
 
             required = set()
             excluded = set()
 
-            for tag in parts[1:]:
+            for tag in link_tail:
                 normalized_tag = tag[1:] if tag[0] == "-" else tag
 
                 if normalized_tag not in site.languages[context.page.language].tags_translations:
@@ -134,11 +138,11 @@ class InternalLinkInlineProcessor(LinkInlineProcessor):
 
         elif link_type == "absolute":
 
-            if parts[1][0] != "/":
+            if link_tail[0][0] != "/":
                 context.add_error(failed_text=data, message="Absolute link should start with /")
                 return result  # type: ignore
 
-            new_href = normalize_url(f"{site.url}/{parts[1]}")
+            new_href = normalize_url(f"{site.url}/{link_tail[0]}")
 
         elif link_type == "feed":
             new_href = UrlsFeedsAtom(language=context.page.language).url()
@@ -146,7 +150,7 @@ class InternalLinkInlineProcessor(LinkInlineProcessor):
         elif link_type == "static":
             post_url = UrlsPost(language=context.page.language, slug=context.article.slug)
 
-            new_href = post_url.file_url(parts[1])
+            new_href = post_url.file_url(link_tail[0])
 
         else:
             context.add_error(failed_text=data, message="Unknown local link format")

@@ -7,3 +7,8 @@ seo_image = ""
 ---
 
 Это пост с переводом.
+
+А вот некоторые ссылки для проверки:
+
+- [ссылка на пост на английском]{post:@choose-nearest-language:basic-rendering}
+- [ссылка на мультиязычный пост]{post:@choose-nearest-language:post-in-two-languages} — эта ссылка должна вести на эту же страницу.

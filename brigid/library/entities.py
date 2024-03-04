@@ -147,9 +147,9 @@ class Article(BaseEntity):
     def id(self) -> str:
         return f"article#{self.slug}"
 
-    def best_language(self, *languages: str) -> str | None:
-        for language in self.pages:
-            if language in languages:
+    def first_language(self, *languages: str) -> str | None:
+        for language in languages:
+            if language in self.pages:
                 return language
 
         return None
