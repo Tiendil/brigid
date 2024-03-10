@@ -21,7 +21,7 @@ class ImageMixing:
         if v is None:
             return v
 
-        return strip_html(v)  # type: ignore
+        return strip_html(v)
 
 
 class Image(ImageMixing, BaseEntity):
@@ -31,9 +31,6 @@ class Image(ImageMixing, BaseEntity):
     # TODO: add caption to the image to show in the lightbox
 
     model_config = pydantic.ConfigDict(frozen=False)
-
-    def url_file(self, article: Article) -> pathlib.Path:
-        return article.path.parent / self.src
 
 
 class ImagesModel(BaseEntity):
