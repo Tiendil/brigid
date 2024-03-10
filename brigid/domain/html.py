@@ -1,22 +1,10 @@
-from html.parser import HTMLParser
+import warnings
+
+from bs4 import BeautifulSoup, MarkupResemblesLocatorWarning
 
 
-class MLStripper(HTMLParser):
-    def __init__(self):
-        super().__init__()
-        self.reset()
-        self.strict = False
-        self.convert_charrefs = True
-        self.fed = []
-
-    def handle_data(self, data):
-        self.fed.append(data)
-
-    def get_data(self):
-        return "".join(self.fed)
-
-
-def strip_html(html):
-    s = MLStripper()
-    s.feed(html)
-    return s.get_data()
+def strip_html(html: str) ->str:
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", category=MarkupResemblesLocatorWarning)
+        soup = BeautifulSoup(html, "html.parser")
+        return soup.get_text()
