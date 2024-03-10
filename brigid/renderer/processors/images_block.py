@@ -51,11 +51,15 @@ class ImagesModel(BaseEntity):
         return v
 
     @pydantic.model_validator(mode="after")
-    def first_image_alt_from_caption(self)-> "ImagesModel":
+    def first_image_alt_from_caption(self) -> "ImagesModel":
 
         if self.caption is not None and self.images[0].alt is None:
             self.images[0].alt = self.caption
 
+        return self
+
+    @pydantic.model_validator(mode="after")
+    def all_images_must_have_alts(self) -> "ImagesModel":
         for image in self.images:
             if image.alt is None:
                 raise ValueError("alt must be present")
