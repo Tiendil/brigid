@@ -1,7 +1,7 @@
 import uuid
 
 import pytest
-from brigid.renderer.processors.images_block import Image, ImagesModel
+from brigid.renderer.processors.images_block import Image, ImageModel, ImagesModel
 
 
 class TestImage:
@@ -56,3 +56,17 @@ class TestImagesModel:
         images = ImagesModel(caption="test_caption", images=[Image(src="test.jpg")],
                              galery_class="test-galery")
         assert images.galery_class == "test-galery"
+
+
+class TestImageModel:
+
+    def test_alt_or_caption(self) -> None:
+        with pytest.raises(ValueError):
+            ImageModel(src="test.jpg")
+
+        ImageModel(src="test.jpg", alt="alt_1")
+
+        image = ImageModel(src="test.jpg", caption="caption_1")
+        assert image.alt == "caption_1"
+
+        ImageModel(src="test.jpg", alt="alt_1", caption="caption_1")
