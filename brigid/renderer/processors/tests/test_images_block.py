@@ -1,7 +1,8 @@
 import uuid
+from unittest.mock import MagicMock
 
 import pytest
-from brigid.renderer.processors.images_block import Image, ImageModel, ImagesModel
+from brigid.renderer.processors.images_block import Image, ImageModel, ImagesBlock, ImagesModel
 
 
 class TestImage:
@@ -70,3 +71,47 @@ class TestImageModel:
         assert image.alt == "caption_1"
 
         ImageModel(src="test.jpg", alt="alt_1", caption="caption_1")
+
+
+class TestImagesBlock:
+
+    def test_root_css_classes(self) -> None:
+        images = ImagesModel(caption="test_caption",
+                             images=[Image(src="test.jpg", alt="alt_1"),
+                                     Image(src="test2.jpg", alt="alt_2")])
+
+        images_block = ImagesBlock(length=3,
+                                   tracker={},
+                                   block_mgr=MagicMock(),
+                                   config={})
+
+        assert set(images_block.root_css_classes(images)) == {"brigid-images", "brigid-images-2"}
+
+    def test_process_data__images_model(self) -> None:
+        images_block = ImagesBlock(length=3,
+                                   tracker={},
+                                   block_mgr=MagicMock(),
+                                   config={})
+
+        images = ImagesModel(caption="test_caption",
+                             images=[Image(src="test.jpg", alt="alt_1"),
+                                     Image(src="test2.jpg", alt="alt_2")])
+
+        assert images_block.process_data(images.replace()) == images
+
+    def test_process_data__image_model(self) -> None:
+        images_block = ImagesBlock(length=3,
+                                   tracker={},
+                                   block_mgr=MagicMock(),
+                                   config={})
+
+        image = ImageModel(src="test.jpg",
+                           alt="alt_1",
+                           caption="test caption",
+                           galery_class='test-galery')
+
+        images = ImagesModel(caption="test caption",
+                             galery_class='test-galery',
+                             images=[Image(src="test.jpg", alt="alt_1")])
+
+        assert images_block.process_data(image) == images

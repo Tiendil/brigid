@@ -1,6 +1,6 @@
 
-<iframe src="{{video.url}}" frameborder="0" allowfullscreen></iframe>
+<iframe src="{{data.url}}" frameborder="0" allowfullscreen></iframe>
 
-{% if video.caption %}
-  <figcaption>{{video.caption|render_text}}</figcaption>
+{% if data.caption %}
+  <figcaption>{{data.caption|render_text}}</figcaption>
 {% endif %}

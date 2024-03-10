@@ -97,32 +97,24 @@ class ImagesBlock(TomlBlock):
     NAME = "brigid-images"
     models = ImageModel | ImagesModel
     root_tag = "figure"
+    templates = "./blocks/images.html.j2"
 
-    def root_css_classes(self, data: Any) -> list[str]:
+    def root_css_classes(self, data: ImagesModel) -> list[str]:
+        assert data.galery_class
         return ["brigid-images", data.galery_class]
 
-    def process_data(self, data: Any) -> str:
-        from brigid.theme.templates import render
-
-        context = render_context.get()
-
+    def process_data(self, data: Any) -> ImagesModel:
         if isinstance(data, ImageModel):
-            images = ImagesModel(
+            return ImagesModel(
                 caption=data.caption,
                 images=[Image(src=data.src, alt=data.alt)],
                 galery_class=data.galery_class,
             )
-        else:
-            images = data
 
-        return render(
-            "./blocks/images.html.j2",
-            {
-                "images": images,
-                "article": context.article,
-                "page": context.page,
-            },
-        )
+        if isinstance(data, ImagesModel):
+            return data
+
+        raise NotImplementedError(f"Unknown data type: {data}")
 
 
 class ImagesBlockExtension(BlocksExtension):
