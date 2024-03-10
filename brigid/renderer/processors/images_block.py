@@ -2,25 +2,26 @@ import pathlib
 from typing import Any
 
 import pydantic
-from pymdownx.blocks import BlocksExtension
-
 from brigid.core.entities import BaseEntity
 from brigid.domain.html import strip_html
 from brigid.library.entities import Article
 from brigid.renderer.context import render_context
 from brigid.renderer.processors.toml_block import TomlBlock
+from pymdownx.blocks import BlocksExtension
+
 
 # TODO: remove duplicated code
 
 
 class ImageMixing:
 
-    @pydantic.validator("alt")
-    def escape_alt(cls, v):
+    @pydantic.field_validator("alt")
+    @classmethod
+    def escape_alt(cls, v: str | None, info: pydantic.ValidationInfo) -> str | None:
         if v is None:
             return v
 
-        return strip_html(v)
+        return strip_html(v)  # type: ignore
 
 
 class Image(ImageMixing, BaseEntity):
@@ -44,14 +45,16 @@ class ImagesModel(BaseEntity):
 
     model_config = pydantic.ConfigDict(frozen=False)
 
-    @pydantic.validator("images")
-    def minimum_1_image(cls, v):
+    @pydantic.field_validator("images")
+    @classmethod
+    def minimum_1_image(cls, v: list[Image], info: pydantic.ValidationInfo) -> list[Image]:
         if len(v) < 1:
             raise ValueError("at least one image is required")
+
         return v
 
     @pydantic.model_validator(mode="after")
-    def first_image_alt_from_caption(cls, self):
+    def first_image_alt_from_caption(self)-> "ImagesModel":
 
         if self.caption is not None and self.images[0].alt is None:
             self.images[0].alt = self.caption
@@ -63,7 +66,7 @@ class ImagesModel(BaseEntity):
         return self
 
     @pydantic.model_validator(mode="after")
-    def default_galery_class(cls, self):
+    def default_galery_class(self) -> "ImagesModel":
         if self.galery_class is None:
             self.galery_class = f"brigid-images-{len(self.images)}"
 
@@ -79,7 +82,7 @@ class ImageModel(ImageMixing, BaseEntity):
     model_config = pydantic.ConfigDict(frozen=False)
 
     @pydantic.model_validator(mode="after")
-    def alt_or_caption(cls, self):
+    def alt_or_caption(self) -> "ImageModel":
         if self.alt is None and self.caption is None:
             raise ValueError("alt or caption must be present")
 
