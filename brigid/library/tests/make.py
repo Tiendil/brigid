@@ -29,7 +29,10 @@ def article(path: pathlib.Path | None = None,
     return article
 
 
-def page(article: Article,  # noqa: CFQ002
+_article = article
+
+
+def page(article: Article | None = None,  # noqa: CFQ002
          path: pathlib.Path | None = None,
          published_at: datetime.datetime | None = None,
          language: str = 'en',
@@ -39,6 +42,9 @@ def page(article: Article,  # noqa: CFQ002
          body: str | None = None,
          tags: Iterable[str] = (),
          template: str | None = None) -> Page:
+
+    if article is None:
+        article = _article()
 
     if path is None:
         path = article.path.parent / f"{language}.md"

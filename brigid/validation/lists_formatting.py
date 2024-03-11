@@ -1,4 +1,5 @@
 import pathlib
+import re
 from typing import Callable
 
 from brigid.core.entities import BaseEntity
@@ -8,13 +9,12 @@ from brigid.renderer.markdown_render import render_page
 from brigid.validation.entities import Error
 
 
+UNORDERED_LIST_LINE_RE = re.compile(r"^\s*[-*+]\s+")
+ORDERED_LIST_LINE_RE = re.compile(r"^\s*\d+\.\s+")
+
+
 def is_list_line(line: str) -> bool:
-    if line.startswith("**"):
-        return False
-
-    line = line.lstrip()
-
-    return line.startswith("-") or line.startswith("*") or line.startswith("+")
+    return bool(UNORDERED_LIST_LINE_RE.match(line)) or bool(ORDERED_LIST_LINE_RE.match(line))
 
 
 def is_line_empty(line: str) -> bool:
