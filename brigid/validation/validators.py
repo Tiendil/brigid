@@ -12,11 +12,11 @@ global_validators = [required_article("404"), required_article("500")]
 def validate() -> list[Error]:
     errors = []
 
-    for validator in global_validators:
-        errors.extend(validator())
+    for global_validator in global_validators:
+        errors.extend(global_validator())
 
     for page in storage.all_pages():
-        for validator in page_validators:
-            errors.extend(validator(page))
+        for page_validator in page_validators:
+            errors.extend(page_validator(page))
 
     return errors

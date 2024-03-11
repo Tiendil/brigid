@@ -12,12 +12,12 @@ def article(
 ) -> Article:
 
     if path is None:
-        path = pathlib.Path("/tmp/brigid/tests") / uuid.uuid4().hex / "article.toml"
+        path = pathlib.Path("/tmp/brigid/tests") / uuid.uuid4().hex / "article.toml"  # noqa: S108
 
     if slug is None:
         slug = uuid.uuid4().hex
 
-    article = Article(path=path, slug=slug, type=type, pages={}, tags=[])
+    article = Article(path=path, slug=slug, type=type, pages={}, tags=set())
 
     storage.add_article(article)
 
@@ -27,8 +27,8 @@ def article(
 _article = article
 
 
-def page(
-    article: Article | None = None,  # noqa: CFQ002
+def page(  # noqa: CFQ002
+    article: Article | None = None,
     path: pathlib.Path | None = None,
     published_at: datetime.datetime | None = None,
     language: str = "en",
@@ -67,7 +67,7 @@ def page(
         description=description,
         seo_image=seo_image,
         body=body,
-        tags=tags,
+        tags=set(tags),
         template=template,
     )
 
