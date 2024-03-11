@@ -132,11 +132,7 @@ class Article(BaseEntity):
 
     type: ArticleType = ArticleType.post
 
-    title: str | None = None
-
     pages: dict[str, str] = pydantic.Field(default_factory=dict)
-
-    feed: bool = False
 
     tags: set[str] = pydantic.Field(default_factory=list)
 

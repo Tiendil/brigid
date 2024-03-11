@@ -27,8 +27,6 @@ class TomlBlock(Block):
         return "raw"
 
     def on_end(self, block: etree.Element) -> None:
-        from brigid.theme.templates import render
-
         try:
             if block.text is None:
                 raise NotImplementedError("Block text is None")
@@ -41,10 +39,9 @@ class TomlBlock(Block):
 
             model = self.process_data(raw_model)
 
-            new_text = render(self.template,
-                              {"data": model,
-                               "current_article": context.article,
-                               "current_page": context.page,})
+            new_text = self.render_in_theme({"data": model,
+                                             "current_article": context.article,
+                                             "current_page": context.page})
 
             block.text = self.md.htmlStash.store(new_text)
 
@@ -60,3 +57,7 @@ class TomlBlock(Block):
 
     def process_data(self, data: Any) -> Any:
         return data
+
+    def render_in_theme(self, data: Any) -> str:
+        from brigid.theme.templates import render
+        return render(self.template, data)

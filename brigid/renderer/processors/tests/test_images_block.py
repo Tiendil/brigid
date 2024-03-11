@@ -1,7 +1,11 @@
 import uuid
-from unittest.mock import MagicMock
+from typing import Any
+from unittest.mock import MagicMock, patch
 
 import pytest
+from brigid.library.tests import make as library_make
+from brigid.renderer.context import RenderContext, markdown_context
+from brigid.renderer.markdown_render import render_text
 from brigid.renderer.processors.images_block import Image, ImageModel, ImagesBlock, ImagesModel
 
 
@@ -115,3 +119,38 @@ class TestImagesBlock:
                              images=[Image(src="test.jpg", alt="alt_1")])
 
         assert images_block.process_data(image) == images
+
+    def test_full_render(self) -> None:
+
+        def render_in_theme(block: ImagesBlock, data: dict[str, Any]) -> str:
+            assert data['current_article'] == article
+            assert data['current_page'] == page
+            assert data['data'] == ImagesModel(caption="some caption",
+                                               images=[Image(src="./images/image-1.jpg",
+                                                             alt="some alt")])
+            return 'rendered'
+
+        text = '''
+/// brigid-images
+src = "./images/image-1.jpg"
+alt = "some alt"
+caption = "some caption"
+///
+        '''
+
+        article = library_make.article()
+        page = library_make.page(article)
+
+        context = RenderContext(page=page,
+                                article=article,
+                                renderer=0)
+
+        with patch("brigid.renderer.processors.images_block.ImagesBlock.render_in_theme", render_in_theme):
+            with markdown_context(context):
+                result = render_text(text)
+
+        assert result.page == page
+        assert result.article == article
+        assert result.renderer == 1
+        assert result.errors == []
+        assert result.content == '<figure class="brigid-images brigid-images-1">rendered</figure>'

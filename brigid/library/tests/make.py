@@ -1,0 +1,61 @@
+import datetime
+import pathlib
+import uuid
+
+from brigid.library.entities import Article, ArticleType, Collection, Page, Redirects, Site, SiteLanguage
+
+
+def article(path: pathlib.Path | None = None,
+            slug: str | None = None,
+            type: ArticleType = ArticleType.post) -> Article:
+
+    if path is None:
+        path = pathlib.Path("/tmp/brigid/tests") / uuid.uuid4().hex / "article.toml"
+
+    if slug is None:
+        slug = uuid.uuid4().hex
+
+    return Article(
+        path=path,
+        slug=slug,
+        type=type,
+        pages={},
+        tags=[])
+
+
+def page(article,
+         path: pathlib.Path | None = None,
+         published_at: datetime.datetime | None = None,
+         language: str = 'en',
+         title: str | None = None,
+         description: str | None = None,
+         seo_image: str | None = None,
+         body: str | None = None,
+         tags: list[str] = [],
+         template: str | None = None) -> Page:
+
+    if path is None:
+        path = article.path.parent / f"{language}.md"
+
+    if title is None:
+        title = f'Title: {article.slug} {language}'
+
+    if description is None:
+        description = f'Description: {article.slug} {language}'
+
+    if published_at is None:
+        published_at = datetime.datetime.now()
+
+    if body is None:
+        body = f'Body: {article.slug} {language}'
+
+    return Page(article_id=article.id,
+                path=path,
+                published_at=published_at,
+                language=language,
+                title=title,
+                description=description,
+                seo_image=seo_image,
+                body=body,
+                tags=tags,
+                template=template)

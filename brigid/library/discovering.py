@@ -4,10 +4,10 @@ import re
 
 import frontmatter
 import toml
-
 from brigid.core import logging
 from brigid.library.entities import Article, Collection, Page, Redirects, Site, SiteLanguage
 from brigid.library.storage import storage
+
 
 logger = logging.get_module_logger()
 
@@ -83,9 +83,6 @@ def load_page(path: pathlib.Path) -> Page:
 
     with path.open() as f:
         page_data, page_content = frontmatter.parse(f.read(), handler=FrontmatterTOMLHandler())
-
-    if "title" not in page_data:
-        page_data["title"] = article.title
 
     if "tags" not in page_data:
         page_data["tags"] = article.tags
