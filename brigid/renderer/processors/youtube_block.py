@@ -4,7 +4,6 @@ import pydantic
 from pymdownx.blocks import BlocksExtension
 
 from brigid.core.entities import BaseEntity
-from brigid.renderer.context import render_context
 from brigid.renderer.processors.toml_block import TomlBlock
 
 
@@ -24,17 +23,11 @@ class YouTubeBlock(TomlBlock):
     NAME = "brigid-youtube"
     models = YouTubeModel
     root_tag = "figure"
+    template = "./blocks/youtube.html.j2"
 
     def root_css_classes(self, data: Any) -> list[str]:
         classes = ["brigid-youtube", data.css_class]
         return [x for x in classes if x]
-
-    def process_data(self, data: Any) -> str:
-        from brigid.theme.templates import render
-
-        context = render_context.get()
-
-        return render("./blocks/youtube.html.j2", {"video": data, "article": context.article})
 
 
 class YouTubeBlockExtension(BlocksExtension):

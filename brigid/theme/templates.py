@@ -1,3 +1,5 @@
+from typing import Any
+
 import jinja2
 
 from brigid.theme.settings import settings
@@ -64,6 +66,6 @@ def env() -> jinja2.Environment:
     return _env
 
 
-def render(template_name, context):
+def render(template_name: str, context: dict[str, Any]) -> str:
     template = env().get_template(template_name)
     return template.render(context)

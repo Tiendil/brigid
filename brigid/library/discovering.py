@@ -84,9 +84,6 @@ def load_page(path: pathlib.Path) -> Page:
     with path.open() as f:
         page_data, page_content = frontmatter.parse(f.read(), handler=FrontmatterTOMLHandler())
 
-    if "title" not in page_data:
-        page_data["title"] = article.title
-
     if "tags" not in page_data:
         page_data["tags"] = article.tags
 

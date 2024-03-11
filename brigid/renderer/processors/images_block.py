@@ -1,4 +1,3 @@
-import pathlib
 from typing import Any
 
 import pydantic
@@ -6,8 +5,6 @@ from pymdownx.blocks import BlocksExtension
 
 from brigid.core.entities import BaseEntity
 from brigid.domain.html import strip_html
-from brigid.library.entities import Article
-from brigid.renderer.context import render_context
 from brigid.renderer.processors.toml_block import TomlBlock
 
 # TODO: remove duplicated code
@@ -15,8 +12,9 @@ from brigid.renderer.processors.toml_block import TomlBlock
 
 class ImageMixing:
 
-    @pydantic.validator("alt")
-    def escape_alt(cls, v):
+    @pydantic.field_validator("alt")
+    @classmethod
+    def escape_alt(cls, v: str | None, info: pydantic.ValidationInfo) -> str | None:
         if v is None:
             return v
 
@@ -31,9 +29,6 @@ class Image(ImageMixing, BaseEntity):
 
     model_config = pydantic.ConfigDict(frozen=False)
 
-    def url_file(self, article: Article) -> pathlib.Path:
-        return article.path.parent / self.src
-
 
 class ImagesModel(BaseEntity):
     caption: str | None = None
@@ -44,18 +39,24 @@ class ImagesModel(BaseEntity):
 
     model_config = pydantic.ConfigDict(frozen=False)
 
-    @pydantic.validator("images")
-    def minimum_1_image(cls, v):
+    @pydantic.field_validator("images")
+    @classmethod
+    def minimum_1_image(cls, v: list[Image], info: pydantic.ValidationInfo) -> list[Image]:
         if len(v) < 1:
             raise ValueError("at least one image is required")
+
         return v
 
     @pydantic.model_validator(mode="after")
-    def first_image_alt_from_caption(cls, self):
+    def first_image_alt_from_caption(self) -> "ImagesModel":
 
         if self.caption is not None and self.images[0].alt is None:
             self.images[0].alt = self.caption
 
+        return self
+
+    @pydantic.model_validator(mode="after")
+    def all_images_must_have_alts(self) -> "ImagesModel":
         for image in self.images:
             if image.alt is None:
                 raise ValueError("alt must be present")
@@ -63,7 +64,7 @@ class ImagesModel(BaseEntity):
         return self
 
     @pydantic.model_validator(mode="after")
-    def default_galery_class(cls, self):
+    def default_galery_class(self) -> "ImagesModel":
         if self.galery_class is None:
             self.galery_class = f"brigid-images-{len(self.images)}"
 
@@ -79,7 +80,7 @@ class ImageModel(ImageMixing, BaseEntity):
     model_config = pydantic.ConfigDict(frozen=False)
 
     @pydantic.model_validator(mode="after")
-    def alt_or_caption(cls, self):
+    def alt_or_caption(self) -> "ImageModel":
         if self.alt is None and self.caption is None:
             raise ValueError("alt or caption must be present")
 
@@ -93,32 +94,24 @@ class ImagesBlock(TomlBlock):
     NAME = "brigid-images"
     models = ImageModel | ImagesModel
     root_tag = "figure"
+    template = "./blocks/images.html.j2"
 
-    def root_css_classes(self, data: Any) -> list[str]:
+    def root_css_classes(self, data: ImagesModel) -> list[str]:
+        assert data.galery_class
         return ["brigid-images", data.galery_class]
 
-    def process_data(self, data: Any) -> str:
-        from brigid.theme.templates import render
-
-        context = render_context.get()
-
+    def process_data(self, data: Any) -> ImagesModel:
         if isinstance(data, ImageModel):
-            images = ImagesModel(
+            return ImagesModel(
                 caption=data.caption,
                 images=[Image(src=data.src, alt=data.alt)],
                 galery_class=data.galery_class,
             )
-        else:
-            images = data
 
-        return render(
-            "./blocks/images.html.j2",
-            {
-                "images": images,
-                "article": context.article,
-                "page": context.page,
-            },
-        )
+        if isinstance(data, ImagesModel):
+            return data
+
+        raise NotImplementedError(f"Unknown data type: {data}")
 
 
 class ImagesBlockExtension(BlocksExtension):

@@ -15,6 +15,7 @@ class TomlBlock(Block):
     NAME: str = NotImplemented
     models: type[pydantic.BaseModel] = NotImplemented
     root_tag: str = "div"
+    template: str = NotImplemented
 
     def root_css_classes(self, data: Any) -> list[str]:
         return []
@@ -32,10 +33,15 @@ class TomlBlock(Block):
 
             data = toml.loads(block.text)
 
-            model = None
+            context = render_context.get()
 
-            model = pydantic.TypeAdapter(self.models).validate_python(data)
-            new_text = self.process_data(model)
+            raw_model = pydantic.TypeAdapter(self.models).validate_python(data)
+
+            model = self.process_data(raw_model)
+
+            new_text = self.render_in_theme(
+                {"data": model, "current_article": context.article, "current_page": context.page}
+            )
 
             block.text = self.md.htmlStash.store(new_text)
 
@@ -49,5 +55,10 @@ class TomlBlock(Block):
 
             context.add_error(failed_text="unknown", message=f"Error while rendering block: {e}")
 
-    def process_data(self, data: Any) -> str:
-        raise NotImplementedError()
+    def process_data(self, data: Any) -> Any:
+        return data
+
+    def render_in_theme(self, data: Any) -> str:
+        from brigid.theme.templates import render
+
+        return render(self.template, data)

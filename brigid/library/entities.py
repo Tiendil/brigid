@@ -2,6 +2,7 @@ import datetime
 import enum
 import pathlib
 import re
+from functools import cached_property
 from typing import Literal
 
 import pydantic
@@ -131,19 +132,19 @@ class Article(BaseEntity):
 
     type: ArticleType = ArticleType.post
 
-    title: str | None = None
-
     pages: dict[str, str] = pydantic.Field(default_factory=dict)
-
-    feed: bool = False
 
     tags: set[str] = pydantic.Field(default_factory=list)
 
-    @property
+    @cached_property
+    def dir(self) -> pathlib.Path:
+        return self.path.parent
+
+    @cached_property
     def more_than_one_language(self) -> bool:
         return len(self.pages) > 1
 
-    @property
+    @cached_property
     def id(self) -> str:
         return f"article#{self.slug}"
 
@@ -181,34 +182,34 @@ class Page(BaseEntity):
 
     template: str | None = None
 
-    @property
+    @cached_property
     def id(self) -> str:
         return f"page#{self.language}#{self.slug}"
 
-    @property
+    @cached_property
     def slug(self) -> str:
         from brigid.library.storage import storage
 
         return storage.get_article(id=self.article_id).slug
 
-    @property
+    @cached_property
     def is_post(self) -> bool:
         from brigid.library.storage import storage
 
         return storage.get_article(id=self.article_id).type == ArticleType.post
 
-    @property
+    @cached_property
     def has_more(self) -> bool:
         return MORE_RE.search(self.body) is not None
 
-    @property
+    @cached_property
     def intro(self) -> str:
         if not self.has_more:
             return self.body
 
         return MORE_RE.split(self.body)[0]
 
-    @property
+    @cached_property
     def tags_in_translation_order(self) -> list[str]:
         from brigid.library.storage import storage
 
