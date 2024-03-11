@@ -4,10 +4,10 @@ import re
 
 import frontmatter
 import toml
+
 from brigid.core import logging
 from brigid.library.entities import Article, Collection, Page, Redirects, Site, SiteLanguage
 from brigid.library.storage import storage
-
 
 logger = logging.get_module_logger()
 

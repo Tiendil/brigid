@@ -1,20 +1,17 @@
-import uuid
 from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
-from brigid.library.storage import storage
+
 from brigid.library.tests import make as library_make
-from brigid.renderer.context import RenderContext, markdown_context
-from brigid.renderer.markdown_render import render_page, render_text
+from brigid.renderer.markdown_render import render_page
 from brigid.renderer.processors.images_block import Image, ImageModel, ImagesBlock, ImagesModel
 
 
 class TestImage:
 
     def test_escape_alt(self) -> None:
-        image = Image(src="test.jpg",
-                      alt="complex <p>test</p> bla-bla <<<")
+        image = Image(src="test.jpg", alt="complex <p>test</p> bla-bla <<<")
 
         assert image.alt == "complex test bla-bla <<<"
 
@@ -29,38 +26,34 @@ class TestImagesModel:
         images = ImagesModel(caption="test_caption", images=[Image(src="test.jpg")])
         assert images.images[0].alt == "test_caption"
 
-        images = ImagesModel(caption="test_caption", images=[Image(src="test.jpg"),
-                                                             Image(src="test2.jpg", alt="alt_2")])
+        images = ImagesModel(
+            caption="test_caption", images=[Image(src="test.jpg"), Image(src="test2.jpg", alt="alt_2")]
+        )
         assert images.images[0].alt == "test_caption"
         assert images.images[1].alt == "alt_2"
 
     def test_all_images_must_have_alts(self) -> None:
         with pytest.raises(ValueError):
-            ImagesModel(caption="test_caption",
-                        images=[Image(src="test.jpg"),
-                                Image(src="test2.jpg")])
+            ImagesModel(caption="test_caption", images=[Image(src="test.jpg"), Image(src="test2.jpg")])
 
-        ImagesModel(caption="test_caption",
-                    images=[Image(src="test.jpg", alt="alt_1"),
-                            Image(src="test2.jpg", alt="alt_2")])
+        ImagesModel(
+            caption="test_caption", images=[Image(src="test.jpg", alt="alt_1"), Image(src="test2.jpg", alt="alt_2")]
+        )
 
     def test_all_images_must_have_alts_besides_the_first_one(self) -> None:
-        ImagesModel(caption="test_caption",
-                    images=[Image(src="test.jpg"),
-                            Image(src="test2.jpg", alt="alt_1")])
+        ImagesModel(caption="test_caption", images=[Image(src="test.jpg"), Image(src="test2.jpg", alt="alt_1")])
 
     def test_default_galery_class(self) -> None:
         images = ImagesModel(caption="test_caption", images=[Image(src="test.jpg")])
         assert images.galery_class == "brigid-images-1"
 
-        images = ImagesModel(caption="test_caption",
-                             images=[Image(src="test.jpg", alt="alt_1"),
-                                     Image(src="test2.jpg", alt="alt_2")])
+        images = ImagesModel(
+            caption="test_caption", images=[Image(src="test.jpg", alt="alt_1"), Image(src="test2.jpg", alt="alt_2")]
+        )
         assert images.galery_class == "brigid-images-2"
 
     def test_galery_class(self) -> None:
-        images = ImagesModel(caption="test_caption", images=[Image(src="test.jpg")],
-                             galery_class="test-galery")
+        images = ImagesModel(caption="test_caption", images=[Image(src="test.jpg")], galery_class="test-galery")
         assert images.galery_class == "test-galery"
 
 
@@ -81,63 +74,51 @@ class TestImageModel:
 class TestImagesBlock:
 
     def test_root_css_classes(self) -> None:
-        images = ImagesModel(caption="test_caption",
-                             images=[Image(src="test.jpg", alt="alt_1"),
-                                     Image(src="test2.jpg", alt="alt_2")])
+        images = ImagesModel(
+            caption="test_caption", images=[Image(src="test.jpg", alt="alt_1"), Image(src="test2.jpg", alt="alt_2")]
+        )
 
-        images_block = ImagesBlock(length=3,
-                                   tracker={},
-                                   block_mgr=MagicMock(),
-                                   config={})
+        images_block = ImagesBlock(length=3, tracker={}, block_mgr=MagicMock(), config={})
 
         assert set(images_block.root_css_classes(images)) == {"brigid-images", "brigid-images-2"}
 
     def test_process_data__images_model(self) -> None:
-        images_block = ImagesBlock(length=3,
-                                   tracker={},
-                                   block_mgr=MagicMock(),
-                                   config={})
+        images_block = ImagesBlock(length=3, tracker={}, block_mgr=MagicMock(), config={})
 
-        images = ImagesModel(caption="test_caption",
-                             images=[Image(src="test.jpg", alt="alt_1"),
-                                     Image(src="test2.jpg", alt="alt_2")])
+        images = ImagesModel(
+            caption="test_caption", images=[Image(src="test.jpg", alt="alt_1"), Image(src="test2.jpg", alt="alt_2")]
+        )
 
         assert images_block.process_data(images.replace()) == images
 
     def test_process_data__image_model(self) -> None:
-        images_block = ImagesBlock(length=3,
-                                   tracker={},
-                                   block_mgr=MagicMock(),
-                                   config={})
+        images_block = ImagesBlock(length=3, tracker={}, block_mgr=MagicMock(), config={})
 
-        image = ImageModel(src="test.jpg",
-                           alt="alt_1",
-                           caption="test caption",
-                           galery_class='test-galery')
+        image = ImageModel(src="test.jpg", alt="alt_1", caption="test caption", galery_class="test-galery")
 
-        images = ImagesModel(caption="test caption",
-                             galery_class='test-galery',
-                             images=[Image(src="test.jpg", alt="alt_1")])
+        images = ImagesModel(
+            caption="test caption", galery_class="test-galery", images=[Image(src="test.jpg", alt="alt_1")]
+        )
 
         assert images_block.process_data(image) == images
 
     def test_full_render(self) -> None:
 
         def render_in_theme(block: ImagesBlock, data: dict[str, Any]) -> str:
-            assert data['current_article'] == article
-            assert data['current_page'] == page
-            assert data['data'] == ImagesModel(caption="some caption",
-                                               images=[Image(src="./images/image-1.jpg",
-                                                             alt="some alt")])
-            return 'rendered'
+            assert data["current_article"] == article
+            assert data["current_page"] == page
+            assert data["data"] == ImagesModel(
+                caption="some caption", images=[Image(src="./images/image-1.jpg", alt="some alt")]
+            )
+            return "rendered"
 
-        text = '''
+        text = """
 /// brigid-images
 src = "./images/image-1.jpg"
 alt = "some alt"
 caption = "some caption"
 ///
-        '''
+        """
 
         article = library_make.article()
         page = library_make.page(article, body=text)

@@ -1,6 +1,5 @@
 import uuid
 
-import pytest
 from brigid.library.storage import storage
 from brigid.library.tests import make as library_make
 from brigid.validation.global_validators import required_article

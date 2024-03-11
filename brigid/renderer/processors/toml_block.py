@@ -4,9 +4,9 @@ from typing import Any
 
 import pydantic
 import toml
-from brigid.renderer.context import render_context
 from pymdownx.blocks.block import Block
 
+from brigid.renderer.context import render_context
 
 _renderer = None
 
@@ -39,9 +39,9 @@ class TomlBlock(Block):
 
             model = self.process_data(raw_model)
 
-            new_text = self.render_in_theme({"data": model,
-                                             "current_article": context.article,
-                                             "current_page": context.page})
+            new_text = self.render_in_theme(
+                {"data": model, "current_article": context.article, "current_page": context.page}
+            )
 
             block.text = self.md.htmlStash.store(new_text)
 
@@ -60,4 +60,5 @@ class TomlBlock(Block):
 
     def render_in_theme(self, data: Any) -> str:
         from brigid.theme.templates import render
+
         return render(self.template, data)

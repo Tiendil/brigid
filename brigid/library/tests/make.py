@@ -3,13 +3,13 @@ import pathlib
 import uuid
 from typing import Iterable
 
-from brigid.library.entities import Article, ArticleType, Collection, Page, Redirects, Site, SiteLanguage
+from brigid.library.entities import Article, ArticleType, Page
 from brigid.library.storage import storage
 
 
-def article(path: pathlib.Path | None = None,
-            slug: str | None = None,
-            type: ArticleType = ArticleType.post) -> Article:
+def article(
+    path: pathlib.Path | None = None, slug: str | None = None, type: ArticleType = ArticleType.post
+) -> Article:
 
     if path is None:
         path = pathlib.Path("/tmp/brigid/tests") / uuid.uuid4().hex / "article.toml"
@@ -17,12 +17,7 @@ def article(path: pathlib.Path | None = None,
     if slug is None:
         slug = uuid.uuid4().hex
 
-    article = Article(
-        path=path,
-        slug=slug,
-        type=type,
-        pages={},
-        tags=[])
+    article = Article(path=path, slug=slug, type=type, pages={}, tags=[])
 
     storage.add_article(article)
 
@@ -32,16 +27,18 @@ def article(path: pathlib.Path | None = None,
 _article = article
 
 
-def page(article: Article | None = None,  # noqa: CFQ002
-         path: pathlib.Path | None = None,
-         published_at: datetime.datetime | None = None,
-         language: str = 'en',
-         title: str | None = None,
-         description: str | None = None,
-         seo_image: str | None = None,
-         body: str | None = None,
-         tags: Iterable[str] = (),
-         template: str | None = None) -> Page:
+def page(
+    article: Article | None = None,  # noqa: CFQ002
+    path: pathlib.Path | None = None,
+    published_at: datetime.datetime | None = None,
+    language: str = "en",
+    title: str | None = None,
+    description: str | None = None,
+    seo_image: str | None = None,
+    body: str | None = None,
+    tags: Iterable[str] = (),
+    template: str | None = None,
+) -> Page:
 
     if article is None:
         article = _article()
@@ -50,27 +47,29 @@ def page(article: Article | None = None,  # noqa: CFQ002
         path = article.path.parent / f"{language}.md"
 
     if title is None:
-        title = f'Title: {article.slug} {language}'
+        title = f"Title: {article.slug} {language}"
 
     if description is None:
-        description = f'Description: {article.slug} {language}'
+        description = f"Description: {article.slug} {language}"
 
     if published_at is None:
         published_at = datetime.datetime.now()
 
     if body is None:
-        body = f'Body: {article.slug} {language}'
+        body = f"Body: {article.slug} {language}"
 
-    page = Page(article_id=article.id,
-                path=path,
-                published_at=published_at,
-                language=language,
-                title=title,
-                description=description,
-                seo_image=seo_image,
-                body=body,
-                tags=tags,
-                template=template)
+    page = Page(
+        article_id=article.id,
+        path=path,
+        published_at=published_at,
+        language=language,
+        title=title,
+        description=description,
+        seo_image=seo_image,
+        body=body,
+        tags=tags,
+        template=template,
+    )
 
     storage.add_page(page)
 

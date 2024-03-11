@@ -1,6 +1,7 @@
 from typing import Any
 
 import jinja2
+
 from brigid.theme.settings import settings
 
 

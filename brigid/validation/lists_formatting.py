@@ -1,13 +1,7 @@
-import pathlib
 import re
-from typing import Callable
 
-from brigid.core.entities import BaseEntity
-from brigid.library.entities import Article, Page
-from brigid.library.storage import storage
-from brigid.renderer.markdown_render import render_page
+from brigid.library.entities import Page
 from brigid.validation.entities import Error
-
 
 UNORDERED_LIST_LINE_RE = re.compile(r"^\s*[-*+]\s+")
 ORDERED_LIST_LINE_RE = re.compile(r"^\s*\d+\.\s+")
@@ -52,6 +46,4 @@ def page_has_correct_list_formatting(page: Page) -> list[Error]:
     if not parser(page.body):
         return []
 
-    return [Error(
-        filepath=page.path,
-            message="Page has incorrect list formatting")]
+    return [Error(filepath=page.path, message="Page has incorrect list formatting")]
