@@ -97,7 +97,7 @@ class ImagesBlock(TomlBlock):
     NAME = "brigid-images"
     models = ImageModel | ImagesModel
     root_tag = "figure"
-    templates = "./blocks/images.html.j2"
+    template = "./blocks/images.html.j2"
 
     def root_css_classes(self, data: ImagesModel) -> list[str]:
         assert data.galery_class
