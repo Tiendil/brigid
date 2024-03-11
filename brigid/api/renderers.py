@@ -1,4 +1,5 @@
 from collections import Counter
+from itertools import chain
 
 from fastapi.responses import HTMLResponse
 from feedgenerator import Atom1Feed
@@ -13,7 +14,7 @@ from brigid.theme.jinjaglobals import render_page_intro
 from brigid.theme.templates import render
 
 
-def render_index(language: str, raw_tags: str) -> HTMLResponse:  # noqa: CCR001
+def render_index(language: str, raw_tags: str) -> HTMLResponse:  # noqa: CCR001, CFQ001
     site = storage.get_site()
 
     if language not in site.allowed_languages:
@@ -39,6 +40,11 @@ def render_index(language: str, raw_tags: str) -> HTMLResponse:  # noqa: CCR001
             excluded.add(tag[1:])
         else:
             required.add(tag)
+
+    for tag in chain(required, excluded):
+        if tag not in site.languages[language].tags_translations:
+            # TODO: maybe, in the future it is better to make smart redirect and message user about it
+            raise errors.PageNotFound()
 
     site = storage.get_site()
 
