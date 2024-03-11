@@ -11,10 +11,11 @@ from brigid.validation.lists_formatting import page_has_correct_list_formatting
 
 def required_article(slug: str) -> Callable[[], list[Error]]:
     def validator() -> list[Error]:
-        article = storage.get_article(slug=slug)
 
-        if article is None:
+        if not storage.has_article(slug=slug):
             return [Error(filepath=None, message=f"{slug} article not found")]
+
+        article = storage.get_article(slug=slug)
 
         site = storage.get_site()
 
