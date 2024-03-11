@@ -1,8 +1,10 @@
 import datetime
 import pathlib
 import uuid
+from typing import Iterable
 
 from brigid.library.entities import Article, ArticleType, Collection, Page, Redirects, Site, SiteLanguage
+from brigid.library.storage import storage
 
 
 def article(path: pathlib.Path | None = None,
@@ -15,15 +17,19 @@ def article(path: pathlib.Path | None = None,
     if slug is None:
         slug = uuid.uuid4().hex
 
-    return Article(
+    article = Article(
         path=path,
         slug=slug,
         type=type,
         pages={},
         tags=[])
 
+    storage.add_article(article)
 
-def page(article,
+    return article
+
+
+def page(article: Article,  # noqa: CFQ002
          path: pathlib.Path | None = None,
          published_at: datetime.datetime | None = None,
          language: str = 'en',
@@ -31,7 +37,7 @@ def page(article,
          description: str | None = None,
          seo_image: str | None = None,
          body: str | None = None,
-         tags: list[str] = [],
+         tags: Iterable[str] = (),
          template: str | None = None) -> Page:
 
     if path is None:
@@ -49,7 +55,7 @@ def page(article,
     if body is None:
         body = f'Body: {article.slug} {language}'
 
-    return Page(article_id=article.id,
+    page = Page(article_id=article.id,
                 path=path,
                 published_at=published_at,
                 language=language,
@@ -59,3 +65,7 @@ def page(article,
                 body=body,
                 tags=tags,
                 template=template)
+
+    storage.add_page(page)
+
+    return page

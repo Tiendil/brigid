@@ -3,9 +3,10 @@ from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
+from brigid.library.storage import storage
 from brigid.library.tests import make as library_make
 from brigid.renderer.context import RenderContext, markdown_context
-from brigid.renderer.markdown_render import render_text
+from brigid.renderer.markdown_render import render_page, render_text
 from brigid.renderer.processors.images_block import Image, ImageModel, ImagesBlock, ImagesModel
 
 
@@ -139,18 +140,13 @@ caption = "some caption"
         '''
 
         article = library_make.article()
-        page = library_make.page(article)
-
-        context = RenderContext(page=page,
-                                article=article,
-                                renderer=0)
+        page = library_make.page(article, body=text)
 
         with patch("brigid.renderer.processors.images_block.ImagesBlock.render_in_theme", render_in_theme):
-            with markdown_context(context):
-                result = render_text(text)
+            result = render_page(page)
 
         assert result.page == page
         assert result.article == article
-        assert result.renderer == 1
+        assert result.renderer == 0
         assert result.errors == []
         assert result.content == '<figure class="brigid-images brigid-images-1">rendered</figure>'
