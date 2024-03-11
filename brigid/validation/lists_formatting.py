@@ -49,7 +49,7 @@ def parser(text: str) -> bool:  # noqa: CCR001
 
 
 def page_has_correct_list_formatting(page: Page) -> list[Error]:
-    if parser(page.body):
+    if not parser(page.body):
         return []
 
     return [Error(
