@@ -87,6 +87,7 @@ def render_index(language: str, raw_tags: str) -> HTMLResponse:  # noqa: CCR001,
     )
 
     meta_info = MetaInfo(
+        site_title=site.languages[language].title,
         language=language,
         # TODO: construct language urls for filters
         #       it is complicated, because
@@ -149,6 +150,7 @@ def render_page(language: str, article_slug: str, status_code: int = 200) -> HTM
         seo_image_url = post_url.file_url(page.seo_image)
 
     meta_info = MetaInfo(
+        site_title=site.languages[language].title,
         language=language,
         allowed_languages=[language for language in site.allowed_languages if language in article.pages],
         title=page.title,
