@@ -7,7 +7,8 @@
     {{ meta.general_fields(meta_info, current_url) }}
 
     {% if article %}
-      {{ meta.json_fd(meta_info, current_url) }}
+      {{ meta.object_graph_fields_article(meta_info, current_url) }}
+      {{ meta.json_fd_article(meta_info, current_url) }}
     {% endif %}
 
     <link rel="stylesheet" href="/static/main.css">
