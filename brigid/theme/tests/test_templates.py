@@ -11,14 +11,26 @@ from brigid.renderer.processors.images_block import Image, ImageModel, ImagesBlo
 from brigid.theme.entities import MetaInfo, Template
 from brigid.theme.templates import render
 from bs4 import BeautifulSoup, MarkupResemblesLocatorWarning
-from lxml import html as lxml_html
+from html5lib import HTMLParser
 
 
 def assert_correct_html(text: str) -> None:
+    parser = HTMLParser(strict=True)
+
     try:
-        document = lxml_html.fromstring(text)
-    except ValueError as e:
-        assert False, f"Malformed HTML: {e}"
+        parser.parse(text)
+    except Exception as e:
+        pytest.fail(f"Malformed HTML: {e}")
+
+
+def test_assert_correct_html() -> None:
+    from _pytest.outcomes import Failed
+
+    assert_correct_html("<!DOCTYPE html><html></html>")
+
+    with pytest.raises(Failed):
+        assert_correct_html("<html>")
+
 
     # content = render(
     #     "./blog_index.html.j2",
@@ -34,19 +46,6 @@ def assert_correct_html(text: str) -> None:
     #     },
     # )
 
-
-    # content = render(
-    #     template,
-    #     {
-    #         "language": language,
-    #         "meta_info": meta_info,
-    #         "site": storage.get_site(),
-    #         "article": article,
-    #         "similar_pages": similar_pages,
-    #         "page": page,
-    #         "current_url": post_url,
-    #     },
-    # )
 
 
 
