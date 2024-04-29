@@ -1,3 +1,4 @@
+import datetime
 import importlib
 import pathlib
 import sys
@@ -36,3 +37,7 @@ def discover_submodules(parent_module: str) -> list[types.ModuleType]:
         child_modules.append(submodule)
 
     return child_modules
+
+
+def now() -> datetime.datetime:
+    return datetime.datetime.now(tz=datetime.timezone.utc)

@@ -67,6 +67,7 @@ def create_app() -> fastapi.FastAPI:  # noqa: CCR001
 
             await app.router.startup()
 
+            # TODO: must be skipped in tests?
             discovering.load(directory=library_settings.directory)
 
             yield

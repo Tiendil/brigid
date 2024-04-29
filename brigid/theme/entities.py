@@ -1,6 +1,13 @@
 import datetime
+import enum
 
 from brigid.core.entities import BaseEntity
+
+
+# TODO: template names should have prefixes
+class Template(enum.StrEnum):
+    article_page = "article.html.j2"
+    index_page = "blog_index.html.j2"
 
 
 class MetaInfo(BaseEntity):
