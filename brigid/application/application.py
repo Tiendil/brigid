@@ -2,8 +2,6 @@ import contextlib
 from typing import AsyncGenerator
 
 import fastapi
-from fastapi.middleware.cors import CORSMiddleware
-
 from brigid.api import http_handlers as api_http_handlers
 from brigid.api import middlewares as api_middlewares
 from brigid.api import static_cache as api_static_cache
@@ -12,6 +10,8 @@ from brigid.application.settings import settings
 from brigid.core import logging, sentry
 from brigid.library import discovering
 from brigid.library.settings import settings as library_settings
+from fastapi.middleware.cors import CORSMiddleware
+
 
 logger = logging.get_module_logger()
 
@@ -52,16 +52,6 @@ async def use_sentry() -> AsyncGenerator[None, None]:
     yield
 
     logger.info("sentry_disabled")
-
-
-def smart_url(domain: str, port: int) -> str:
-    if port == 80:
-        return f"http://{domain}"
-
-    if port == 443:
-        return f"https://{domain}"
-
-    return f"http://{domain}:{port}"
 
 
 def create_app() -> fastapi.FastAPI:  # noqa: CCR001
