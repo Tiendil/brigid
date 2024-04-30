@@ -112,7 +112,6 @@ class Site(BaseEntity):
     posts_in_latest: int = 20
     posts_in_similar: int = 6
     languages: dict[str, SiteLanguage] = pydantic.Field(default_factory=dict)
-    default_page_template: str = "article.html.j2"
     favicon: str | None = None
 
     path: pathlib.Path

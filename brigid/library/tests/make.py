@@ -3,6 +3,7 @@ import pathlib
 import uuid
 from typing import Iterable
 
+from brigid.core.utils import now
 from brigid.library.entities import Article, ArticleType, Page
 from brigid.library.storage import storage
 
@@ -53,7 +54,7 @@ def page(  # noqa: CFQ002
         description = f"Description: {article.slug} {language}"
 
     if published_at is None:
-        published_at = datetime.datetime.now()
+        published_at = now()
 
     if body is None:
         body = f"Body: {article.slug} {language}"

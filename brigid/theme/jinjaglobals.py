@@ -1,3 +1,4 @@
+import os
 import pathlib
 
 from markupsafe import Markup
@@ -72,3 +73,12 @@ def translate_theme(language: str, text_id: str) -> str:
         return translations[language][text_id]
 
     return text_id
+
+
+@jinjaglobal
+def test_marker(marker: str) -> str:
+
+    if not os.environ.get("BRIGID_TESTS_RUNNING"):
+        return ""
+
+    return Markup(marker)

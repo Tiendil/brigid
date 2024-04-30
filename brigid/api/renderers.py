@@ -9,7 +9,7 @@ from brigid.core import errors
 from brigid.domain.urls import UrlsFeedsAtom, UrlsPost, UrlsTags
 from brigid.library.similarity import get_similar_pages
 from brigid.library.storage import storage
-from brigid.theme.entities import MetaInfo
+from brigid.theme.entities import MetaInfo, Template
 from brigid.theme.jinjaglobals import render_page_intro
 from brigid.theme.templates import render
 
@@ -102,9 +102,8 @@ def render_index(language: str, raw_tags: str) -> HTMLResponse:  # noqa: CCR001,
         seo_image_url=None,
     )
 
-    # TODO: template names should have prefixes
     content = render(
-        "./blog_index.html.j2",
+        Template.index_page,
         {
             "language": language,
             "meta_info": meta_info,
@@ -140,7 +139,7 @@ def render_page(language: str, article_slug: str, status_code: int = 200) -> HTM
     similar_pages = get_similar_pages(language=language, original_page=page, number=site.posts_in_similar)
 
     # TODO: default template for each page type
-    template = page.template or site.default_page_template
+    template = page.template or Template.article_page
 
     post_url = UrlsPost(language=page.language, slug=article.slug)
 

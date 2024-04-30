@@ -54,16 +54,6 @@ async def use_sentry() -> AsyncGenerator[None, None]:
     logger.info("sentry_disabled")
 
 
-def smart_url(domain: str, port: int) -> str:
-    if port == 80:
-        return f"http://{domain}"
-
-    if port == 443:
-        return f"https://{domain}"
-
-    return f"http://{domain}:{port}"
-
-
 def create_app() -> fastapi.FastAPI:  # noqa: CCR001
     logging.initialize(use_sentry=settings.sentry.enabled)
 
@@ -77,6 +67,7 @@ def create_app() -> fastapi.FastAPI:  # noqa: CCR001
 
             await app.router.startup()
 
+            # TODO: must be skipped in tests?
             discovering.load(directory=library_settings.directory)
 
             yield
