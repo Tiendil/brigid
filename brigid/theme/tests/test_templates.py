@@ -128,3 +128,59 @@ class TestIndexRender:
         assert content is not None
 
         assert_correct_html(content)
+
+    def test_more_link_rendered_only_if_part_of_content_is_hidden(self) -> None:
+        language = "en"
+
+        article_1 = library_make.article()
+        page_1 = library_make.page(article_1, body="bla-bla-text", language=language)
+
+        article_2 = library_make.article()
+        page_2 = library_make.page(article_2, body="bla-bla-text <!-- more --> bla-bla-text", language=language)
+
+        # TODO: make real meta_info
+        #       maybe move code of constructing meta_info (from renderers.py) to separate function
+        meta_info = MetaInfo(
+            site_title='title',  # TODO: get real site title
+            language=language,
+            allowed_languages=[],
+            title='seo title',
+            description='seo description',
+            author='author',
+            tags=[],  # TODO: add tags
+            published_at=None,
+            seo_image_url=None,
+        )
+
+        # TODO: test complex filter_state
+        filter_state = UrlsTags(
+            language=language,
+            page=1,
+            required_tags=[],
+            excluded_tags=[],
+        )
+
+        content = render(
+            "./blog_index.html.j2",
+            {
+                "language": language,
+                "meta_info": meta_info,
+                "site": storage.get_site(),
+                "pages": [page_1, page_2],
+                "current_url": filter_state,
+                "article": None,
+                "pages_found": 2,  # TODO: add more hidden pages
+                # TODO: add tags_count
+                "tags_count": {},
+            },
+        )
+
+        assert content is not None
+
+        assert_correct_html(content)
+
+        soup = BeautifulSoup(content, "html.parser")
+
+        # rendered 2 pages, but only one of them has "more" link
+        assert len(soup(class_="test-page-header-link")) == 2
+        assert len(soup(class_="test-page-more-link")) == 1

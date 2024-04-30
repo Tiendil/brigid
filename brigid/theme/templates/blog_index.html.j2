@@ -14,14 +14,14 @@
 
             <div class="brigid-article">
               <h1>
-                <a class="brigid-page-header-link" href="{{root_url(language).to_post(article.slug).url()}}">{{page.title}}</a>
+                <a class="{{test_marker('test-page-header-link')}}" href="{{root_url(language).to_post(article.slug).url()}}">{{page.title}}</a>
               </h1>
 
               {{page|render_page_intro}}
 
               {% if page.has_more %}
                 <p>
-                  <a class="brigid-page-more-link" href="{{root_url(language).to_post(article.slug).url()}}">
+                  <a class="{{test_marker('test-page-more-link')}}" href="{{root_url(language).to_post(article.slug).url()}}">
                     {{translate_theme(language, 'read_more')}}
                   </a>
                 </p>

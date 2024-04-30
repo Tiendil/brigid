@@ -1,11 +1,16 @@
 import asyncio
+import os
 from typing import AsyncGenerator, Generator
 
 import fastapi
 import pytest
 import pytest_asyncio
-
 from brigid.application import application
+
+
+@pytest.fixture(scope="session", autouse=True)
+def mark_tests_running():
+    os.environ["BRIGID_TESTS_RUNNING"] = "True"
 
 
 @pytest.fixture(scope="session", autouse=True)
