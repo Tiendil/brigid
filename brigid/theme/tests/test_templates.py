@@ -32,23 +32,6 @@ def test_assert_correct_html() -> None:
         assert_correct_html("<html>")
 
 
-    # content = render(
-    #     "./blog_index.html.j2",
-    #     {
-    #         "language": language,
-    #         "meta_info": meta_info,
-    #         "site": site,
-    #         "pages": pages,
-    #         "current_url": filter_state,
-    #         "article": None,
-    #         "pages_found": len(all_pages),
-    #         "tags_count": tags_count,
-    #     },
-    # )
-
-
-
-
 class TestPageRender:
 
     def test_page_rendered_without_errors(self) -> None:
@@ -58,7 +41,7 @@ class TestPageRender:
         # TODO: make real meta_info
         #       maybe move code of constructing meta_info (from renderers.py) to separate function
         meta_info = MetaInfo(
-            site_title='title',
+            site_title='title',  # TODO: get real site title
             language=page.language,
             allowed_languages=[page.language],
             title=page.title,
@@ -84,6 +67,61 @@ class TestPageRender:
                 "page": page,
                 # TODO: add post_url
                 "current_url": post_url,
+            },
+        )
+
+        assert content is not None
+
+        assert_correct_html(content)
+
+
+class TestIndexRender:
+
+    def test_page_rendered_without_errors(self) -> None:
+
+        language = "en"
+
+        pages = []
+
+        for i in range(10):
+            article = library_make.article()
+            page = library_make.page(article, body="bla-bla-text", language=language)
+            pages.append(page)
+
+        # TODO: make real meta_info
+        #       maybe move code of constructing meta_info (from renderers.py) to separate function
+        meta_info = MetaInfo(
+            site_title='title',  # TODO: get real site title
+            language=language,
+            allowed_languages=[],
+            title='seo title',
+            description='seo description',
+            author='author',
+            tags=[],  # TODO: add tags
+            published_at=None,
+            seo_image_url=None,
+        )
+
+        # TODO: test complex filter_state
+        filter_state = UrlsTags(
+            language=language,
+            page=1,
+            required_tags=[],
+            excluded_tags=[],
+        )
+
+        content = render(
+            "./blog_index.html.j2",
+            {
+                "language": language,
+                "meta_info": meta_info,
+                "site": storage.get_site(),
+                "pages": pages,
+                "current_url": filter_state,
+                "article": None,
+                "pages_found": len(pages),  # TODO: add more hidden pages
+                # TODO: add tags_count
+                "tags_count": {},
             },
         )
 
