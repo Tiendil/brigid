@@ -2,6 +2,8 @@ import contextlib
 from typing import AsyncGenerator
 
 import fastapi
+from fastapi.middleware.cors import CORSMiddleware
+
 from brigid.api import http_handlers as api_http_handlers
 from brigid.api import middlewares as api_middlewares
 from brigid.api import static_cache as api_static_cache
@@ -10,8 +12,6 @@ from brigid.application.settings import settings
 from brigid.core import logging, sentry
 from brigid.library import discovering
 from brigid.library.settings import settings as library_settings
-from fastapi.middleware.cors import CORSMiddleware
-
 
 logger = logging.get_module_logger()
 

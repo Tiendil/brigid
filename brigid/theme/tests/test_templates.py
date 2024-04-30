@@ -1,17 +1,12 @@
-import warnings
-from typing import Any
-from unittest.mock import MagicMock, patch
-
 import pytest
-from brigid.domain.urls import UrlsFeedsAtom, UrlsPost, UrlsTags
+from bs4 import BeautifulSoup
+from html5lib import HTMLParser
+
+from brigid.domain.urls import UrlsPost, UrlsTags
 from brigid.library.storage import storage
 from brigid.library.tests import make as library_make
-from brigid.renderer.markdown_render import render_page
-from brigid.renderer.processors.images_block import Image, ImageModel, ImagesBlock, ImagesModel
 from brigid.theme.entities import MetaInfo, Template
 from brigid.theme.templates import render
-from bs4 import BeautifulSoup, MarkupResemblesLocatorWarning
-from html5lib import HTMLParser
 
 
 def assert_correct_html(text: str) -> None:
@@ -41,12 +36,12 @@ class TestPageRender:
         # TODO: make real meta_info
         #       maybe move code of constructing meta_info (from renderers.py) to separate function
         meta_info = MetaInfo(
-            site_title='title',  # TODO: get real site title
+            site_title="title",  # TODO: get real site title
             language=page.language,
             allowed_languages=[page.language],
             title=page.title,
             description=page.description,
-            author='author',
+            author="author",
             # TODO: add some tags
             tags=[],
             published_at=page.published_at,
@@ -91,12 +86,12 @@ class TestIndexRender:
         # TODO: make real meta_info
         #       maybe move code of constructing meta_info (from renderers.py) to separate function
         meta_info = MetaInfo(
-            site_title='title',  # TODO: get real site title
+            site_title="title",  # TODO: get real site title
             language=language,
             allowed_languages=[],
-            title='seo title',
-            description='seo description',
-            author='author',
+            title="seo title",
+            description="seo description",
+            author="author",
             tags=[],  # TODO: add tags
             published_at=None,
             seo_image_url=None,
@@ -141,12 +136,12 @@ class TestIndexRender:
         # TODO: make real meta_info
         #       maybe move code of constructing meta_info (from renderers.py) to separate function
         meta_info = MetaInfo(
-            site_title='title',  # TODO: get real site title
+            site_title="title",  # TODO: get real site title
             language=language,
             allowed_languages=[],
-            title='seo title',
-            description='seo description',
-            author='author',
+            title="seo title",
+            description="seo description",
+            author="author",
             tags=[],  # TODO: add tags
             published_at=None,
             seo_image_url=None,

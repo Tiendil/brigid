@@ -6,9 +6,9 @@ from functools import cached_property
 from typing import Literal
 
 import pydantic
+
 from brigid.core.entities import BaseEntity
 from brigid.domain import urls
-
 
 MORE_RE = re.compile(r"<!--\s*more\s*-->", re.IGNORECASE)
 
