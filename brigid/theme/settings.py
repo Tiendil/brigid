@@ -14,7 +14,7 @@ class PhotoSwipe(pydantic.BaseModel):
 
 class Templates(pydantic.BaseModel):
     directory: pathlib.Path = pathlib.Path(__file__).parent / "templates"
-    reload: bool = True
+    reload: bool = False
 
 
 class Settings(BaseSettings):
