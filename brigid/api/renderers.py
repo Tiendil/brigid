@@ -1,9 +1,6 @@
 from collections import Counter
 from itertools import chain
 
-from fastapi.responses import HTMLResponse
-from feedgenerator import Atom1Feed
-
 from brigid.api.utils import construct_index_description, construct_index_title, to_integer
 from brigid.core import errors
 from brigid.domain.urls import UrlsFeedsAtom, UrlsPost, UrlsTags
@@ -12,6 +9,8 @@ from brigid.library.storage import storage
 from brigid.theme.entities import MetaInfo, Template
 from brigid.theme.jinjaglobals import render_page_intro
 from brigid.theme.templates import render
+from fastapi.responses import HTMLResponse
+from feedgenerator import Atom1Feed
 
 
 def render_index(language: str, raw_tags: str) -> HTMLResponse:  # noqa: CCR001, CFQ001
@@ -103,7 +102,7 @@ def render_index(language: str, raw_tags: str) -> HTMLResponse:  # noqa: CCR001,
     )
 
     content = render(
-        Template.index_page,
+        str(Template.index_page),
         {
             "language": language,
             "meta_info": meta_info,
@@ -161,7 +160,7 @@ def render_page(language: str, article_slug: str, status_code: int = 200) -> HTM
     )
 
     content = render(
-        template,
+        str(template),
         {
             "language": language,
             "meta_info": meta_info,
