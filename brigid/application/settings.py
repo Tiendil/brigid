@@ -1,6 +1,6 @@
-
 import pydantic
 import pydantic_settings
+
 from brigid.core.settings import BaseSettings
 from brigid.domain.entities import Environment
 
