@@ -10,5 +10,20 @@ services:
       - ${PWD}/:/repository
       - ${PWD}/.env:/repository/.env
 
+    command:
+      - "poetry"
+      - "run"
+      - "uvicorn"
+      - "brigid.application.application:app"
+      - "--host"
+      - "0.0.0.0"
+      - "--port"
+      - "8000"
+      - "--workers"
+      - "1"
+      - "--reload"
+      - "--reload-include"
+      - "\\*"
+
     ports:
       - "8000:8000"

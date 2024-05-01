@@ -2,6 +2,7 @@ import pydantic
 import pydantic_settings
 
 from brigid.core.settings import BaseSettings
+from brigid.domain.entities import Environment
 
 
 class Sentry(pydantic.BaseModel):
@@ -12,19 +13,19 @@ class Sentry(pydantic.BaseModel):
     traces_sample_rate: float = 1.0
 
 
-_development_origins = ("*",)
+_local_origins = ("*",)
 
 
 class Settings(BaseSettings):
-    environment: str = "local"
+    environment: Environment = Environment.local
 
     sentry: Sentry = Sentry()
 
-    origins: tuple[str, ...] = _development_origins
+    origins: tuple[str, ...] = _local_origins
 
     @pydantic.model_validator(mode="after")
     def origin_must_be_redefined_in_prod(self) -> "Settings":
-        if self.environment == "prod" and self.origins == _development_origins:
+        if self.environment == Environment.prod and self.origins == _local_origins:
             raise ValueError("Origins must be redefined in prod")
 
         return self

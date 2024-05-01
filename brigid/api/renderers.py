@@ -103,7 +103,7 @@ def render_index(language: str, raw_tags: str) -> HTMLResponse:  # noqa: CCR001,
     )
 
     content = render(
-        Template.index_page,
+        str(Template.index_page),
         {
             "language": language,
             "meta_info": meta_info,
@@ -161,7 +161,7 @@ def render_page(language: str, article_slug: str, status_code: int = 200) -> HTM
     )
 
     content = render(
-        template,
+        str(template),
         {
             "language": language,
             "meta_info": meta_info,
