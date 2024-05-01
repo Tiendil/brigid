@@ -6,9 +6,10 @@ from functools import cached_property
 from typing import Literal
 
 import pydantic
-
 from brigid.core.entities import BaseEntity
 from brigid.domain import urls
+from brigid.domain.entities import Environment
+
 
 MORE_RE = re.compile(r"<!--\s*more\s*-->", re.IGNORECASE)
 
@@ -103,8 +104,8 @@ class SiteLanguage(BaseEntity):
 
 
 class Site(BaseEntity):
-    url: str  # TODO: pydantic.UrlStr
-
+    prod_url: pydantic.HttpUrl
+    local_url: pydantic.HttpUrl
     default_language: str
     allowed_languages: set[str] = pydantic.Field(default_factory=set)
     posts_per_page: int = 5
@@ -122,6 +123,20 @@ class Site(BaseEntity):
     similarity: SimilarityConfig = SimilarityConfig()
 
     model_config = pydantic.ConfigDict(frozen=False)
+
+    @cached_property
+    def url(self) -> str:
+        from brigid.application.settings import settings
+
+        print(settings.environment)
+
+        if settings.environment == Environment.prod:
+            return str(self.prod_url).rstrip("/")
+
+        if settings.environment == Environment.local:
+            return str(self.local_url).rstrip("/")
+
+        raise NotImplementedError(f"Unknown environment: {settings.environment}")
 
 
 class Article(BaseEntity):
