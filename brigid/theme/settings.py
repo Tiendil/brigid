@@ -2,7 +2,6 @@ import pathlib
 
 import pydantic
 import pydantic_settings
-
 from brigid.core.settings import BaseSettings
 
 
@@ -14,7 +13,7 @@ class PhotoSwipe(pydantic.BaseModel):
 
 class Templates(pydantic.BaseModel):
     directory: pathlib.Path = pathlib.Path(__file__).parent / "templates"
-    reload: bool = True
+    reload: bool = False
 
 
 class Settings(BaseSettings):
