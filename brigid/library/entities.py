@@ -105,7 +105,7 @@ class SiteLanguage(BaseEntity):
 
 class Site(BaseEntity):
     prod_url: pydantic.HttpUrl
-    local_url: pydantic.HttpUrl
+    local_url: pydantic.HttpUrl = "http://0.0.0.0:8000"
     default_language: str
     allowed_languages: set[str] = pydantic.Field(default_factory=set)
     posts_per_page: int = 5
