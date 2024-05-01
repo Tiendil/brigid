@@ -105,7 +105,7 @@ class SiteLanguage(BaseEntity):
 
 class Site(BaseEntity):
     prod_url: pydantic.HttpUrl
-    local_url: pydantic.HttpUrl = "http://0.0.0.0:8000"
+    local_url: pydantic.HttpUrl = pydantic.Field("http://0.0.0.0:8000")
     default_language: str
     allowed_languages: set[str] = pydantic.Field(default_factory=set)
     posts_per_page: int = 5
@@ -127,8 +127,6 @@ class Site(BaseEntity):
     @cached_property
     def url(self) -> str:
         from brigid.application.settings import settings
-
-        print(settings.environment)
 
         if settings.environment == Environment.prod:
             return str(self.prod_url).rstrip("/")
