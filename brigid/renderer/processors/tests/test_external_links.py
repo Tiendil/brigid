@@ -18,7 +18,7 @@ class TestExternalLink:
 
         assert (
             result.content
-            == '<p><a href="http://example.com" target="_blank">xxx</a> + <a href="http://example.org" target="_blank">yyy</a></p>'
+            == '<p><a href="http://example.com" target="_blank">xxx</a> + <a href="http://example.org" target="_blank">yyy</a></p>'  # noqa: E501
         )
 
     def test_no_schema(self) -> None:
