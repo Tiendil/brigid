@@ -1,9 +1,10 @@
 from urllib.parse import urlparse
 
-from brigid.library.storage import storage
-from brigid.renderer.context import render_context
 from markdown.inlinepatterns import LINK_RE as EXTERNAL_LINK_RE
 from markdown.inlinepatterns import LinkInlineProcessor
+
+from brigid.library.storage import storage
+from brigid.renderer.context import render_context
 
 
 class ExternalLinkInlineProcessor(LinkInlineProcessor):
@@ -33,7 +34,9 @@ class ExternalLinkInlineProcessor(LinkInlineProcessor):
         # TODO: compare taking into account the default ports, aka example.com:90 = example.com
         # TODO: is this required, link could be to the same domain but in different project
         if parsed_site.netloc == parsed_url.netloc:
-            context.add_error(failed_text=data, message="Use internal links syntax to specify links to the same domain")
+            context.add_error(
+                failed_text=data, message="Use internal links syntax to specify links to the same domain"
+            )
             return result
 
         if parsed_url.scheme == "":

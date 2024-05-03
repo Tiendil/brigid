@@ -1,11 +1,6 @@
-from typing import Any
-from unittest.mock import MagicMock, patch
-
-import pytest
 from brigid.library.storage import storage
 from brigid.library.tests import make as library_make
 from brigid.renderer.markdown_render import render_page
-from brigid.renderer.processors.images_block import Image, ImageModel, ImagesBlock, ImagesModel
 
 
 class TestExternalLink:
@@ -21,7 +16,10 @@ class TestExternalLink:
 
         result = render_page(page)
 
-        assert result.content == '<p><a href="http://example.com" target="_blank">xxx</a> + <a href="http://example.org" target="_blank">yyy</a></p>'
+        assert (
+            result.content
+            == '<p><a href="http://example.com" target="_blank">xxx</a> + <a href="http://example.org" target="_blank">yyy</a></p>'
+        )
 
     def test_no_schema(self) -> None:
 
@@ -35,7 +33,7 @@ class TestExternalLink:
         result = render_page(page)
 
         assert len(result.errors) == 1
-        assert result.errors[0].message == 'Specify schema/protocol for external links'
+        assert result.errors[0].message == "Specify schema/protocol for external links"
 
     def test_used_for_internal_links(self) -> None:
 
@@ -51,4 +49,4 @@ class TestExternalLink:
         result = render_page(page)
 
         assert len(result.errors) == 1
-        assert result.errors[0].message == 'Use internal links syntax to specify links to the same domain'
+        assert result.errors[0].message == "Use internal links syntax to specify links to the same domain"
