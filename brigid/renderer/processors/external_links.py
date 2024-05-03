@@ -1,10 +1,9 @@
 from urllib.parse import urlparse
 
-from markdown.inlinepatterns import LINK_RE as EXTERNAL_LINK_RE
-from markdown.inlinepatterns import LinkInlineProcessor
-
 from brigid.library.storage import storage
 from brigid.renderer.context import render_context
+from markdown.inlinepatterns import LINK_RE as EXTERNAL_LINK_RE
+from markdown.inlinepatterns import LinkInlineProcessor
 
 
 class ExternalLinkInlineProcessor(LinkInlineProcessor):
@@ -44,6 +43,9 @@ class ExternalLinkInlineProcessor(LinkInlineProcessor):
         if parsed_url.scheme != "" and parsed_url.netloc == "":
             context.add_error(failed_text=data, message="Specify domain for external links")
             return result
+
+        # all external links must be with target="_blank"
+        result[0].set("target", "_blank")
 
         return result
 
