@@ -1,11 +1,12 @@
 import pytest
+from bs4 import BeautifulSoup
+from html5lib import HTMLParser
+
 from brigid.domain.urls import UrlsPost, UrlsTags
 from brigid.library.storage import storage
 from brigid.library.tests import make as library_make
 from brigid.theme.entities import MetaInfo, Template
 from brigid.theme.templates import render
-from bs4 import BeautifulSoup
-from html5lib import HTMLParser
 
 
 def assert_correct_html(text: str) -> None:
