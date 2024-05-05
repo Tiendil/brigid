@@ -7,7 +7,7 @@
 
         @apply max-w-none max-w-2xl grow;
         @apply border-b-4 border-double;
-        @apply mb-8 pb-4 last:mb-0;
+        @apply mb-8 pb-4 last-of-type:mb-0;
 
         a {
             @apply underline-offset-2 decoration-from-font decoration-orange-600;

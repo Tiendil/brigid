@@ -3,6 +3,7 @@ import pathlib
 
 from markupsafe import Markup
 
+from brigid.domain import constants as domain_constants
 from brigid.domain.urls import UrlsRoot
 from brigid.library.entities import Page
 from brigid.library.storage import Storage, storage
@@ -13,6 +14,11 @@ from brigid.renderer.static_files import ImageInfo, files
 from brigid.theme.default_translations import translations
 from brigid.theme.settings import PhotoSwipe, settings
 from brigid.theme.utils import jinjafilter, jinjaglobal
+
+
+@jinjafilter
+def upper_first(text: str) -> str:
+    return text[0].upper() + text[1:]
 
 
 @jinjafilter
@@ -82,3 +88,8 @@ def test_marker(marker: str) -> str:
         return ""
 
     return Markup(marker)
+
+
+@jinjaglobal
+def brigid_repository() -> str:
+    return domain_constants.brigid_repository
