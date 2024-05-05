@@ -1871,6 +1871,7 @@ video {
 }
 
 .brigid-index-navigation {
+  max-width: 42rem;
   border-bottom-width: 4px;
   border-style: double;
   .brigid-index-navigation-item {

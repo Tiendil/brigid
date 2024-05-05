@@ -33,7 +33,7 @@
 
     .brigid-index-navigation {
 
-        @apply prose border-b-4 border-double;
+        @apply prose border-b-4 border-double max-w-2xl;
 
         .brigid-index-navigation-item {
             @apply inline-block;
