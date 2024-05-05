@@ -17,7 +17,7 @@ class MetaInfo(BaseEntity):
     allowed_languages: list[str]
 
     title: str
-    description: str
+    seo_description: str
     author: str
     tags: list[str]
     published_at: datetime.datetime | None

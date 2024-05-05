@@ -193,7 +193,7 @@ class Page(BaseEntity):
     # Google could show max from 155 to 160 characters from description in the search results
     # Facebook, Twitter could show more characters
     # But we'll stick to minimum from maximum
-    description: str = pydantic.Field(max_length=155)
+    seo_description: str = pydantic.Field(max_length=155)
 
     # could be None, but page should define it explicitly
     seo_image: str | None

@@ -2,7 +2,7 @@
 title = "Пост на не дефолтном языке"
 tags = ["example", "basic", "languages"]
 published_at = "2024-03-04T12:00:00+00:00"
-description = "Пример поста на не дефолтном языке."
+seo_description = "Пример поста на не дефолтном языке."
 seo_image = ""
 ---
 

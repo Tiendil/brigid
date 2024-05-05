@@ -40,7 +40,7 @@ class TestPageRender:
             language=page.language,
             allowed_languages=[page.language],
             title=page.title,
-            description=page.description,
+            seo_description=page.seo_description,
             author="author",
             # TODO: add some tags
             tags=[],
@@ -90,7 +90,7 @@ class TestIndexRender:
             language=language,
             allowed_languages=[],
             title="seo title",
-            description="seo description",
+            seo_description="seo description",
             author="author",
             tags=[],  # TODO: add tags
             published_at=None,
@@ -140,7 +140,7 @@ class TestIndexRender:
             language=language,
             allowed_languages=[],
             title="seo title",
-            description="seo description",
+            seo_description="seo description",
             author="author",
             tags=[],  # TODO: add tags
             published_at=None,

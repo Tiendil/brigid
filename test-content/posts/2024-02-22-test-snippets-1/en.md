@@ -2,7 +2,7 @@
 title = "Example of snippets 1"
 tags = ["example", "snippets"]
 published_at = "2024-02-22T12:00:00+00:00"
-description = "Examples of rendering snippets with relative imports."
+seo_description = "Examples of rendering snippets with relative imports."
 seo_image = ""
 ---
 

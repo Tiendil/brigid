@@ -2,7 +2,7 @@
 title = "Variants of basic rendering"
 tags = ["example", "basic", "images"]
 published_at = "2024-02-16T12:00:00+00:00"
-description = "Examples of rendering basic elements in web pages."
+seo_description = "Examples of rendering basic elements in web pages."
 seo_image = ""
 ---
 

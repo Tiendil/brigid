@@ -34,7 +34,7 @@ def page(  # noqa: CFQ002
     published_at: datetime.datetime | None = None,
     language: str = "en",
     title: str | None = None,
-    description: str | None = None,
+    seo_description: str | None = None,
     seo_image: str | None = None,
     body: str | None = None,
     tags: Iterable[str] = (),
@@ -50,8 +50,8 @@ def page(  # noqa: CFQ002
     if title is None:
         title = f"Title: {article.slug} {language}"
 
-    if description is None:
-        description = f"Description: {article.slug} {language}"
+    if seo_description is None:
+        seo_description = f"Description: {article.slug} {language}"
 
     if published_at is None:
         published_at = now()
@@ -65,7 +65,7 @@ def page(  # noqa: CFQ002
         published_at=published_at,
         language=language,
         title=title,
-        description=description,
+        seo_description=seo_description,
         seo_image=seo_image,
         body=body,
         tags=set(tags),
