@@ -33,7 +33,7 @@
 
     .brigid-index-navigation {
 
-        @apply prose border-b-4 border-double mb-4;
+        @apply prose border-b-4 border-double;
 
         .brigid-index-navigation-item {
             @apply inline-block;
@@ -90,6 +90,14 @@
 
             .brigid-languages-list-link {
                 @apply text-slate-400;
+            }
+        }
+
+        .brigid-footer {
+            @apply text-sm mt-4 border-b-0;
+
+            ul {
+                @apply list-none pl-0;
             }
         }
     }

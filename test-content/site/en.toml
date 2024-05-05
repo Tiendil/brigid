@@ -15,6 +15,10 @@ type = "external"
 name = "GitHub"
 url = "https://github.com/Tiendil/brigid"
 
+[license]
+url = "https://example.com"
+name = "License name"
+
 [tags_translations]
 example = "example"
 wide = "wide"

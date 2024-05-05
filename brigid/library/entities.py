@@ -6,10 +6,10 @@ from functools import cached_property
 from typing import Literal
 
 import pydantic
-
 from brigid.core.entities import BaseEntity
 from brigid.domain import urls
 from brigid.domain.entities import Environment
+
 
 MORE_RE = re.compile(r"<!--\s*more\s*-->", re.IGNORECASE)
 
@@ -91,10 +91,16 @@ class SimilarityConfig(BaseEntity):
     bonus_for_tags: dict[str, int] = pydantic.Field(default_factory=dict)
 
 
+class License(BaseEntity):
+    name: str
+    url: str
+
+
 class SiteLanguage(BaseEntity):
     title: str
     subtitle: str
     author: str
+    license: License | None = None
 
     tags_translations: dict[str, str] = pydantic.Field(default_factory=dict)
     theme_translations: dict[str, str] = pydantic.Field(default_factory=dict)
@@ -119,6 +125,10 @@ class Site(BaseEntity):
 
     footer_html: str | None = None
     header_html: str | None = None
+
+    content_repository: str | None = None
+
+    show_brigid_link: bool = True
 
     similarity: SimilarityConfig = SimilarityConfig()
 

@@ -1871,7 +1871,6 @@ video {
 }
 
 .brigid-index-navigation {
-  margin-bottom: 1rem;
   border-bottom-width: 4px;
   border-style: double;
   .brigid-index-navigation-item {
@@ -2001,6 +2000,24 @@ video {
     .brigid-languages-list-link {
       --tw-text-opacity: 1;
       color: rgb(148 163 184 / var(--tw-text-opacity));
+    }
+  }
+  .brigid-footer {
+    margin-top: 1rem;
+  }
+  .brigid-footer {
+    border-bottom-width: 0px;
+  }
+  .brigid-footer {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+  .brigid-footer {
+    ul {
+      list-style-type: none;
+    }
+    ul {
+      padding-left: 0px;
     }
   }
 }
