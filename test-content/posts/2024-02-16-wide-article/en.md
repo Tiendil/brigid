@@ -3,7 +3,7 @@ title = "Wide artice"
 tags = ["wide", "example"]
 template = "article_wide.html.j2"
 published_at = "2024-02-16T15:00:00+00:00"
-description = "Examples of wide article rendering."
+seo_description = "Examples of wide article rendering."
 seo_image = ""
 ---
 

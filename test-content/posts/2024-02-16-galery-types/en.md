@@ -2,7 +2,7 @@
 title = "Variants of galeries rendering"
 tags = ["example", "images"]
 published_at = "2024-02-16T14:00:00+00:00"
-description = "Examples of rendering galleries in web pages."
+seo_description = "Examples of rendering galleries in web pages."
 seo_image = ""
 ---
 

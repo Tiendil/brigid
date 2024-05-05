@@ -1,12 +1,11 @@
 import pytest
-from bs4 import BeautifulSoup
-from html5lib import HTMLParser
-
 from brigid.domain.urls import UrlsPost, UrlsTags
 from brigid.library.storage import storage
 from brigid.library.tests import make as library_make
 from brigid.theme.entities import MetaInfo, Template
 from brigid.theme.templates import render
+from bs4 import BeautifulSoup
+from html5lib import HTMLParser
 
 
 def assert_correct_html(text: str) -> None:
@@ -40,7 +39,7 @@ class TestPageRender:
             language=page.language,
             allowed_languages=[page.language],
             title=page.title,
-            description=page.description,
+            seo_description=page.seo_description,
             author="author",
             # TODO: add some tags
             tags=[],
@@ -90,7 +89,7 @@ class TestIndexRender:
             language=language,
             allowed_languages=[],
             title="seo title",
-            description="seo description",
+            seo_description="seo description",
             author="author",
             tags=[],  # TODO: add tags
             published_at=None,
@@ -140,7 +139,7 @@ class TestIndexRender:
             language=language,
             allowed_languages=[],
             title="seo title",
-            description="seo description",
+            seo_description="seo description",
             author="author",
             tags=[],  # TODO: add tags
             published_at=None,

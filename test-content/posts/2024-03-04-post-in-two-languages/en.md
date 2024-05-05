@@ -2,7 +2,7 @@
 title = "Post with translation"
 tags = ["example", "basic", "languages"]
 published_at = "2024-03-04T13:00:00+00:00"
-description = "Example post with translation."
+seo_description = "Example post with translation."
 seo_image = ""
 ---
 

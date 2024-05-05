@@ -20,7 +20,7 @@
 
   <title>{{meta_info.title}}</title>
 
-  <meta name="description" content="{{meta_info.description}}">
+  <meta name="description" content="{{meta_info.seo_description}}">
 
   <meta name="keywords" content="{{', '.join(meta_info.tags|sort)}}">
 
@@ -98,7 +98,7 @@
 
   <meta property="og:url" content="{{current_url.url()}}">
 
-  <meta property="og:description" content="{{meta_info.description}}">
+  <meta property="og:description" content="{{meta_info.seo_description}}">
 
   {# TODO: do we need to specify territories with langúage codes? #}
   {# og:locale - The locale these tags are marked up in. Of the format language_TERRITORY. Default is en_US. #}
@@ -127,7 +127,7 @@
 
   <meta property="og:url" content="{{current_url.url()}}">
 
-  <meta property="og:description" content="{{meta_info.description}}">
+  <meta property="og:description" content="{{meta_info.seo_description}}">
 
   {# TODO: do we need to specify territories with langúage codes? #}
   {# og:locale - The locale these tags are marked up in. Of the format language_TERRITORY. Default is en_US. #}
