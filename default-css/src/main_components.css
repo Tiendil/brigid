@@ -97,7 +97,7 @@
             @apply text-sm mt-4 border-b-0;
 
             ul {
-                @apply list-none pl-0;
+                @apply list-none p-0 m-0;
             }
         }
     }

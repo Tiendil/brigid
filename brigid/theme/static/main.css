@@ -2015,10 +2015,13 @@ video {
   }
   .brigid-footer {
     ul {
+      margin: 0px;
+    }
+    ul {
       list-style-type: none;
     }
     ul {
-      padding-left: 0px;
+      padding: 0px;
     }
   }
 }
@@ -2566,7 +2569,7 @@ video {
   padding-bottom: 1rem;
 }
 
-.brigid-article:last-child {
+.brigid-article:last-of-type {
   margin-bottom: 0px;
 }
 
