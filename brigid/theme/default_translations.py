@@ -10,7 +10,7 @@ translations = {
         "similarity_score_tooltip": "Уровень похожести",
         "license": "лицензия",
         "content_repository": "исходники постов",
-        "site_is_created_with": "сайт создан с помощью"
+        "site_is_created_with": "сайт создан с помощью",
     },
     "en": {
         "read_more": "Read more",
@@ -23,6 +23,6 @@ translations = {
         "similarity_score_tooltip": "Similarity score",
         "license": "license",
         "content_repository": "content repository",
-        "site_is_created_with": "site is created with"
+        "site_is_created_with": "site is created with",
     },
 }

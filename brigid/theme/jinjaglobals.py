@@ -1,6 +1,8 @@
 import os
 import pathlib
 
+from markupsafe import Markup
+
 from brigid.domain import constants as domain_constants
 from brigid.domain.urls import UrlsRoot
 from brigid.library.entities import Page
@@ -12,7 +14,6 @@ from brigid.renderer.static_files import ImageInfo, files
 from brigid.theme.default_translations import translations
 from brigid.theme.settings import PhotoSwipe, settings
 from brigid.theme.utils import jinjafilter, jinjaglobal
-from markupsafe import Markup
 
 
 @jinjafilter
