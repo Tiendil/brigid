@@ -117,6 +117,10 @@ List with links:
 - [Link 2](https://example.com)
 - [Link 3](https://example.com)
 
+raw link is a normal text: https://example.com
+
+raw link in corner brackets is a link: <https://example.com>
+
 ## Markup in galery captions
 
 /// brigid-images
