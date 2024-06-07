@@ -6,11 +6,25 @@ export BUMP_VERSION=$1
 
 echo "Bumping version as $BUMP_VERSION"
 
-export BRIGID_VERSION=$(poetry version $BUMP_VERSION --short)
-export BRIGID_VERSION_TAG="backend-$BRIGID_VERSION"
+export NEXT_VERSION=$(poetry version $BUMP_VERSION --short)
+export NEXT_VERSION_TAG="backend-$NEXT_VERSION"
 
-echo "New version is $BRIGID_VERSION"
-echo "New version tag $BRIGID_VERSION_TAG"
+echo "Install dependencies"
+
+poetry install
+
+echo "Update change log"
+
+poetry run changy version create $NEXT_VERSION
+
+echo "Generate changelog"
+
+poetry run changy changelog create
+
+export COMMIT_BODY=$(poetry run changy version show $NEXT_VERSION)
+
+echo "New version is $NEXT_VERSION"
+echo "New version tag $NEXT_VERSION_TAG"
 
 echo "Building Python package"
 
@@ -19,10 +33,10 @@ poetry build
 echo "Commit changes"
 
 git add -A
-git commit -m "Backend release ${BRIGID_VERSION}"
+git commit -m "Release $NEXT_VERSION" -m "$COMMIT_BODY"
 git push
 
 echo "Create tag"
 
-git tag $BRIGID_VERSION_TAG
-git push origin $BRIGID_VERSION_TAG
+git tag $NEXT_VERSION_TAG
+git push origin $NEXT_VERSION_TAG

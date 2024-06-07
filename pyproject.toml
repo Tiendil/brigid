@@ -56,6 +56,8 @@ typer = "0.9.*"
 [tool.poetry.dev-dependencies]
 uvicorn = {version = "0.27.*", extras = ["standard"]}
 
+changy = "0.*"
+
 pytest = "7.4.*"
 pytest-asyncio = "0.21.*"
 pytest-mock = "3.11.*"
