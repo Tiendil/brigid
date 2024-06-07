@@ -7,7 +7,7 @@ export BUMP_VERSION=$1
 echo "Bumping version as $BUMP_VERSION"
 
 export NEXT_VERSION=$(poetry version $BUMP_VERSION --short)
-export NEXT_VERSION_TAG="backend-$NEXT_VERSION"
+export NEXT_VERSION_TAG="release-$NEXT_VERSION"
 
 echo "Install dependencies"
 
