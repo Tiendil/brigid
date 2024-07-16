@@ -37,6 +37,7 @@ def _construct() -> markdown.Markdown:
             "pymdownx.saneheaders",
             "pymdownx.tilde",
             "pymdownx.blocks.details",
+            "markdown.extensions.tables",
         ],
         extension_configs=configs,
     )
