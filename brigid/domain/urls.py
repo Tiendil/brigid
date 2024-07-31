@@ -4,6 +4,7 @@ from typing import Any, Iterable
 from urllib.parse import urlparse, urlunparse
 
 
+# TODO: refactor to use data from the request context
 def base_url() -> str:
     from brigid.library.storage import storage
 
@@ -12,6 +13,9 @@ def base_url() -> str:
 
 
 def normalize_url(url: str) -> str:
+
+    if '://' not in url:
+        raise NotImplementedError("Not full url")
 
     schema, tail = url.split("://")
 
@@ -22,7 +26,16 @@ def normalize_url(url: str) -> str:
 
     parsed_url = urlparse(url)
     normalized_path = posixpath.normpath(parsed_url.path)
-    return urlunparse(parsed_url._replace(path=normalized_path))
+
+    if normalized_path == '.':
+        normalized_path = ''
+
+    result = urlunparse(parsed_url._replace(path=normalized_path))
+
+    if result[-1] == '/':
+        result = result[:-1]
+
+    return result
 
 
 class UrlsBase:
