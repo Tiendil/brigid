@@ -1,6 +1,7 @@
 import copy
 import pytest
 from typing import Any
+from unittest import mock
 
 from brigid.domain.urls import normalize_url, UrlsBase, UrlsFeedsAtom, UrlsAuthor, UrlsPost, UrlsTags, UrlsSiteMapFull, UrlsRoot
 
@@ -195,3 +196,27 @@ class TestUrlsTags(_TestUrlsBase):
                         excluded_tags=())
 
         assert url.url() == f"{base_url}/{self.base_language}/tags/13"
+
+    @mock.patch('brigid.domain.urls.UrlsTags.total_pages', 100500)
+    def test_is_same_index(self, url: UrlsBase) -> None:
+        assert url.is_same_index(url)
+        assert url.is_same_index(url.move_page(1))
+        assert url.is_same_index(url.move_page(-1))
+
+        assert not url.is_same_index(url.require('f'))
+        assert not url.is_same_index(url.exclude('f'))
+        assert not url.is_same_index(url.remove('a'))
+        assert not url.is_same_index(url.remove('c'))
+        assert not url.is_same_index(url.to_language(self.alt_language))
+
+    @mock.patch('brigid.domain.urls.UrlsTags.total_pages', 100500)
+    def test_is_prev_to(self, url: UrlsBase) -> None:
+        assert not url.is_prev_to(url)
+        assert not url.is_prev_to(url.move_page(-1))
+        assert url.is_prev_to(url.move_page(1))
+
+    @mock.patch('brigid.domain.urls.UrlsTags.total_pages', 100500)
+    def test_is_next_to(self, url: UrlsBase) -> None:
+        assert not url.is_next_to(url)
+        assert url.is_next_to(url.move_page(-1))
+        assert not url.is_next_to(url.move_page(1))
