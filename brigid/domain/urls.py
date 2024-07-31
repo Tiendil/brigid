@@ -50,7 +50,7 @@ class UrlsBase:
         raise NotImplementedError("url")
 
     def file_url(self, relative_path: str) -> str:
-        raise ValueError("file_url")
+        raise NotImplementedError("file_url")
 
     def to_root(self) -> "UrlsRoot":
         return UrlsRoot(language=self.language)
