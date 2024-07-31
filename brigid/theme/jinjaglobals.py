@@ -99,4 +99,4 @@ def brigid_repository() -> str:
 
 @jinjaglobal
 def request_context_get(name: str) -> Any:
-    request_context = d_request_context.get(name)
+    return d_request_context.get(name)

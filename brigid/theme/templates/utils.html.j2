@@ -1,9 +1,12 @@
 
 {% macro tags_url(name, url, class) %}
+  {%- set page_url = request_context_get('url') -%}
+
   <a class="{{class}}"
-     {% set page_url = request_context_get('url') %}
+
      {% if url.is_prev_to(page_url) %}rel="prev"{% endif %}
      {% if url.is_next_to(page_url) %}rel="next"{% endif %}
+
      href="{{url.url()}}">
     {{name}}
   </a>
