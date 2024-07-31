@@ -80,6 +80,12 @@ class UrlsBase:
     def to_site_map_full(self) -> "UrlsSiteMapFull":
         return UrlsSiteMapFull(language=self.language)
 
+    def __eq__(self, other: 'UrlsBase') -> None:
+        if not isinstance(other, self.__class__):
+            return False
+
+        return self.language == other.language
+
 
 class UrlsRoot(UrlsBase):
     __slots__ = ()
@@ -122,6 +128,12 @@ class UrlsPost(UrlsBase):
     def file_url(self, relative_path: str) -> str:
         return normalize_url(f"{base_url()}/static/posts/{self.slug}/{relative_path}")
 
+    def __eq__(self, other: UrlsBase) -> None:
+        if not super().__eq__(other):
+            return False
+
+        return self.slug == other.slug
+
 
 class UrlsTags(UrlsBase):
     __slots__ = ("page", "required_tags", "excluded_tags", "selected_tags")
@@ -139,6 +151,15 @@ class UrlsTags(UrlsBase):
         self.required_tags = frozenset(required_tags)
         self.excluded_tags = frozenset(excluded_tags)
         self.selected_tags = self.required_tags | self.excluded_tags
+
+    def __eq__(self, other: UrlsBase) -> None:
+        if not super().__eq__(other):
+            return False
+
+        return (self.page == other.page and
+                self.required_tags == other.required_tags and
+                self.excluded_tags == other.excluded_tags)
+
 
     def is_same_index(self, current_url: UrlsBase) -> bool:
         if not isinstance(current_url, UrlsTags):

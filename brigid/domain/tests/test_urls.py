@@ -80,7 +80,7 @@ class _TestUrlsBase:
             excluded_tags=('c', 'd', 'e'),
         )
 
-        assert filter_url == excluded_tags
+        assert filter_url == expected_filter_url
 
     def test_language(self, url: UrlsBase) -> None:
         expected_url = copy.deepcopy(url)
