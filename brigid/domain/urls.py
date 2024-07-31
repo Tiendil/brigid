@@ -127,6 +127,27 @@ class UrlsTags(UrlsBase):
         self.excluded_tags = frozenset(excluded_tags)
         self.selected_tags = self.required_tags | self.excluded_tags
 
+    def is_same_index(self, current_url: UrlsBase) -> bool:
+        if not isinstance(current_url, UrlsTags):
+            return False
+
+        if self.required_tags != current_url.required_tags:
+            return False
+
+        if self.excluded_tags != current_url.excluded_tags:
+            return False
+
+        if self.language != current_url.language:
+            return False
+
+        return True
+
+    def is_prev_to(self, current_url: UrlsBase) -> bool:
+        return self.is_same_index(current_url) and self.page + 1 == current_url.page
+
+    def is_next_to(self, current_url: UrlsBase) -> bool:
+        return self.is_same_index(current_url) and self.page - 1 == current_url.page
+
     # TODO: cache
     @property
     def total_pages(self) -> int:

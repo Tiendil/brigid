@@ -1,5 +1,6 @@
 import os
 import pathlib
+from typing import Any
 
 from markupsafe import Markup
 
@@ -14,6 +15,7 @@ from brigid.renderer.static_files import ImageInfo, files
 from brigid.theme.default_translations import translations
 from brigid.theme.settings import PhotoSwipe, settings
 from brigid.theme.utils import jinjafilter, jinjaglobal
+from brigid.domain import request_context as d_request_context
 
 
 @jinjafilter
@@ -93,3 +95,13 @@ def test_marker(marker: str) -> str:
 @jinjaglobal
 def brigid_repository() -> str:
     return domain_constants.brigid_repository
+
+
+@jinjaglobal
+def error(message: str) -> None:
+    raise NotImplementedError(message)
+
+
+@jinjaglobal
+def request_context_get(name: str) -> Any:
+    request_context = d_request_context.get(name)

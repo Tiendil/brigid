@@ -7,6 +7,7 @@ from brigid.library.storage import storage
 from brigid.library.tests import make as library_make
 from brigid.theme.entities import MetaInfo, Template
 from brigid.theme.templates import render
+from brigid.domain import request_context
 
 
 def assert_correct_html(text: str) -> None:
@@ -49,6 +50,9 @@ class TestPageRender:
         )
 
         post_url = UrlsPost(language=page.language, slug=article.slug)
+
+        request_context.set("language", page.language)
+        request_context.set("url", post_url)
 
         content = render(
             str(Template.article_page),
@@ -105,6 +109,9 @@ class TestIndexRender:
             excluded_tags=[],
         )
 
+        request_context.set("language", language)
+        request_context.set("url", filter_state)
+
         content = render(
             "./blog_index.html.j2",
             {
@@ -154,6 +161,9 @@ class TestIndexRender:
             required_tags=[],
             excluded_tags=[],
         )
+
+        request_context.set("language", language)
+        request_context.set("url", filter_state)
 
         content = render(
             "./blog_index.html.j2",
