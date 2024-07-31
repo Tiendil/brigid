@@ -98,10 +98,5 @@ def brigid_repository() -> str:
 
 
 @jinjaglobal
-def error(message: str) -> None:
-    raise NotImplementedError(message)
-
-
-@jinjaglobal
 def request_context_get(name: str) -> Any:
     request_context = d_request_context.get(name)
