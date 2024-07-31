@@ -220,3 +220,87 @@ class TestUrlsTags(_TestUrlsBase):
         assert not url.is_next_to(url)
         assert url.is_next_to(url.move_page(-1))
         assert not url.is_next_to(url.move_page(1))
+
+    def test_first_page(self, url: UrlsBase) -> None:
+        assert url.first_page() == UrlsTags(language=self.base_language,
+                                            page=1,
+                                            required_tags=url.required_tags,
+                                            excluded_tags=url.excluded_tags)
+
+    @mock.patch('brigid.domain.urls.UrlsTags.total_pages', 100500)
+    def test_last_page(self, url: UrlsBase) -> None:
+        assert url.last_page() == UrlsTags(language=self.base_language,
+                                           page=100500,
+                                           required_tags=url.required_tags,
+                                           excluded_tags=url.excluded_tags)
+
+    @mock.patch('brigid.domain.urls.UrlsTags.total_pages', 100500)
+    def test_last_page(self, url: UrlsBase) -> None:
+        assert url.move_page(3) == UrlsTags(language=self.base_language,
+                                            page=url.page + 3,
+                                            required_tags=url.required_tags,
+                                            excluded_tags=url.excluded_tags)
+
+    @mock.patch('brigid.domain.urls.UrlsTags.total_pages', 100500)
+    def test_last_page__too_low(self, url: UrlsBase) -> None:
+        with pytest.raises(NotImplementedError):
+            url.move_page(-10005000)
+
+    @mock.patch('brigid.domain.urls.UrlsTags.total_pages', 100500)
+    def test_last_page__too_big(self, url: UrlsBase) -> None:
+        with pytest.raises(NotImplementedError):
+            url.move_page(10005000)
+
+    def test_require(self, url: UrlsBase) -> None:
+        assert url.require('f') == UrlsTags(language=self.base_language,
+                                            page=1,
+                                            required_tags=('a', 'd', 'f'),
+                                            excluded_tags=('c', 'b', 'e'))
+
+    def test_require__move(self, url: UrlsBase) -> None:
+        assert url.require('b') == UrlsTags(language=self.base_language,
+                                            page=1,
+                                            required_tags=('a', 'd', 'b'),
+                                            excluded_tags=('c', 'e'))
+
+    def test_require__duplicated(self, url: UrlsBase) -> None:
+        assert url.require('a') == UrlsTags(language=self.base_language,
+                                            page=1,
+                                            required_tags=('a', 'd'),
+                                            excluded_tags=('c', 'b', 'e'))
+
+    def test_exclude(self, url: UrlsBase) -> None:
+        assert url.exclude('f') == UrlsTags(language=self.base_language,
+                                            page=1,
+                                            required_tags=('a', 'd'),
+                                            excluded_tags=('c', 'b', 'e', 'f'))
+
+    def test_exclude__move(self, url: UrlsBase) -> None:
+        assert url.exclude('d') == UrlsTags(language=self.base_language,
+                                            page=1,
+                                            required_tags=('a',),
+                                            excluded_tags=('c', 'b', 'd', 'e'))
+
+    def test_exclude__duplicated(self, url: UrlsBase) -> None:
+        assert url.exclude('b') == UrlsTags(language=self.base_language,
+                                            page=1,
+                                            required_tags=('a', 'd'),
+                                            excluded_tags=('c', 'b', 'e'))
+
+    def test_remove__no_tag(self, url: UrlsBase) -> None:
+        assert url.remove('f') == UrlsTags(language=self.base_language,
+                                            page=1,
+                                            required_tags=('a', 'd'),
+                                            excluded_tags=('c', 'b', 'e'))
+
+    def test_remove__from_required(self, url: UrlsBase) -> None:
+        assert url.remove('d') == UrlsTags(language=self.base_language,
+                                            page=1,
+                                            required_tags=('a',),
+                                            excluded_tags=('c', 'b', 'e'))
+
+    def test_remove__from_excluded(self, url: UrlsBase) -> None:
+        assert url.remove('b') == UrlsTags(language=self.base_language,
+                                            page=1,
+                                            required_tags=('a', 'd'),
+                                            excluded_tags=('c', 'e'))

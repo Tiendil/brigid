@@ -182,7 +182,9 @@ class UrlsTags(UrlsBase):
     def is_next_to(self, current_url: UrlsBase) -> bool:
         return self.is_same_index(current_url) and self.page - 1 == current_url.page
 
-    # TODO: cache
+    # TODO: cache, maybe cache temporary on the storage level
+    # TODO: add tests
+    # TODO: this place could caus performance issues because of rendering a lot of links
     @property
     def total_pages(self) -> int:
         from brigid.library.storage import storage
@@ -243,7 +245,7 @@ class UrlsTags(UrlsBase):
     def move_page(self, delta: int) -> "UrlsTags":
         new_page = self.page + delta
 
-        if self.page < 1 or self.page > self.total_pages:
+        if new_page < 1 or new_page > self.total_pages:
             raise NotImplementedError("Wrong page number")
 
         return UrlsTags(
