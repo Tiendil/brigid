@@ -1,4 +1,3 @@
-
 import copy
 import pytest
 from typing import Any
@@ -107,7 +106,7 @@ class TestUrlsBase(_TestUrlsBase):
 
 class TestUrlsRoot(_TestUrlsBase):
 
-    def _consruct_url(self) -> UrlsBase:
+    def _consruct_url(self) -> UrlsRoot:
         return UrlsRoot(language=self.base_language)
 
     def test_url_method_redefined(self, url: UrlsBase) -> None:
@@ -116,7 +115,7 @@ class TestUrlsRoot(_TestUrlsBase):
 
 class TestUrlsAuthor(_TestUrlsBase):
 
-    def _consruct_url(self) -> UrlsBase:
+    def _consruct_url(self) -> UrlsAuthor:
         return UrlsAuthor(language=self.base_language)
 
     def test_url_method_redefined(self, url: UrlsBase) -> None:
@@ -125,7 +124,7 @@ class TestUrlsAuthor(_TestUrlsBase):
 
 class TestUrlsFeedsAtom(_TestUrlsBase):
 
-    def _consruct_url(self) -> UrlsBase:
+    def _consruct_url(self) -> UrlsFeedsAtom:
         return UrlsFeedsAtom(language=self.base_language)
 
     def test_url_method_redefined(self, url: UrlsBase) -> None:
@@ -134,8 +133,11 @@ class TestUrlsFeedsAtom(_TestUrlsBase):
 
 class TestUrlsPost(_TestUrlsBase):
 
-    def _consruct_url(self) -> UrlsBase:
+    def _consruct_url(self) -> UrlsPost:
         return UrlsPost(language=self.base_language, slug='some-slug')
+
+    def test_initialized(self, url: UrlsBase) -> None:
+        assert url.slug == 'some-slug'
 
     def test_url_method_redefined(self, url: UrlsBase) -> None:
         assert url.url() == f"{base_url}/{self.base_language}/posts/some-slug"
@@ -143,3 +145,53 @@ class TestUrlsPost(_TestUrlsBase):
     def test_file_url(self, url: UrlsBase) -> None:
         filepath = 'images/some-image.png'
         assert url.file_url(filepath) == f"{base_url}/static/posts/some-slug/{filepath}"
+
+
+class TestUrlsTags(_TestUrlsBase):
+
+    def _consruct_url(self) -> UrlsTags:
+        return UrlsTags(language=self.base_language,
+                        page=13,
+                        required_tags=('a', 'd'),
+                        excluded_tags=('c', 'b', 'e'))
+
+    def test_initialized(self, url: UrlsBase) -> None:
+        assert url.page == 13
+        assert url.required_tags == {'a', 'd'}
+        assert url.excluded_tags == {'c', 'b', 'e'}
+        assert url.selected_tags == {'a', 'b', 'c', 'd', 'e'}
+
+    def test_url_method_redefined(self, url: UrlsBase) -> None:
+        assert url.url() == f"{base_url}/{self.base_language}/tags/a/-b/-c/d/-e/13"
+
+    def test_url_method__empty(self) -> None:
+        url = UrlsTags(language=self.base_language,
+                        page=1,
+                        required_tags=(),
+                        excluded_tags=())
+
+        assert url.url() == f"{base_url}/{self.base_language}"
+
+    def test_url_method__only_required(self) -> None:
+        url = UrlsTags(language=self.base_language,
+                        page=1,
+                        required_tags=('a', 'b'),
+                        excluded_tags=())
+
+        assert url.url() == f"{base_url}/{self.base_language}/tags/a/b"
+
+    def test_url_method__only_excluded(self) -> None:
+        url = UrlsTags(language=self.base_language,
+                        page=1,
+                        required_tags=(),
+                        excluded_tags=('a', 'b'))
+
+        assert url.url() == f"{base_url}/{self.base_language}/tags/-a/-b"
+
+    def test_url_method__only_page(self) -> None:
+        url = UrlsTags(language=self.base_language,
+                        page=13,
+                        required_tags=(),
+                        excluded_tags=())
+
+        assert url.url() == f"{base_url}/{self.base_language}/tags/13"
