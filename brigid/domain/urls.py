@@ -41,7 +41,7 @@ def normalize_url(url: str) -> str:
 class UrlsBase:
     __slots__ = ("language",)
 
-    is_nofollow = False
+    # is_nofollow = False
 
     def __init__(self, language: str) -> None:
         self.language = language
@@ -176,15 +176,15 @@ class UrlsTags(UrlsBase):
         total_pages = (len(all_pages) + site.posts_per_page - 1) // site.posts_per_page
         return total_pages
 
-    @property
-    def is_nofollow(self) -> bool:
-        # we do not want crawlers to index pages with filters
-        # because there are infinite number of them
-        return bool(self.selected_tags)
+    # @property
+    # def is_nofollow(self) -> bool:
+    #     # we do not want crawlers to index pages with filters
+    #     # because there are infinite number of them
+    #     return bool(self.selected_tags)
 
-    @is_nofollow.setter
-    def is_nofollow(self, value: str) -> None:
-        raise AttributeError("attribute is read-only")
+    # @is_nofollow.setter
+    # def is_nofollow(self, value: str) -> None:
+    #     raise AttributeError("attribute is read-only")
 
     def url(self) -> str:
         tags = list(self.required_tags | self.excluded_tags)
