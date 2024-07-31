@@ -6,6 +6,9 @@ from typing import Any
 from brigid.domain.urls import normalize_url, UrlsBase, UrlsFeedsAtom, UrlsAuthor, UrlsPost, UrlsTags, UrlsSiteMapFull, UrlsRoot
 
 
+base_url = 'http://0.0.0.0:8000'
+
+
 class TestNormalizeUrl:
 
     @pytest.mark.parametrize('url_in',
@@ -52,7 +55,7 @@ class _TestUrlsBase:
     def test_url_method_redefined(self, url: UrlsBase) -> None:
         assert isinstance(url.url(), str)
 
-    def test_file_url_is_not_valid(self, url: UrlsBase) -> None:
+    def test_file_url(self, url: UrlsBase) -> None:
         with pytest.raises(NotImplementedError):
             url.file_url('')
 
@@ -100,3 +103,43 @@ class TestUrlsBase(_TestUrlsBase):
     def test_url_method_redefined(self, url: UrlsBase) -> None:
         with pytest.raises(NotImplementedError):
             url.url()
+
+
+class TestUrlsRoot(_TestUrlsBase):
+
+    def _consruct_url(self) -> UrlsBase:
+        return UrlsRoot(language=self.base_language)
+
+    def test_url_method_redefined(self, url: UrlsBase) -> None:
+        assert url.url() == f"{base_url}/{self.base_language}"
+
+
+class TestUrlsAuthor(_TestUrlsBase):
+
+    def _consruct_url(self) -> UrlsBase:
+        return UrlsAuthor(language=self.base_language)
+
+    def test_url_method_redefined(self, url: UrlsBase) -> None:
+        assert url.url() == f"{base_url}/{self.base_language}/about"
+
+
+class TestUrlsFeedsAtom(_TestUrlsBase):
+
+    def _consruct_url(self) -> UrlsBase:
+        return UrlsFeedsAtom(language=self.base_language)
+
+    def test_url_method_redefined(self, url: UrlsBase) -> None:
+        assert url.url() == f"{base_url}/{self.base_language}/feeds/atom"
+
+
+class TestUrlsPost(_TestUrlsBase):
+
+    def _consruct_url(self) -> UrlsBase:
+        return UrlsPost(language=self.base_language, slug='some-slug')
+
+    def test_url_method_redefined(self, url: UrlsBase) -> None:
+        assert url.url() == f"{base_url}/{self.base_language}/posts/some-slug"
+
+    def test_file_url(self, url: UrlsBase) -> None:
+        filepath = 'images/some-image.png'
+        assert url.file_url(filepath) == f"{base_url}/static/posts/some-slug/{filepath}"
