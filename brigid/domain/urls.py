@@ -2,14 +2,11 @@ import copy
 import posixpath
 from typing import Any, Iterable
 from urllib.parse import urlparse, urlunparse
+from brigid.domain import request_context
 
 
-# TODO: refactor to use data from the request context
-def base_url() -> str:
-    from brigid.library.storage import storage
-
-    site = storage.get_site()
-    return site.url
+def _base_url() -> str:
+    return request_context.get("site").url
 
 
 def normalize_url(url: str) -> str:
@@ -92,28 +89,28 @@ class UrlsRoot(UrlsBase):
     __slots__ = ()
 
     def url(self) -> str:
-        return normalize_url(f"{base_url()}/{self.language}")
+        return normalize_url(f"{_base_url()}/{self.language}")
 
 
 class UrlsAuthor(UrlsBase):
     __slots__ = ()
 
     def url(self) -> str:
-        return normalize_url(f"{base_url()}/{self.language}/about")
+        return normalize_url(f"{_base_url()}/{self.language}/about")
 
 
 class UrlsFeedsAtom(UrlsBase):
     __slots__ = ()
 
     def url(self) -> str:
-        return normalize_url(f"{base_url()}/{self.language}/feeds/atom")
+        return normalize_url(f"{_base_url()}/{self.language}/feeds/atom")
 
 
 class UrlsSiteMapFull(UrlsBase):
     __slots__ = ()
 
     def url(self) -> str:
-        return normalize_url(f"{base_url()}/sitemap.xml")
+        return normalize_url(f"{_base_url()}/sitemap.xml")
 
 
 class UrlsPost(UrlsBase):
@@ -124,10 +121,10 @@ class UrlsPost(UrlsBase):
         self.slug = slug
 
     def url(self) -> str:
-        return normalize_url(f"{base_url()}/{self.language}/posts/{self.slug}")
+        return normalize_url(f"{_base_url()}/{self.language}/posts/{self.slug}")
 
     def file_url(self, relative_path: str) -> str:
-        return normalize_url(f"{base_url()}/static/posts/{self.slug}/{relative_path}")
+        return normalize_url(f"{_base_url()}/static/posts/{self.slug}/{relative_path}")
 
     def __eq__(self, other: UrlsBase) -> None:
         if not super().__eq__(other):
@@ -216,11 +213,11 @@ class UrlsTags(UrlsBase):
             tags.append(str(self.page))
 
         if not tags:
-            return normalize_url(f"{base_url()}/{self.language}")
+            return normalize_url(f"{_base_url()}/{self.language}")
 
         tags_path = "/".join(tags)
 
-        return normalize_url(f"{base_url()}/{self.language}/tags/{tags_path}")
+        return normalize_url(f"{_base_url()}/{self.language}/tags/{tags_path}")
 
     def first_page(self) -> "UrlsTags":
         return UrlsTags(

@@ -81,4 +81,5 @@ async def process_expected_error(request, error):
 
 async def request_context(request: fastapi.Request, call_next: Any):
     with d_request_context.init():
+        d_request_context.set('site', storage.get_site())
         return await call_next(request)

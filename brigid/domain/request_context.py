@@ -7,6 +7,7 @@ import enum
 class Variable(enum.StrEnum):
     language = "language"
     url = "url"
+    site = "site"
 
 
 request_context = contextvars.ContextVar("request_context")
