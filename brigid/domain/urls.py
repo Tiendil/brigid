@@ -3,15 +3,17 @@ import posixpath
 from typing import Any, Iterable
 from urllib.parse import urlparse, urlunparse
 
+from brigid.domain import request_context
 
-def base_url() -> str:
-    from brigid.library.storage import storage
 
-    site = storage.get_site()
-    return site.url
+def _base_url() -> str:
+    return request_context.get("site").url  # type: ignore
 
 
 def normalize_url(url: str) -> str:
+
+    if "://" not in url:
+        raise NotImplementedError("Not full url")
 
     schema, tail = url.split("://")
 
@@ -22,13 +24,23 @@ def normalize_url(url: str) -> str:
 
     parsed_url = urlparse(url)
     normalized_path = posixpath.normpath(parsed_url.path)
-    return urlunparse(parsed_url._replace(path=normalized_path))
+
+    if normalized_path == ".":
+        normalized_path = ""
+
+    result = urlunparse(parsed_url._replace(path=normalized_path))
+
+    if result[-1] == "/":
+        result = result[:-1]
+
+    return result
 
 
 class UrlsBase:
     __slots__ = ("language",)
 
-    is_nofollow = False
+    def is_noindex(self) -> bool:
+        return False
 
     def __init__(self, language: str) -> None:
         self.language = language
@@ -37,7 +49,7 @@ class UrlsBase:
         raise NotImplementedError("url")
 
     def file_url(self, relative_path: str) -> str:
-        raise ValueError("file_url")
+        raise NotImplementedError("file_url")
 
     def to_root(self) -> "UrlsRoot":
         return UrlsRoot(language=self.language)
@@ -67,33 +79,39 @@ class UrlsBase:
     def to_site_map_full(self) -> "UrlsSiteMapFull":
         return UrlsSiteMapFull(language=self.language)
 
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, self.__class__):
+            return False
+
+        return self.language == other.language
+
 
 class UrlsRoot(UrlsBase):
     __slots__ = ()
 
     def url(self) -> str:
-        return normalize_url(f"{base_url()}/{self.language}")
+        return normalize_url(f"{_base_url()}/{self.language}")
 
 
 class UrlsAuthor(UrlsBase):
     __slots__ = ()
 
     def url(self) -> str:
-        return normalize_url(f"{base_url()}/{self.language}/about")
+        return normalize_url(f"{_base_url()}/{self.language}/about")
 
 
 class UrlsFeedsAtom(UrlsBase):
     __slots__ = ()
 
     def url(self) -> str:
-        return normalize_url(f"{base_url()}/{self.language}/feeds/atom")
+        return normalize_url(f"{_base_url()}/{self.language}/feeds/atom")
 
 
 class UrlsSiteMapFull(UrlsBase):
     __slots__ = ()
 
     def url(self) -> str:
-        return normalize_url(f"{base_url()}/sitemap.xml")
+        return normalize_url(f"{_base_url()}/sitemap.xml")
 
 
 class UrlsPost(UrlsBase):
@@ -104,10 +122,16 @@ class UrlsPost(UrlsBase):
         self.slug = slug
 
     def url(self) -> str:
-        return normalize_url(f"{base_url()}/{self.language}/posts/{self.slug}")
+        return normalize_url(f"{_base_url()}/{self.language}/posts/{self.slug}")
 
     def file_url(self, relative_path: str) -> str:
-        return normalize_url(f"{base_url()}/static/posts/{self.slug}/{relative_path}")
+        return normalize_url(f"{_base_url()}/static/posts/{self.slug}/{relative_path}")
+
+    def __eq__(self, other: Any) -> bool:
+        if not super().__eq__(other):
+            return False
+
+        return self.slug == other.slug
 
 
 class UrlsTags(UrlsBase):
@@ -127,7 +151,40 @@ class UrlsTags(UrlsBase):
         self.excluded_tags = frozenset(excluded_tags)
         self.selected_tags = self.required_tags | self.excluded_tags
 
-    # TODO: cache
+    def __eq__(self, other: Any) -> bool:
+        if not super().__eq__(other):
+            return False
+
+        return (
+            self.page == other.page
+            and self.required_tags == other.required_tags
+            and self.excluded_tags == other.excluded_tags
+        )
+
+    def _is_same_index(self, current_url: UrlsBase) -> bool:
+        if not isinstance(current_url, UrlsTags):
+            return False
+
+        if self.required_tags != current_url.required_tags:
+            return False
+
+        if self.excluded_tags != current_url.excluded_tags:
+            return False
+
+        if self.language != current_url.language:
+            return False
+
+        return True
+
+    def is_prev_to(self, current_url: UrlsBase) -> bool:
+        return self._is_same_index(current_url) and self.page + 1 == current_url.page  # type: ignore
+
+    def is_next_to(self, current_url: UrlsBase) -> bool:
+        return self._is_same_index(current_url) and self.page - 1 == current_url.page  # type: ignore
+
+    # TODO: cache, maybe cache temporary on the storage level
+    # TODO: add tests
+    # TODO: this place could caus performance issues because of rendering a lot of links
     @property
     def total_pages(self) -> int:
         from brigid.library.storage import storage
@@ -142,15 +199,10 @@ class UrlsTags(UrlsBase):
         total_pages = (len(all_pages) + site.posts_per_page - 1) // site.posts_per_page
         return total_pages
 
-    @property
-    def is_nofollow(self) -> bool:
+    def is_noindex(self) -> bool:
         # we do not want crawlers to index pages with filters
         # because there are infinite number of them
         return bool(self.selected_tags)
-
-    @is_nofollow.setter
-    def is_nofollow(self, value: str) -> None:
-        raise AttributeError("attribute is read-only")
 
     def url(self) -> str:
         tags = list(self.required_tags | self.excluded_tags)
@@ -163,11 +215,11 @@ class UrlsTags(UrlsBase):
             tags.append(str(self.page))
 
         if not tags:
-            return normalize_url(f"{base_url()}/{self.language}")
+            return normalize_url(f"{_base_url()}/{self.language}")
 
         tags_path = "/".join(tags)
 
-        return normalize_url(f"{base_url()}/{self.language}/tags/{tags_path}")
+        return normalize_url(f"{_base_url()}/{self.language}/tags/{tags_path}")
 
     def first_page(self) -> "UrlsTags":
         return UrlsTags(
@@ -188,7 +240,7 @@ class UrlsTags(UrlsBase):
     def move_page(self, delta: int) -> "UrlsTags":
         new_page = self.page + delta
 
-        if self.page < 1 or self.page > self.total_pages:
+        if new_page < 1 or new_page > self.total_pages:
             raise NotImplementedError("Wrong page number")
 
         return UrlsTags(

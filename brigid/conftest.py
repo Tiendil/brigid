@@ -7,6 +7,8 @@ import pytest
 import pytest_asyncio
 
 from brigid.application import application
+from brigid.domain import request_context
+from brigid.library.storage import storage
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -19,6 +21,13 @@ def event_loop() -> Generator[asyncio.AbstractEventLoop, asyncio.AbstractEventLo
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
     loop.close()
+
+
+@pytest.fixture(autouse=True)
+def reset_request_context():
+    with request_context.init():
+        request_context.set("site", storage.get_site())
+        yield
 
 
 @pytest_asyncio.fixture(scope="session", autouse=True)

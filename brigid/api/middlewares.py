@@ -6,6 +6,7 @@ from sentry_sdk import capture_exception
 
 from brigid.api import renderers
 from brigid.api.utils import choose_language
+from brigid.domain import request_context as d_request_context
 from brigid.library.storage import storage
 
 
@@ -76,3 +77,9 @@ async def process_expected_error(request, error):
     language = choose_language(request)
 
     return renderers.render_page(language, "500", status_code=500)
+
+
+async def request_context(request: fastapi.Request, call_next: Any):
+    with d_request_context.init():
+        d_request_context.set("site", storage.get_site())
+        return await call_next(request)

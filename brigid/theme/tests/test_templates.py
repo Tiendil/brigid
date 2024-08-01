@@ -2,6 +2,7 @@ import pytest
 from bs4 import BeautifulSoup
 from html5lib import HTMLParser
 
+from brigid.domain import request_context
 from brigid.domain.urls import UrlsPost, UrlsTags
 from brigid.library.storage import storage
 from brigid.library.tests import make as library_make
@@ -49,6 +50,9 @@ class TestPageRender:
         )
 
         post_url = UrlsPost(language=page.language, slug=article.slug)
+
+        request_context.set("language", page.language)
+        request_context.set("url", post_url)
 
         content = render(
             str(Template.article_page),
@@ -105,6 +109,9 @@ class TestIndexRender:
             excluded_tags=[],
         )
 
+        request_context.set("language", language)
+        request_context.set("url", filter_state)
+
         content = render(
             "./blog_index.html.j2",
             {
@@ -154,6 +161,9 @@ class TestIndexRender:
             required_tags=[],
             excluded_tags=[],
         )
+
+        request_context.set("language", language)
+        request_context.set("url", filter_state)
 
         content = render(
             "./blog_index.html.j2",

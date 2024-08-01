@@ -1,9 +1,11 @@
 import os
 import pathlib
+from typing import Any
 
 from markupsafe import Markup
 
 from brigid.domain import constants as domain_constants
+from brigid.domain import request_context as d_request_context
 from brigid.domain.urls import UrlsRoot
 from brigid.library.entities import Page
 from brigid.library.storage import Storage, storage
@@ -93,3 +95,8 @@ def test_marker(marker: str) -> str:
 @jinjaglobal
 def brigid_repository() -> str:
     return domain_constants.brigid_repository
+
+
+@jinjaglobal
+def request_context_get(name: str) -> Any:
+    return d_request_context.get(name)

@@ -6,6 +6,7 @@ from feedgenerator import Atom1Feed
 
 from brigid.api.utils import construct_index_description, construct_index_title, to_integer
 from brigid.core import errors
+from brigid.domain import request_context
 from brigid.domain.urls import UrlsFeedsAtom, UrlsPost, UrlsTags
 from brigid.library.similarity import get_similar_pages
 from brigid.library.storage import storage
@@ -19,6 +20,8 @@ def render_index(language: str, raw_tags: str) -> HTMLResponse:  # noqa: CCR001,
 
     if language not in site.allowed_languages:
         raise errors.PageNotFound()
+
+    request_context.set("language", language)
 
     required = set()
     excluded = set()
@@ -63,6 +66,8 @@ def render_index(language: str, raw_tags: str) -> HTMLResponse:  # noqa: CCR001,
         required_tags=required,
         excluded_tags=excluded,
     )
+
+    request_context.set("url", filter_state)
 
     translated_tags_required = [site.languages[language].tags_translations[tag] for tag in required]
     translated_tags_required.sort()
@@ -134,6 +139,8 @@ def render_page(language: str, article_slug: str, status_code: int = 200) -> HTM
     if language not in article.pages:
         raise errors.PageNotFound()
 
+    request_context.set("language", language)
+
     page = storage.get_page(id=article.pages[language])
 
     similar_pages = get_similar_pages(language=language, original_page=page, number=site.posts_in_similar)
@@ -142,6 +149,8 @@ def render_page(language: str, article_slug: str, status_code: int = 200) -> HTM
     template = page.template or Template.article_page
 
     post_url = UrlsPost(language=page.language, slug=article.slug)
+
+    request_context.set("url", post_url)
 
     seo_image_url = None
 

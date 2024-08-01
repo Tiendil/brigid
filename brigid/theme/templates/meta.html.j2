@@ -28,6 +28,11 @@
 
   <meta name="referrer" content="unsafe-URL">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {% if current_url.is_noindex() %}
+    <meta name="robots" content="noindex">
+  {% endif %}
+
 {% endmacro %}
 
 

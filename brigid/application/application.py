@@ -21,6 +21,7 @@ def initialize_api(app: fastapi.FastAPI) -> None:
 
     app.include_router(api_http_handlers.router)
 
+    app.middleware("http")(api_middlewares.request_context)
     app.middleware("http")(api_middlewares.remove_double_slashes)
     app.middleware("http")(api_middlewares.remove_trailing_slash)
     app.middleware("http")(api_middlewares.set_content_language)

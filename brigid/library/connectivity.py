@@ -1,5 +1,6 @@
 from collections import defaultdict
 
+from brigid.domain import request_context
 from brigid.library.storage import storage
 from brigid.renderer.markdown_render import render_page
 
@@ -26,7 +27,9 @@ class Connectivity:
         if page_id in self._processed_pages:
             return
 
-        render_page(storage.get_page(page_id))
+        with request_context.init():
+            request_context.set("site", storage.get_site())
+            render_page(storage.get_page(page_id))
 
         self._processed_pages.add(page_id)
 
