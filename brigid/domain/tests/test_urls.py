@@ -94,6 +94,9 @@ class _TestUrlsBase:
     def test_site_map_full(self, url: UrlsBase) -> None:
         assert url.to_site_map_full() == UrlsSiteMapFull(language=self.base_language)
 
+    def test_noindex(self, url: UrlsBase) -> None:
+        assert not url.is_noindex()
+
 
 class TestUrlsBase(_TestUrlsBase):
 
@@ -304,3 +307,21 @@ class TestUrlsTags(_TestUrlsBase):
                                             page=1,
                                             required_tags=('a', 'd'),
                                             excluded_tags=('c', 'e'))
+
+    @mock.patch('brigid.domain.urls.UrlsTags.total_pages', 100500)
+    def test_noindex(self, url: UrlsBase) -> None:
+        assert url.selected_tags
+        assert url.is_noindex()
+        assert url.move_page(1).is_noindex()
+        assert url.move_page(-1).is_noindex()
+
+    @mock.patch('brigid.domain.urls.UrlsTags.total_pages', 100500)
+    def test_no_noindex_for_basic_pages_list(self) -> None:
+        url = UrlsTags(language=self.base_language,
+                       page=10,
+                       required_tags=(),
+                       excluded_tags=())
+
+        assert not url.is_noindex()
+        assert not url.move_page(1).is_noindex()
+        assert not url.move_page(-1).is_noindex()
