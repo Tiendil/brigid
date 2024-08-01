@@ -5,6 +5,7 @@ from typing import Any
 from markupsafe import Markup
 
 from brigid.domain import constants as domain_constants
+from brigid.domain import request_context as d_request_context
 from brigid.domain.urls import UrlsRoot
 from brigid.library.entities import Page
 from brigid.library.storage import Storage, storage
@@ -15,7 +16,6 @@ from brigid.renderer.static_files import ImageInfo, files
 from brigid.theme.default_translations import translations
 from brigid.theme.settings import PhotoSwipe, settings
 from brigid.theme.utils import jinjafilter, jinjaglobal
-from brigid.domain import request_context as d_request_context
 
 
 @jinjafilter

@@ -2,6 +2,7 @@ import copy
 import posixpath
 from typing import Any, Iterable
 from urllib.parse import urlparse, urlunparse
+
 from brigid.domain import request_context
 
 
@@ -11,7 +12,7 @@ def _base_url() -> str:
 
 def normalize_url(url: str) -> str:
 
-    if '://' not in url:
+    if "://" not in url:
         raise NotImplementedError("Not full url")
 
     schema, tail = url.split("://")
@@ -24,12 +25,12 @@ def normalize_url(url: str) -> str:
     parsed_url = urlparse(url)
     normalized_path = posixpath.normpath(parsed_url.path)
 
-    if normalized_path == '.':
-        normalized_path = ''
+    if normalized_path == ".":
+        normalized_path = ""
 
     result = urlunparse(parsed_url._replace(path=normalized_path))
 
-    if result[-1] == '/':
+    if result[-1] == "/":
         result = result[:-1]
 
     return result
@@ -78,7 +79,7 @@ class UrlsBase:
     def to_site_map_full(self) -> "UrlsSiteMapFull":
         return UrlsSiteMapFull(language=self.language)
 
-    def __eq__(self, other: 'UrlsBase') -> None:
+    def __eq__(self, other: "UrlsBase") -> None:
         if not isinstance(other, self.__class__):
             return False
 
@@ -154,10 +155,11 @@ class UrlsTags(UrlsBase):
         if not super().__eq__(other):
             return False
 
-        return (self.page == other.page and
-                self.required_tags == other.required_tags and
-                self.excluded_tags == other.excluded_tags)
-
+        return (
+            self.page == other.page
+            and self.required_tags == other.required_tags
+            and self.excluded_tags == other.excluded_tags
+        )
 
     def is_same_index(self, current_url: UrlsBase) -> bool:
         if not isinstance(current_url, UrlsTags):

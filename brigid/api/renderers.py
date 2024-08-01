@@ -1,19 +1,18 @@
 from collections import Counter
 from itertools import chain
 
-
 from fastapi.responses import HTMLResponse
 from feedgenerator import Atom1Feed
 
 from brigid.api.utils import construct_index_description, construct_index_title, to_integer
 from brigid.core import errors
+from brigid.domain import request_context
 from brigid.domain.urls import UrlsFeedsAtom, UrlsPost, UrlsTags
 from brigid.library.similarity import get_similar_pages
 from brigid.library.storage import storage
 from brigid.theme.entities import MetaInfo, Template
 from brigid.theme.jinjaglobals import render_page_intro
 from brigid.theme.templates import render
-from brigid.domain import request_context
 
 
 def render_index(language: str, raw_tags: str) -> HTMLResponse:  # noqa: CCR001, CFQ001
@@ -22,7 +21,7 @@ def render_index(language: str, raw_tags: str) -> HTMLResponse:  # noqa: CCR001,
     if language not in site.allowed_languages:
         raise errors.PageNotFound()
 
-    request_context.set('language', language)
+    request_context.set("language", language)
 
     required = set()
     excluded = set()
@@ -68,7 +67,7 @@ def render_index(language: str, raw_tags: str) -> HTMLResponse:  # noqa: CCR001,
         excluded_tags=excluded,
     )
 
-    request_context.set('url', filter_state)
+    request_context.set("url", filter_state)
 
     translated_tags_required = [site.languages[language].tags_translations[tag] for tag in required]
     translated_tags_required.sort()
@@ -140,7 +139,7 @@ def render_page(language: str, article_slug: str, status_code: int = 200) -> HTM
     if language not in article.pages:
         raise errors.PageNotFound()
 
-    request_context.set('language', language)
+    request_context.set("language", language)
 
     page = storage.get_page(id=article.pages[language])
 
@@ -151,7 +150,7 @@ def render_page(language: str, article_slug: str, status_code: int = 200) -> HTM
 
     post_url = UrlsPost(language=page.language, slug=article.slug)
 
-    request_context.set('url', post_url)
+    request_context.set("url", post_url)
 
     seo_image_url = None
 
