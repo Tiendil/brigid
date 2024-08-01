@@ -226,7 +226,7 @@ class TestUrlsTags(_TestUrlsBase):
         )
 
     @mock.patch("brigid.domain.urls.UrlsTags.total_pages", 100500)
-    def test_last_page(self, url: UrlsBase) -> None:
+    def test_move_page(self, url: UrlsBase) -> None:
         assert url.move_page(3) == UrlsTags(
             language=self.base_language,
             page=url.page + 3,
@@ -235,12 +235,12 @@ class TestUrlsTags(_TestUrlsBase):
         )
 
     @mock.patch("brigid.domain.urls.UrlsTags.total_pages", 100500)
-    def test_last_page__too_low(self, url: UrlsBase) -> None:
+    def test_move_page__too_low(self, url: UrlsBase) -> None:
         with pytest.raises(NotImplementedError):
             url.move_page(-10005000)
 
     @mock.patch("brigid.domain.urls.UrlsTags.total_pages", 100500)
-    def test_last_page__too_big(self, url: UrlsBase) -> None:
+    def test_move_page__too_big(self, url: UrlsBase) -> None:
         with pytest.raises(NotImplementedError):
             url.move_page(10005000)
 

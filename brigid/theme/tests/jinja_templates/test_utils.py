@@ -1,6 +1,6 @@
 from typing import Any
 from unittest import mock
-from xml.dom import minidom
+from xml.dom import minidom  # noqa: S408
 
 from brigid.domain import request_context
 from brigid.domain.urls import UrlsTags
@@ -8,7 +8,7 @@ from brigid.theme.templates import env
 
 
 def assert_compare_html(a: str, b: str):
-    assert minidom.parseString(a).toprettyxml() == minidom.parseString(b).toprettyxml()
+    assert minidom.parseString(a).toprettyxml() == minidom.parseString(b).toprettyxml()  # noqa: S318
 
 
 class TestTagsUrl:
@@ -34,7 +34,7 @@ class TestTagsUrl:
 
         result = self.render(context)
 
-        expected_result = f"""
+        expected_result = """
   <a class=""
      href="http://0.0.0.0:8000/en/tags/a/-b/-c/d/-e/13">
     xxx
@@ -56,7 +56,7 @@ class TestTagsUrl:
 
         result = self.render(context, template=template)
 
-        expected_result = f"""
+        expected_result = """
   <a class="aaa bbb"
      href="http://0.0.0.0:8000/en/tags/a/-b/-c/d/-e/13">
     xxx
@@ -78,7 +78,7 @@ class TestTagsUrl:
 
         result = self.render(context)
 
-        expected_result = f"""
+        expected_result = """
   <a class="" rel="prev" href="http://0.0.0.0:8000/en/tags/a/-b/-c/d/-e/13">
     xxx
   </a>
@@ -98,9 +98,7 @@ class TestTagsUrl:
 
         result = self.render(context)
 
-        print(result)
-
-        expected_result = f"""
+        expected_result = """
   <a class=""
      rel="next"
      href="http://0.0.0.0:8000/en/tags/a/-b/-c/d/-e/13">
