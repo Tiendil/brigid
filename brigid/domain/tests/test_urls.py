@@ -145,13 +145,13 @@ class TestUrlsPost(_TestUrlsBase):
     def _consruct_url(self) -> UrlsPost:
         return UrlsPost(language=self.base_language, slug="some-slug")
 
-    def test_initialized(self, url: UrlsBase) -> None:
+    def test_initialized(self, url: UrlsPost) -> None:
         assert url.slug == "some-slug"
 
-    def test_url_method_redefined(self, url: UrlsBase) -> None:
+    def test_url_method_redefined(self, url: UrlsPost) -> None:  # type: ignore
         assert url.url() == f"{base_url}/{self.base_language}/posts/some-slug"
 
-    def test_file_url(self, url: UrlsBase) -> None:
+    def test_file_url(self, url: UrlsPost) -> None:  # type: ignore
         filepath = "images/some-image.png"
         assert url.file_url(filepath) == f"{base_url}/static/posts/some-slug/{filepath}"
 
@@ -161,13 +161,13 @@ class TestUrlsTags(_TestUrlsBase):
     def _consruct_url(self) -> UrlsTags:
         return UrlsTags(language=self.base_language, page=13, required_tags=("a", "d"), excluded_tags=("c", "b", "e"))
 
-    def test_initialized(self, url: UrlsBase) -> None:
+    def test_initialized(self, url: UrlsTags) -> None:
         assert url.page == 13
         assert url.required_tags == {"a", "d"}
         assert url.excluded_tags == {"c", "b", "e"}
         assert url.selected_tags == {"a", "b", "c", "d", "e"}
 
-    def test_url_method_redefined(self, url: UrlsBase) -> None:
+    def test_url_method_redefined(self, url: UrlsTags) -> None:  # type: ignore
         assert url.url() == f"{base_url}/{self.base_language}/tags/a/-b/-c/d/-e/13"
 
     def test_url_method__empty(self) -> None:
@@ -191,42 +191,42 @@ class TestUrlsTags(_TestUrlsBase):
         assert url.url() == f"{base_url}/{self.base_language}/tags/13"
 
     @mock.patch("brigid.domain.urls.UrlsTags.total_pages", 100500)
-    def test_is_same_index(self, url: UrlsBase) -> None:
-        assert url.is_same_index(url)
-        assert url.is_same_index(url.move_page(1))
-        assert url.is_same_index(url.move_page(-1))
+    def test_is_same_index(self, url: UrlsTags) -> None:
+        assert url._is_same_index(url)
+        assert url._is_same_index(url.move_page(1))
+        assert url._is_same_index(url.move_page(-1))
 
-        assert not url.is_same_index(url.require("f"))
-        assert not url.is_same_index(url.exclude("f"))
-        assert not url.is_same_index(url.remove("a"))
-        assert not url.is_same_index(url.remove("c"))
-        assert not url.is_same_index(url.to_language(self.alt_language))
+        assert not url._is_same_index(url.require("f"))
+        assert not url._is_same_index(url.exclude("f"))
+        assert not url._is_same_index(url.remove("a"))
+        assert not url._is_same_index(url.remove("c"))
+        assert not url._is_same_index(url.to_language(self.alt_language))
 
     @mock.patch("brigid.domain.urls.UrlsTags.total_pages", 100500)
-    def test_is_prev_to(self, url: UrlsBase) -> None:
+    def test_is_prev_to(self, url: UrlsTags) -> None:
         assert not url.is_prev_to(url)
         assert not url.is_prev_to(url.move_page(-1))
         assert url.is_prev_to(url.move_page(1))
 
     @mock.patch("brigid.domain.urls.UrlsTags.total_pages", 100500)
-    def test_is_next_to(self, url: UrlsBase) -> None:
+    def test_is_next_to(self, url: UrlsTags) -> None:
         assert not url.is_next_to(url)
         assert url.is_next_to(url.move_page(-1))
         assert not url.is_next_to(url.move_page(1))
 
-    def test_first_page(self, url: UrlsBase) -> None:
+    def test_first_page(self, url: UrlsTags) -> None:
         assert url.first_page() == UrlsTags(
             language=self.base_language, page=1, required_tags=url.required_tags, excluded_tags=url.excluded_tags
         )
 
     @mock.patch("brigid.domain.urls.UrlsTags.total_pages", 100500)
-    def test_last_page(self, url: UrlsBase) -> None:
+    def test_last_page(self, url: UrlsTags) -> None:
         assert url.last_page() == UrlsTags(
             language=self.base_language, page=100500, required_tags=url.required_tags, excluded_tags=url.excluded_tags
         )
 
     @mock.patch("brigid.domain.urls.UrlsTags.total_pages", 100500)
-    def test_move_page(self, url: UrlsBase) -> None:
+    def test_move_page(self, url: UrlsTags) -> None:
         assert url.move_page(3) == UrlsTags(
             language=self.base_language,
             page=url.page + 3,
@@ -235,62 +235,62 @@ class TestUrlsTags(_TestUrlsBase):
         )
 
     @mock.patch("brigid.domain.urls.UrlsTags.total_pages", 100500)
-    def test_move_page__too_low(self, url: UrlsBase) -> None:
+    def test_move_page__too_low(self, url: UrlsTags) -> None:
         with pytest.raises(NotImplementedError):
             url.move_page(-10005000)
 
     @mock.patch("brigid.domain.urls.UrlsTags.total_pages", 100500)
-    def test_move_page__too_big(self, url: UrlsBase) -> None:
+    def test_move_page__too_big(self, url: UrlsTags) -> None:
         with pytest.raises(NotImplementedError):
             url.move_page(10005000)
 
-    def test_require(self, url: UrlsBase) -> None:
+    def test_require(self, url: UrlsTags) -> None:
         assert url.require("f") == UrlsTags(
             language=self.base_language, page=1, required_tags=("a", "d", "f"), excluded_tags=("c", "b", "e")
         )
 
-    def test_require__move(self, url: UrlsBase) -> None:
+    def test_require__move(self, url: UrlsTags) -> None:
         assert url.require("b") == UrlsTags(
             language=self.base_language, page=1, required_tags=("a", "d", "b"), excluded_tags=("c", "e")
         )
 
-    def test_require__duplicated(self, url: UrlsBase) -> None:
+    def test_require__duplicated(self, url: UrlsTags) -> None:
         assert url.require("a") == UrlsTags(
             language=self.base_language, page=1, required_tags=("a", "d"), excluded_tags=("c", "b", "e")
         )
 
-    def test_exclude(self, url: UrlsBase) -> None:
+    def test_exclude(self, url: UrlsTags) -> None:
         assert url.exclude("f") == UrlsTags(
             language=self.base_language, page=1, required_tags=("a", "d"), excluded_tags=("c", "b", "e", "f")
         )
 
-    def test_exclude__move(self, url: UrlsBase) -> None:
+    def test_exclude__move(self, url: UrlsTags) -> None:
         assert url.exclude("d") == UrlsTags(
             language=self.base_language, page=1, required_tags=("a",), excluded_tags=("c", "b", "d", "e")
         )
 
-    def test_exclude__duplicated(self, url: UrlsBase) -> None:
+    def test_exclude__duplicated(self, url: UrlsTags) -> None:
         assert url.exclude("b") == UrlsTags(
             language=self.base_language, page=1, required_tags=("a", "d"), excluded_tags=("c", "b", "e")
         )
 
-    def test_remove__no_tag(self, url: UrlsBase) -> None:
+    def test_remove__no_tag(self, url: UrlsTags) -> None:
         assert url.remove("f") == UrlsTags(
             language=self.base_language, page=1, required_tags=("a", "d"), excluded_tags=("c", "b", "e")
         )
 
-    def test_remove__from_required(self, url: UrlsBase) -> None:
+    def test_remove__from_required(self, url: UrlsTags) -> None:
         assert url.remove("d") == UrlsTags(
             language=self.base_language, page=1, required_tags=("a",), excluded_tags=("c", "b", "e")
         )
 
-    def test_remove__from_excluded(self, url: UrlsBase) -> None:
+    def test_remove__from_excluded(self, url: UrlsTags) -> None:
         assert url.remove("b") == UrlsTags(
             language=self.base_language, page=1, required_tags=("a", "d"), excluded_tags=("c", "e")
         )
 
     @mock.patch("brigid.domain.urls.UrlsTags.total_pages", 100500)
-    def test_noindex(self, url: UrlsBase) -> None:
+    def test_noindex(self, url: UrlsTags) -> None:  # type: ignore
         assert url.selected_tags
         assert url.is_noindex()
         assert url.move_page(1).is_noindex()

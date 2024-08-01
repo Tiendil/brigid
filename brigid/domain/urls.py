@@ -7,7 +7,7 @@ from brigid.domain import request_context
 
 
 def _base_url() -> str:
-    return request_context.get("site").url
+    return request_context.get("site").url  # type: ignore
 
 
 def normalize_url(url: str) -> str:
@@ -79,7 +79,7 @@ class UrlsBase:
     def to_site_map_full(self) -> "UrlsSiteMapFull":
         return UrlsSiteMapFull(language=self.language)
 
-    def __eq__(self, other: "UrlsBase") -> None:
+    def __eq__(self, other: Any) -> bool:
         if not isinstance(other, self.__class__):
             return False
 
@@ -127,7 +127,7 @@ class UrlsPost(UrlsBase):
     def file_url(self, relative_path: str) -> str:
         return normalize_url(f"{_base_url()}/static/posts/{self.slug}/{relative_path}")
 
-    def __eq__(self, other: UrlsBase) -> None:
+    def __eq__(self, other: Any) -> bool:
         if not super().__eq__(other):
             return False
 
@@ -151,7 +151,7 @@ class UrlsTags(UrlsBase):
         self.excluded_tags = frozenset(excluded_tags)
         self.selected_tags = self.required_tags | self.excluded_tags
 
-    def __eq__(self, other: UrlsBase) -> None:
+    def __eq__(self, other: Any) -> bool:
         if not super().__eq__(other):
             return False
 
@@ -161,7 +161,7 @@ class UrlsTags(UrlsBase):
             and self.excluded_tags == other.excluded_tags
         )
 
-    def is_same_index(self, current_url: UrlsBase) -> bool:
+    def _is_same_index(self, current_url: UrlsBase) -> bool:
         if not isinstance(current_url, UrlsTags):
             return False
 
@@ -177,10 +177,10 @@ class UrlsTags(UrlsBase):
         return True
 
     def is_prev_to(self, current_url: UrlsBase) -> bool:
-        return self.is_same_index(current_url) and self.page + 1 == current_url.page
+        return self._is_same_index(current_url) and self.page + 1 == current_url.page  # type: ignore
 
     def is_next_to(self, current_url: UrlsBase) -> bool:
-        return self.is_same_index(current_url) and self.page - 1 == current_url.page
+        return self._is_same_index(current_url) and self.page - 1 == current_url.page  # type: ignore
 
     # TODO: cache, maybe cache temporary on the storage level
     # TODO: add tests
