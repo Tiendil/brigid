@@ -1,4 +1,5 @@
 import pathlib
+import functools
 from typing import Iterable
 
 from brigid.library.entities import Article, Collection, Page, Redirects, Site
@@ -118,22 +119,27 @@ class Storage:
     def get_collection(self, id: str) -> Collection:
         return self._collections[id]
 
+    # TODO: remove?
     def all_pages(self) -> list[Page]:
         return list(self._pages.values())
 
     def pages_number(self, language: str) -> int:
         return sum(1 for page in self._pages.values() if page.language == language)
 
+    def pages(self, language: str) -> list[Page]:
+        return [
+            page for page in self._pages.values() if page.language == language and not page.is_post
+        ]
+
     # TODO: cache
     def last_pages(
         self,
         language: str,
-        only_posts: bool = True,
         require_tags: Iterable[str] = (),
         exclude_tags: Iterable[str] = (),
     ) -> list[Page]:
         pages = [
-            page for page in self._pages.values() if page.language == language and (not only_posts or page.is_post)
+            page for page in self._pages.values() if page.language == language and page.is_post
         ]
 
         if require_tags:
