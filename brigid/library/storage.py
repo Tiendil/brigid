@@ -124,12 +124,21 @@ class Storage:
             page for page in self._pages.values() if page.language == language and not page.is_post
         ]
 
-    # TODO: cache
     def get_posts(
         self,
         language: str,
         require_tags: Iterable[str] = (),
         exclude_tags: Iterable[str] = (),
+    ) -> list[Page]:
+        # fixed order of arguments for better cache performance
+        return self._get_posts(language, require_tags, exclude_tags)
+
+    @functools.lru_cache(maxsize=128)
+    def _get_posts(
+            self,
+            language: str,
+            require_tags: Iterable[str] = (),
+            exclude_tags: Iterable[str] = (),
     ) -> list[Page]:
         pages = [
             page for page in self._pages.values() if page.language == language and page.is_post
