@@ -34,9 +34,10 @@ class Connectivity:
         self._processed_pages.add(page_id)
 
     def initialize(self) -> None:
-        for page in storage.all_pages():
-            if page.id not in self._processed_pages:
-                self.process_page(page.id)
+        for language in storage.get_site().allowed_languages:
+            for page in storage.get_posts(language=language):
+                if page.id not in self._processed_pages:
+                    self.process_page(page.id)
 
 
 connectivity = Connectivity()

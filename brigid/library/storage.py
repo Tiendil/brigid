@@ -120,9 +120,6 @@ class Storage:
         return self._collections[id]
 
     # TODO: remove?
-    def all_pages(self) -> list[Page]:
-        return list(self._pages.values())
-
     def pages_number(self, language: str) -> int:
         return sum(1 for page in self._pages.values() if page.language == language)
 
