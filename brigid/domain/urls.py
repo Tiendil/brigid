@@ -187,7 +187,7 @@ class UrlsTags(UrlsBase):
         storage = request_context.get("storage")  # type: ignore
         posts_per_page = storage.get_site().posts_per_page  # type: ignore
 
-        all_pages = storage.last_pages(
+        all_pages = storage.get_posts(
             language=self.language,
             require_tags=self.required_tags,
             exclude_tags=self.excluded_tags,

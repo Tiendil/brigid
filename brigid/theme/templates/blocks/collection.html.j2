@@ -2,7 +2,7 @@
 {% set storage = get_storage() %}
 {% set collection = storage.get_collection(data.id) %}
 
-{% set posts = storage.last_pages(language=current_page.language, require_tags=collection.required_tags, exclude_tags=collection.excluded_tags) %}
+{% set posts = storage.get_posts(language=current_page.language, require_tags=collection.required_tags, exclude_tags=collection.excluded_tags) %}
 
 {% if collection.order == 'asc' %}
   {% set posts = posts|reverse %}

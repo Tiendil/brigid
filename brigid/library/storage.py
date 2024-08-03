@@ -126,13 +126,13 @@ class Storage:
     def pages_number(self, language: str) -> int:
         return sum(1 for page in self._pages.values() if page.language == language)
 
-    def pages(self, language: str) -> list[Page]:
+    def get_pages(self, language: str) -> list[Page]:
         return [
             page for page in self._pages.values() if page.language == language and not page.is_post
         ]
 
     # TODO: cache
-    def last_pages(
+    def get_posts(
         self,
         language: str,
         require_tags: Iterable[str] = (),
