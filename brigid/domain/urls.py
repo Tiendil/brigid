@@ -7,7 +7,7 @@ from brigid.domain import request_context
 
 
 def _base_url() -> str:
-    return request_context.get("site").url  # type: ignore
+    return request_context.get("storage").get_site().url  # type: ignore
 
 
 def normalize_url(url: str) -> str:
@@ -135,7 +135,7 @@ class UrlsPost(UrlsBase):
 
 
 class UrlsTags(UrlsBase):
-    __slots__ = ("page", "required_tags", "excluded_tags", "selected_tags")
+    __slots__ = ("page", "required_tags", "excluded_tags", "selected_tags", '_total_pages')
 
     def __init__(
         self,
@@ -150,6 +150,7 @@ class UrlsTags(UrlsBase):
         self.required_tags = frozenset(required_tags)
         self.excluded_tags = frozenset(excluded_tags)
         self.selected_tags = self.required_tags | self.excluded_tags
+        self._total_pages = None
 
     def __eq__(self, other: Any) -> bool:
         if not super().__eq__(other):
@@ -182,22 +183,26 @@ class UrlsTags(UrlsBase):
     def is_next_to(self, current_url: UrlsBase) -> bool:
         return self._is_same_index(current_url) and self.page - 1 == current_url.page  # type: ignore
 
-    # TODO: cache, maybe cache temporary on the storage level
-    # TODO: add tests
-    # TODO: this place could caus performance issues because of rendering a lot of links
-    @property
-    def total_pages(self) -> int:
-        from brigid.library.storage import storage
-
-        site = storage.get_site()
+    def _get_total_pages(self) -> int:
+        storage = request_context.get("storage")  # type: ignore
+        posts_per_page = storage.get_site().posts_per_page  # type: ignore
 
         all_pages = storage.last_pages(
             language=self.language,
             require_tags=self.required_tags,
             exclude_tags=self.excluded_tags,
         )
-        total_pages = (len(all_pages) + site.posts_per_page - 1) // site.posts_per_page
-        return total_pages
+
+        return (len(all_pages) + posts_per_page - 1) // posts_per_page
+
+    @property
+    def total_pages(self) -> int:
+        if self._total_pages is not None:
+            return self._total_pages
+
+        self._total_pages = self._get_total_pages()
+
+        return self._total_pages
 
     def is_noindex(self) -> bool:
         # we do not want crawlers to index pages with filters

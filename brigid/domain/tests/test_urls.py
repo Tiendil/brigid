@@ -1,6 +1,7 @@
 import copy
 from typing import Any
 from unittest import mock
+from brigid.library.storage import storage
 
 import pytest
 
@@ -303,3 +304,51 @@ class TestUrlsTags(_TestUrlsBase):
         assert not url.is_noindex()
         assert not url.move_page(1).is_noindex()
         assert not url.move_page(-1).is_noindex()
+
+    def test_total_pages_cached(self, url: UrlsTags) -> None:
+        assert url._total_pages is None
+
+        assert isinstance(url.total_pages, int)
+
+        assert url._total_pages is not None
+        assert url._total_pages == url.total_pages
+
+    def test_get_total_pages(self) -> None:
+        url = UrlsTags(language=self.base_language, page=1, required_tags=(), excluded_tags=())
+
+        all_pages = storage.last_pages(language=self.base_language, require_tags=(), exclude_tags=())
+        posts_per_page = storage.get_site().posts_per_page
+
+        pages = (len(all_pages) + posts_per_page - 1) // posts_per_page
+
+        assert pages == url.total_pages == url.move_page(1).total_pages
+
+    def test_get_total_pages__requied_filter(self) -> None:
+        url = UrlsTags(language=self.base_language, page=1, required_tags=('basic',), excluded_tags=())
+
+        whole_pages = storage.last_pages(language=self.base_language, require_tags=(), exclude_tags=())
+
+        all_pages = storage.last_pages(language=self.base_language, require_tags=('basic',), exclude_tags=())
+
+        assert len(whole_pages) != len(all_pages)
+
+        posts_per_page = storage.get_site().posts_per_page
+
+        pages = (len(all_pages) + posts_per_page - 1) // posts_per_page
+
+        assert pages == url.total_pages
+
+    def test_get_total_pages__exclued_filter(self) -> None:
+        url = UrlsTags(language=self.base_language, page=1, required_tags=(), excluded_tags=('basic',))
+
+        whole_pages = storage.last_pages(language=self.base_language, require_tags=(), exclude_tags=())
+
+        all_pages = storage.last_pages(language=self.base_language, require_tags=(), exclude_tags=('basic',))
+
+        assert len(whole_pages) != len(all_pages)
+
+        posts_per_page = storage.get_site().posts_per_page
+
+        pages = (len(all_pages) + posts_per_page - 1) // posts_per_page
+
+        assert pages == url.total_pages
