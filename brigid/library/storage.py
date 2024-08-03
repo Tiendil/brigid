@@ -119,10 +119,6 @@ class Storage:
     def get_collection(self, id: str) -> Collection:
         return self._collections[id]
 
-    # TODO: remove?
-    def pages_number(self, language: str) -> int:
-        return sum(1 for page in self._pages.values() if page.language == language)
-
     def get_pages(self, language: str) -> list[Page]:
         return [
             page for page in self._pages.values() if page.language == language and not page.is_post
