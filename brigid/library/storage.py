@@ -128,7 +128,6 @@ class Storage:
     def last_pages(
         self,
         language: str,
-        number: int | None = None,
         only_posts: bool = True,
         require_tags: Iterable[str] = (),
         exclude_tags: Iterable[str] = (),
@@ -147,10 +146,7 @@ class Storage:
 
         pages.sort(key=lambda x: x.published_at, reverse=True)
 
-        if number is None:
-            return pages
-
-        return pages[:number]
+        return pages
 
 
 storage = Storage()
