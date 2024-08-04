@@ -1,3 +1,4 @@
+import functools
 import pathlib
 from typing import Iterable
 
@@ -118,24 +119,30 @@ class Storage:
     def get_collection(self, id: str) -> Collection:
         return self._collections[id]
 
-    def all_pages(self) -> list[Page]:
-        return list(self._pages.values())
+    def get_pages(self, language: str) -> list[Page]:
+        return [page for page in self._pages.values() if page.language == language and not page.is_post]
 
-    def pages_number(self, language: str) -> int:
-        return sum(1 for page in self._pages.values() if page.language == language)
-
-    # TODO: cache
-    def last_pages(
+    def get_posts(
         self,
         language: str,
-        number: int | None = None,
-        only_posts: bool = True,
         require_tags: Iterable[str] = (),
         exclude_tags: Iterable[str] = (),
     ) -> list[Page]:
-        pages = [
-            page for page in self._pages.values() if page.language == language and (not only_posts or page.is_post)
-        ]
+        # fixed order of arguments for better cache performance
+
+        required = tuple(sorted(require_tags))
+        excluded = tuple(sorted(exclude_tags))
+
+        return self._get_posts(language, required, excluded)
+
+    @functools.lru_cache(maxsize=128)
+    def _get_posts(
+        self,
+        language: str,
+        require_tags: Iterable[str] = (),
+        exclude_tags: Iterable[str] = (),
+    ) -> list[Page]:
+        pages = [page for page in self._pages.values() if page.language == language and page.is_post]
 
         if require_tags:
             require_tags = set(require_tags)
@@ -147,10 +154,10 @@ class Storage:
 
         pages.sort(key=lambda x: x.published_at, reverse=True)
 
-        if number is None:
-            return pages
+        return pages
 
-        return pages[:number]
+    def all_entities(self):
+        return list(self._pages.values())
 
 
 storage = Storage()

@@ -14,7 +14,7 @@ def get_last_published_at(language) -> datetime.datetime | None:
 
     # TODO: here we look at all posts, but we should look at all sources of blog
     #       including configs & static files
-    for page in storage.last_pages(language=language, only_posts=True):
+    for page in storage.get_posts(language=language):
         if last_published_at is None or page.published_at > last_published_at:
             last_published_at = page.published_at
 
@@ -43,9 +43,8 @@ def build_sitemap_xml() -> str:
 
     sitemap = ET.Element("urlset", **attributes)  # type: ignore[arg-type]
 
-    for language in site.allowed_languages:
-        for page in storage.last_pages(language=language, only_posts=False):
-            add_page_url(sitemap, page)
+    for page in storage.all_entities():
+        add_page_url(sitemap, page)
 
     for language in site.allowed_languages:
         add_index_url(sitemap, language)

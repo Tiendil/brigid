@@ -12,7 +12,7 @@ def get_similar_pages(language: str, original_page: Page, number: int) -> list[P
     scores = []
 
     # initialize scores
-    for page in storage.last_pages(language=language):
+    for page in storage.get_posts(language=language):
         if original_page.id == page.id:
             continue
 

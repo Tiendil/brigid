@@ -1,3 +1,4 @@
+from brigid.domain import request_context
 from brigid.library.storage import storage
 from brigid.validation.entities import Error
 from brigid.validation.global_validators import required_article
@@ -13,10 +14,14 @@ def validate() -> list[Error]:
     errors = []
 
     for global_validator in global_validators:
-        errors.extend(global_validator())
+        with request_context.init():
+            request_context.set("storage", storage)
+            errors.extend(global_validator())
 
-    for page in storage.all_pages():
+    for page in storage.all_entities():
         for page_validator in page_validators:
-            errors.extend(page_validator(page))
+            with request_context.init():
+                request_context.set("storage", storage)
+                errors.extend(page_validator(page))
 
     return errors

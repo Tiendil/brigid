@@ -51,7 +51,7 @@ def render_index(language: str, raw_tags: str) -> HTMLResponse:  # noqa: CCR001,
 
     site = storage.get_site()
 
-    all_pages = storage.last_pages(language=language, require_tags=required, exclude_tags=excluded)
+    all_pages = storage.get_posts(language=language, require_tags=required, exclude_tags=excluded)
 
     tags_count: Counter[str] = Counter()
 
@@ -208,7 +208,7 @@ def render_atom_feed(language: str) -> HTMLResponse:
         # 'author_link': iri_to_uri(author_link),    # noqa: E800
     )
 
-    all_pages = storage.last_pages(language=language)
+    all_pages = storage.get_posts(language=language)
 
     for page in all_pages[: site.posts_in_feed]:
         article = storage.get_article(id=page.article_id)
