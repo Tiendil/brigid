@@ -32,7 +32,7 @@ async def favicon() -> FileResponse | HTMLResponse:
     path = site.path.parent / site.favicon
     cache().set("/favicon.ico", path)
 
-    return FileResponse(path)
+    return FileResponse(path, media_type="image/x-icon")
 
 
 @router.get("/sitemap.xml")
