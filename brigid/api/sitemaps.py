@@ -82,12 +82,10 @@ def add_pagination_urls(sitemap, language) -> None:
     # add only index with no tags filter
     pagination_urls = UrlsTags(language=language, page=1, required_tags=[], excluded_tags=[])
 
-    if pagination_urls.total_pages == 1:
-        return
-
     last_published_at = get_last_published_at(language)
 
-    while pagination_urls.page <= pagination_urls.total_pages:
+    while pagination_urls.page < pagination_urls.total_pages:
+        # do not add the first page, because it is already added
         pagination_urls = pagination_urls.move_page(+1)
 
         url = ET.SubElement(sitemap, "url")
