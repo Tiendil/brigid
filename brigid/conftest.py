@@ -5,6 +5,7 @@ from typing import AsyncGenerator, Generator
 import fastapi
 import pytest
 import pytest_asyncio
+from fastapi.testclient import TestClient
 
 from brigid.application import application
 from brigid.domain import request_context
@@ -34,3 +35,8 @@ def reset_request_context():
 async def app() -> AsyncGenerator[fastapi.FastAPI, None]:
     async with application.with_app() as app:
         yield app
+
+
+@pytest.fixture
+def client(app: fastapi.FastAPI) -> Generator[TestClient, None, None]:
+    yield TestClient(app, raise_server_exceptions=True, follow_redirects=False)
