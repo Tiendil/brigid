@@ -156,5 +156,8 @@ class Storage:
 
         return pages
 
+    def all_entities(self):
+        return list(self._pages.values())
+
 
 storage = Storage()

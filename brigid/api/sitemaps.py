@@ -1,6 +1,5 @@
 import datetime
 import xml.etree.ElementTree as ET  # noqa: S405
-from itertools import chain
 
 from brigid.domain.urls import UrlsPost, UrlsRoot, UrlsTags
 from brigid.library.storage import storage
@@ -44,9 +43,8 @@ def build_sitemap_xml() -> str:
 
     sitemap = ET.Element("urlset", **attributes)  # type: ignore[arg-type]
 
-    for language in site.allowed_languages:
-        for page in chain(storage.get_posts(language=language), storage.get_pages(language=language)):
-            add_page_url(sitemap, page)
+    for page in storage.all_entities():
+        add_page_url(sitemap, page)
 
     for language in site.allowed_languages:
         add_index_url(sitemap, language)

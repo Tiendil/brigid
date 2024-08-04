@@ -150,7 +150,7 @@ class UrlsTags(UrlsBase):
         self.required_tags = frozenset(required_tags)
         self.excluded_tags = frozenset(excluded_tags)
         self.selected_tags = self.required_tags | self.excluded_tags
-        self._total_pages = None
+        self._total_pages: None | int = None
 
     def __eq__(self, other: Any) -> bool:
         if not super().__eq__(other):
