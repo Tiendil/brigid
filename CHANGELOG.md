@@ -10,7 +10,7 @@ No changes.
 
 ## 0.7.1 on 2024-08-04
 
-[gh-80](https://github.com/Tiendil/brigid/issues/80) — fixed exception on accessing `/sitemap.xml`
+- [gh-80](https://github.com/Tiendil/brigid/issues/80) — fixed exception on accessing `/sitemap.xml`
 
 ## 0.7.0 on 2024-08-04
 
