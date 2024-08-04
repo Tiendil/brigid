@@ -38,8 +38,7 @@ async def favicon() -> FileResponse | HTMLResponse:
 @router.get("/sitemap.xml")
 async def site_map() -> PlainTextResponse:
     content = build_sitemap_xml()
-
-    return PlainTextResponse(content, media_type="application/xml")
+    return PlainTextResponse(content, media_type="application/xml; charset=utf-8")
 
 
 @router.get("/static/main.css")

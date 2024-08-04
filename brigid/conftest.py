@@ -39,4 +39,6 @@ async def app() -> AsyncGenerator[fastapi.FastAPI, None]:
 
 @pytest.fixture
 def client(app: fastapi.FastAPI) -> Generator[TestClient, None, None]:
-    yield TestClient(app)
+    yield TestClient(app,
+                     raise_server_exceptions=True,
+                     follow_redirects=False)
