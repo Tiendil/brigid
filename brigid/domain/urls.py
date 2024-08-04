@@ -135,7 +135,7 @@ class UrlsPost(UrlsBase):
 
 
 class UrlsTags(UrlsBase):
-    __slots__ = ("page", "required_tags", "excluded_tags", "selected_tags", '_total_pages')
+    __slots__ = ("page", "required_tags", "excluded_tags", "selected_tags", "_total_pages")
 
     def __init__(
         self,

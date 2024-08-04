@@ -1,6 +1,6 @@
 import datetime
-from itertools import chain
 import xml.etree.ElementTree as ET  # noqa: S405
+from itertools import chain
 
 from brigid.domain.urls import UrlsPost, UrlsRoot, UrlsTags
 from brigid.library.storage import storage

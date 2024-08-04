@@ -1,7 +1,6 @@
 import copy
 from typing import Any
 from unittest import mock
-from brigid.library.storage import storage
 
 import pytest
 
@@ -15,6 +14,7 @@ from brigid.domain.urls import (
     UrlsTags,
     normalize_url,
 )
+from brigid.library.storage import storage
 
 base_url = "http://0.0.0.0:8000"
 
@@ -324,11 +324,11 @@ class TestUrlsTags(_TestUrlsBase):
         assert pages == url.total_pages == url.move_page(1).total_pages
 
     def test_get_total_pages__requied_filter(self) -> None:
-        url = UrlsTags(language=self.base_language, page=1, required_tags=('basic',), excluded_tags=())
+        url = UrlsTags(language=self.base_language, page=1, required_tags=("basic",), excluded_tags=())
 
         whole_pages = storage.get_posts(language=self.base_language, require_tags=(), exclude_tags=())
 
-        all_pages = storage.get_posts(language=self.base_language, require_tags=('basic',), exclude_tags=())
+        all_pages = storage.get_posts(language=self.base_language, require_tags=("basic",), exclude_tags=())
 
         assert len(whole_pages) != len(all_pages)
 
@@ -339,11 +339,11 @@ class TestUrlsTags(_TestUrlsBase):
         assert pages == url.total_pages
 
     def test_get_total_pages__exclued_filter(self) -> None:
-        url = UrlsTags(language=self.base_language, page=1, required_tags=(), excluded_tags=('basic',))
+        url = UrlsTags(language=self.base_language, page=1, required_tags=(), excluded_tags=("basic",))
 
         whole_pages = storage.get_posts(language=self.base_language, require_tags=(), exclude_tags=())
 
-        all_pages = storage.get_posts(language=self.base_language, require_tags=(), exclude_tags=('basic',))
+        all_pages = storage.get_posts(language=self.base_language, require_tags=(), exclude_tags=("basic",))
 
         assert len(whole_pages) != len(all_pages)
 
