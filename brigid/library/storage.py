@@ -131,7 +131,11 @@ class Storage:
         exclude_tags: Iterable[str] = (),
     ) -> list[Page]:
         # fixed order of arguments for better cache performance
-        return self._get_posts(language, require_tags, exclude_tags)
+
+        required = tuple(sorted(require_tags))
+        excluded = tuple(sorted(exclude_tags))
+
+        return self._get_posts(language, required, excluded)
 
     @functools.lru_cache(maxsize=128)
     def _get_posts(
