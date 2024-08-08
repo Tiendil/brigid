@@ -1,9 +1,8 @@
-import pytest
 import fastapi
+import pytest
 from fastapi.testclient import TestClient
 
 from brigid.domain import request_context
-
 
 ############################################################################
 # ATTENTION: this tests do not cover some cases of request_context usage
@@ -76,9 +75,7 @@ class TestError:
 
     @pytest.mark.asyncio
     async def test_exception_processing_works(self, app: fastapi.FastAPI) -> None:
-        client = TestClient(app,
-                            raise_server_exceptions=False,
-                            follow_redirects=False)
+        client = TestClient(app, raise_server_exceptions=False, follow_redirects=False)
         response = client.get("/test-error")
         assert response.status_code == 500
 
