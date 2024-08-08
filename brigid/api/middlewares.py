@@ -28,7 +28,9 @@ async def process_404(request, _):
 
     language = choose_language(request)
 
-    return renderers.render_page(language, "404", status_code=404)
+    with d_request_context.init():
+        d_request_context.set("storage", storage)
+        return renderers.render_page(language, "404", status_code=404)
 
 
 async def remove_double_slashes(request: fastapi.Request, call_next: Any):
@@ -76,7 +78,9 @@ async def process_expected_error(request, error):
 
     language = choose_language(request)
 
-    return renderers.render_page(language, "500", status_code=500)
+    with d_request_context.init():
+        d_request_context.set("storage", storage)
+        return renderers.render_page(language, "500", status_code=500)
 
 
 async def request_context(request: fastapi.Request, call_next: Any):

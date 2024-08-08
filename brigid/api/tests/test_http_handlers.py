@@ -1,7 +1,14 @@
+import fastapi
 import pytest
 from fastapi.testclient import TestClient
 
 from brigid.domain import request_context
+
+############################################################################
+# ATTENTION: this tests do not cover some cases of request_context usage
+#            because it setupped automatically in conftest.py for all tests.
+#            In the future we can move this fixture from the global scope to the test level.
+############################################################################
 
 
 class TestFavicon:
@@ -65,6 +72,12 @@ class TestError:
     async def test_works(self, client: TestClient) -> None:
         with pytest.raises(ZeroDivisionError):
             client.get("/test-error")
+
+    @pytest.mark.asyncio
+    async def test_exception_processing_works(self, app: fastapi.FastAPI) -> None:
+        client = TestClient(app, raise_server_exceptions=False, follow_redirects=False)
+        response = client.get("/test-error")
+        assert response.status_code == 500
 
 
 class TestRoot:
