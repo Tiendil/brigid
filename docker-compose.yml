@@ -23,7 +23,7 @@ services:
       - "1"
       - "--reload"
       - "--reload-include"
-      - "\\*"
+      - "*"
 
     ports:
       - "8000:8000"
