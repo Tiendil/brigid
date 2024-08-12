@@ -1,0 +1,75 @@
+
+
+/* CSS is not placed in the components layer because these classes are not mentioned in HTML  */
+/* => tailwindcss does not see them and removes them from final CSS */
+.admonition {
+    @apply border rounded p-0 mt-2 border-l-4 px-2;
+    @apply border-slate-400 bg-slate-50;
+
+    .admonition-title {
+        @apply font-medium -mx-2 mt-0 -my-4 px-2;
+        @apply bg-slate-200;
+    }
+
+    & > :last-child {
+        @apply mb-0;
+    }
+
+    &.note {
+        @apply bg-blue-50 border-blue-400;
+
+        .admonition-title {
+            @apply bg-blue-200;
+        }
+    }
+
+    &.hint {
+        @apply bg-emerald-50 border-emerald-400;
+
+        .admonition-title {
+            @apply bg-emerald-200;
+        }
+    }
+
+    &.attention {
+        @apply bg-purple-50 border-purple-400;
+
+        .admonition-title {
+            @apply bg-purple-200;
+        }
+    }
+
+    &.caution {
+        @apply bg-purple-200 border-purple-600;
+
+        .admonition-title {
+            @apply bg-purple-300;
+        }
+    }
+
+    &.warning {
+        @apply bg-orange-50 border-orange-400;
+
+        .admonition-title {
+            @apply bg-orange-200;
+        }
+    }
+
+    &.danger {
+        @apply bg-red-50 border-red-400;
+
+        .admonition-title {
+            @apply bg-red-200;
+        }
+    }
+
+    &.error {
+        @apply bg-red-200 border-red-600;
+
+        .admonition-title {
+            @apply bg-red-300;
+        }
+    }
+
+
+}
