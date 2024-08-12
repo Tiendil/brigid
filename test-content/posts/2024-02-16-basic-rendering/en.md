@@ -137,3 +137,39 @@ Basic elements:
 - [Link](https://example.com)
 """
 ///
+
+## Admonitions
+
+/// admonition | Some title
+    type: warning
+
+Some content
+///
+
+/// note | Some title
+Some content
+///
+
+/// attention | Some title
+Some content
+///
+
+/// caution | Some title
+Some content
+///
+
+/// danger | Some title
+Some content
+///
+
+/// error | Some title
+Some content
+///
+
+/// hint | Some title
+Some content
+///
+
+/// warning | Some title
+Some content
+///
