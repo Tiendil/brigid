@@ -11,6 +11,7 @@ translations = {
         "license": "лицензия",
         "content_repository": "исходники постов",
         "site_is_created_with": "сайт создан с помощью",
+        "icons_attribution": 'сайт использует <a href="https://github.com/tabler/tabler-icons" target="_blank">Tabler Icons</a>, лицензированные под <a href="https://github.com/tabler/tabler-icons/blob/main/LICENSE" target="_blank">лицензией MIT</a>',  # noqa
     },
     "en": {
         "read_more": "Read more",
@@ -24,5 +25,6 @@ translations = {
         "license": "license",
         "content_repository": "content repository",
         "site_is_created_with": "site is created with",
+        "icons_attribution": 'site is using <a href="https://github.com/tabler/tabler-icons" target="_blank">Tabler Icons</a>, licensed under the <a href="https://github.com/tabler/tabler-icons/blob/main/LICENSE" target="_blank">MIT License</a>',  # noqa
     },
 }

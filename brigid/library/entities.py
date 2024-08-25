@@ -35,6 +35,8 @@ class MenuItemBase(BaseEntity):
     name: str
     language: str | None = None
     css_classes: str | None = None
+    tooltip: str | None = None
+    open_on_blank_page: bool = False
 
     model_config = pydantic.ConfigDict(frozen=False)
 
@@ -56,6 +58,7 @@ class MenuItemArticle(MenuItemBase):
 
 class MenuItemFeed(MenuItemBase):
     type: Literal[MenuItemType.feed]
+    open_on_blank_page: bool = True
 
     @property
     def url(self) -> str:
@@ -66,6 +69,7 @@ class MenuItemFeed(MenuItemBase):
 class MenuItemExternal(MenuItemBase):
     type: Literal[MenuItemType.external]
     url: str
+    open_on_blank_page: bool = True
 
 
 class MenuItemBlog(MenuItemBase):

@@ -64,8 +64,7 @@ def translate_tag(language: str, tag: str) -> str:
     return site.languages[language].tags_translations[tag]
 
 
-@jinjaglobal
-def translate_theme(language: str, text_id: str) -> str:
+def _translate(language: str, text_id: str) -> str:
     site = storage.get_site()
 
     if text_id in site.languages[language].theme_translations:
@@ -81,6 +80,11 @@ def translate_theme(language: str, text_id: str) -> str:
         return translations[language][text_id]
 
     return text_id
+
+
+@jinjaglobal
+def translate_theme(language: str, text_id: str) -> str:
+    return Markup(_translate(language, text_id))
 
 
 @jinjaglobal
