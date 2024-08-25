@@ -3,17 +3,22 @@ subtitle = "Сайт чтобы тестить тему, CSS, лэйаут, пр
 author = "Елецкий Алексей (Tiendil)"
 
 [[menu]]
-type = "blog"
-name = "Блог"
+  type = "blog"
+  name = "Блог"
 
 [[menu]]
-type = "feed"
-name = "RSS"
+  type = "feed"
+  name = ""
+  css_classes = "ti ti-rss"
+  tooltip = "RSS Feed"
 
 [[menu]]
-type = "external"
-name = "GitHub"
-url = "https://github.com/Tiendil/brigid"
+  type = "external"
+  css_classes = "ti ti-brand-github"
+  name = ""
+  url = "https://github.com/Tiendil/brigid"
+  tooltip = "GitHub"
+
 
 [license]
 url = "https://example.com"

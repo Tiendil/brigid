@@ -10,12 +10,14 @@ author = "Aliaksei Yaletski (Tiendil)"
   type = "feed"
   name = ""
   css_classes = "ti ti-rss"
+  tooltip = "RSS Feed"
 
 [[menu]]
   type = "external"
   css_classes = "ti ti-brand-github"
   name = ""
   url = "https://github.com/Tiendil/brigid"
+  tooltip = "GitHub"
 
 [license]
 url = "https://example.com"
