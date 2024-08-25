@@ -34,6 +34,7 @@ class OrderDirection(enum.StrEnum):
 class MenuItemBase(BaseEntity):
     name: str
     language: str | None = None
+    css_classes: str | None = None
 
     model_config = pydantic.ConfigDict(frozen=False)
 
