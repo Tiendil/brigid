@@ -3,17 +3,19 @@ subtitle = "Site to test theme, css, layout, rendering rules, etc."
 author = "Aliaksei Yaletski (Tiendil)"
 
 [[menu]]
-type = "blog"
-name = "Blog"
+  type = "blog"
+  name = "Blog"
 
 [[menu]]
-type = "feed"
-name = "RSS"
+  type = "feed"
+  name = ""
+  css_classes = "ti ti-rss"
 
 [[menu]]
-type = "external"
-name = "GitHub"
-url = "https://github.com/Tiendil/brigid"
+  type = "external"
+  css_classes = "ti ti-brand-github"
+  name = ""
+  url = "https://github.com/Tiendil/brigid"
 
 [license]
 url = "https://example.com"
