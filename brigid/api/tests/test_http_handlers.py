@@ -65,6 +65,18 @@ class TestRobots:
         assert response.status_code == 200
         assert response.headers["content-type"] == "text/plain; charset=utf-8"
 
+    @pytest.mark.asyncio
+    async def test_content(self, client: TestClient) -> None:
+        expected_content = """
+User-agent: *
+Sitemap: http://0.0.0.0:8000/sitemap.xml
+Disallow: /en/tags/
+Disallow: /ru/tags/
+        """
+
+        response = client.get("/robots.txt")
+        assert response.text == expected_content.strip()
+
 
 class TestError:
 
