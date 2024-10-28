@@ -2576,6 +2576,9 @@ video {
 }
 
 .brigid-article {
+  strong a{
+    font-weight: 600;
+  }
   a{
     text-decoration-color: #ea580c;
   }
