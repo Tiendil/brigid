@@ -9,6 +9,10 @@
         @apply border-b-4 border-double;
         @apply mb-8 pb-4 last-of-type:mb-0;
 
+        strong a {
+            @apply font-semibold;
+        }
+
         a {
             @apply underline-offset-2 decoration-from-font decoration-orange-600;
 

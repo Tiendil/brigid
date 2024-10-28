@@ -121,6 +121,10 @@ raw link is a normal text: https://example.com
 
 raw link in corner brackets is a link: <https://example.com>
 
+**[strong link](https://example.com)**
+
+_[italic link](https://example.com)_
+
 ## Markup in galery captions
 
 /// brigid-images
