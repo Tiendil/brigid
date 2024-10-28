@@ -81,10 +81,18 @@ async def robots() -> PlainTextResponse:
     # language is not important here
     root_url = UrlsRoot(language="en")
 
-    content = f"""\
-User-agent: *
-Sitemap: {root_url.to_site_map_full().url()}
-"""
+    lines = [
+        "User-agent: *",
+        f"Sitemap: {root_url.to_site_map_full().url()}",
+    ]
+
+    site = storage.get_site()
+
+    for language in sorted(site.allowed_languages):
+        # trailing slash is important to treat the path as a prefix
+        lines.append(f"Disallow: /{language}/tags/")
+
+    content = "\n".join(lines)
 
     return PlainTextResponse(content)
 
