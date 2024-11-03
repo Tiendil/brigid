@@ -10,8 +10,8 @@
 {% endif %}
 
 <ul>
-  {% for post in posts %}
-    {% set classes = collection.classes_for_tags(post.tags) %}
-    <li>{{page_anchor(current_page, classes=classes)}}</li>
+  {% for page in posts %}
+    {% set classes = collection.classes_for_tags(page.tags) %}
+    <li>{{page_anchor(page, classes=classes)}}</li>
   {% endfor %}
 </ul>
