@@ -1,0 +1,11 @@
+{% from "utils.html.j2" import page_anchor %}
+
+{% set storage = get_storage() %}
+
+{% set posts = storage.get_posts(language=current_page.language, require_tags=[data.tag]) %}
+
+<ul>
+  {% for post in posts %}
+    <li>{{page_anchor(current_page, short=true)}}</li>
+  {% endfor %}
+</ul>

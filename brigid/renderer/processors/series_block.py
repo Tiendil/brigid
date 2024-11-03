@@ -8,7 +8,7 @@ from brigid.renderer.processors.toml_block import TomlBlock
 
 
 class SeriesModel(BaseEntity):
-    id: str
+    tag: str
     css_class: str | None = None
 
     model_config = pydantic.ConfigDict(frozen=False)

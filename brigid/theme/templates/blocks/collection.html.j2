@@ -1,3 +1,4 @@
+{% from "utils.html.j2" import page_anchor %}
 
 {% set storage = get_storage() %}
 {% set collection = storage.get_collection(data.id) %}
@@ -10,12 +11,7 @@
 
 <ul>
   {% for post in posts %}
-    {% set article = storage.get_article(post.article_id) %}
     {% set classes = collection.classes_for_tags(post.tags) %}
-    <li>
-      <a href="{{root_url(current_page.language).to_post(article.slug).url()}}" class="{{' '.join(classes)}}">
-        {{post.title}}
-      </a>
-    </li>
+    <li>{{page_anchor(current_page, classes=classes)}}</li>
   {% endfor %}
 </ul>
