@@ -31,11 +31,8 @@ def get_similar_pages(language: str, original_page: Page, number: int) -> list[P
             if tag in site.similarity.ignore_similar_tags:
                 continue
 
-            # ignore series tags
-            if tag == original_page.series:
-                continue
-
-            # ignore series tags
+            # ignore pages from the same series
+            # but allow pages with the series tag but not in the series
             if tag == page.series:
                 continue
 
