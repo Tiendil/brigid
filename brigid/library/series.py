@@ -1,4 +1,3 @@
-from brigid.library.connectivity import connectivity
 from brigid.library.entities import Page, PageSeriesInfo
 from brigid.library.storage import storage
 

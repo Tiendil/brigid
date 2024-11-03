@@ -17,7 +17,6 @@ translations = {
         "article_series_read_prev": "Читайте предыдущий",
         "article_series_read_first": "Читайте первый",
     },
-
     "en": {
         "read_more": "Read more",
         "no_posts_found": "Nothing found.",

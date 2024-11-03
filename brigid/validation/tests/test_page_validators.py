@@ -1,7 +1,8 @@
 import uuid
-from brigid.library.tests import make as library_make
-from brigid.validation.page_validators import page_is_rendered, page_has_correct_tags, page_has_correct_series_tags
+
 from brigid.library.storage import storage
+from brigid.library.tests import make as library_make
+from brigid.validation.page_validators import page_has_correct_series_tags, page_has_correct_tags, page_is_rendered
 
 
 def test_some_tags_are_in_configs() -> None:
@@ -62,8 +63,9 @@ class TestPageHasCorrectTags:
 
         assert len(errors) == 2
 
-        assert ((bad_tag_1 in errors[0].message and bad_tag_2 in errors[1].message) or
-                (bad_tag_1 in errors[1].message and bad_tag_2 in errors[0].message))
+        assert (bad_tag_1 in errors[0].message and bad_tag_2 in errors[1].message) or (
+            bad_tag_1 in errors[1].message and bad_tag_2 in errors[0].message
+        )
 
 
 class TestPageHasCorrectSeriesTags:

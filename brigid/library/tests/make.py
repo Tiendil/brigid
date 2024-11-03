@@ -39,7 +39,7 @@ def page(  # noqa: CFQ002
     body: str | None = None,
     tags: Iterable[str] = (),
     template: str | None = None,
-        series: str | None = None,
+    series: str | None = None,
 ) -> Page:
 
     if article is None:

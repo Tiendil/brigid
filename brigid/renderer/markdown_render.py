@@ -5,12 +5,12 @@ from brigid.library.entities import Page
 from brigid.library.storage import storage
 from brigid.renderer.context import RenderContext, markdown_context, render_context
 from brigid.renderer.processors.collection_block import CollectionBlockExtension
-from brigid.renderer.processors.series_block import SeriesBlockExtension
 from brigid.renderer.processors.external_links import EXTERNAL_LINK_RE, ExternalLinkInlineProcessor
 from brigid.renderer.processors.header_anchors import HeaderAnchorsExtension
 from brigid.renderer.processors.images_block import ImagesBlockExtension
 from brigid.renderer.processors.internal_links import INTERNAL_LINK_RE, InternalLinkInlineProcessor
 from brigid.renderer.processors.old_image_markup_validation import IMAGE_LINK_RE, ImageInlineValidator
+from brigid.renderer.processors.series_block import SeriesBlockExtension
 from brigid.renderer.processors.snippets import SnippetExtension
 from brigid.renderer.processors.youtube_block import YouTubeBlockExtension
 

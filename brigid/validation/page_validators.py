@@ -1,7 +1,7 @@
 from brigid.library.entities import Page
+from brigid.library.storage import storage
 from brigid.renderer.markdown_render import render_page
 from brigid.validation.entities import Error
-from brigid.library.storage import storage
 
 
 def page_is_rendered(page: Page) -> list[Error]:
@@ -22,7 +22,9 @@ def page_has_correct_tags(page: Page) -> list[Error]:
 
     for tag in page.tags:
         if tag not in allowed_tags:
-            errors.append(Error(filepath=page.path, message=f"Tag {tag} is not registered for site language {page.language}"))
+            errors.append(
+                Error(filepath=page.path, message=f"Tag {tag} is not registered for site language {page.language}")
+            )
 
     return errors
 
@@ -39,6 +41,11 @@ def page_has_correct_series_tags(page: Page) -> list[Error]:
         errors.append(Error(filepath=page.path, message=f"Series tag {page.series} should be also in page tags"))
 
     if page.series not in allowed_series_tags:
-        errors.append(Error(filepath=page.path, message=f"Series tag {page.series} is not registered for site language {page.language}"))
+        errors.append(
+            Error(
+                filepath=page.path,
+                message=f"Series tag {page.series} is not registered for site language {page.language}",
+            )
+        )
 
     return errors
