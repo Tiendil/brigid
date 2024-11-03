@@ -12,7 +12,10 @@ translations = {
         "content_repository": "исходники постов",
         "site_is_created_with": "сайт создан с помощью",
         "icons_attribution": 'сайт использует <a href="https://github.com/tabler/tabler-icons" target="_blank">Tabler Icons</a>, лицензированные под <a href="https://github.com/tabler/tabler-icons/blob/main/LICENSE" target="_blank">лицензией MIT</a>',  # noqa
+        "article_is_part_of_series": "Этот пост является частью серии",
+        "article_series_read_next": "Читайте далее",
     },
+
     "en": {
         "read_more": "Read more",
         "no_posts_found": "Nothing found.",
@@ -26,5 +29,7 @@ translations = {
         "content_repository": "content repository",
         "site_is_created_with": "site is created with",
         "icons_attribution": 'site is using <a href="https://github.com/tabler/tabler-icons" target="_blank">Tabler Icons</a>, licensed under the <a href="https://github.com/tabler/tabler-icons/blob/main/LICENSE" target="_blank">MIT License</a>',  # noqa
+        "article_is_part_of_series": "This post is part of series",
+        "article_series_read_next": "Read next",
     },
 }
