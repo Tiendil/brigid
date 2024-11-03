@@ -3,7 +3,7 @@ from brigid.library.entities import Page, PageSeriesInfo
 from brigid.library.storage import storage
 
 
-def jget_page_series_info(original_page: Page) -> PageSeriesInfo:
+def get_page_series_info(original_page: Page) -> PageSeriesInfo:
 
     if original_page.series is None:
         raise NotImplementedError("Only pages with series are supported")
@@ -14,13 +14,13 @@ def jget_page_series_info(original_page: Page) -> PageSeriesInfo:
         if original_page.series != page.series:
             continue
 
-        series_pages.append(page.article_id)
+        series_pages.append(page.id)
 
     first_page = series_pages[0]
     prev_page = None
     next_page = None
 
-    original_page_index = series_pages.index(original_page.article_id)
+    original_page_index = series_pages.index(original_page.id)
 
     if original_page_index > 0:
         prev_page = series_pages[original_page_index - 1]
