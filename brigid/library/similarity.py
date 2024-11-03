@@ -5,6 +5,7 @@ from brigid.library.storage import storage
 
 # TODO: collect data to explain similarity
 # TODO: add similarity by vector embedings?
+# TODO: test series
 def get_similar_pages(language: str, original_page: Page, number: int) -> list[PageSimilarityScore]:  # noqa: CCR001
 
     site = storage.get_site()
@@ -16,6 +17,11 @@ def get_similar_pages(language: str, original_page: Page, number: int) -> list[P
         if original_page.id == page.id:
             continue
 
+        if original_page.series == page.series:
+            # exclude pages from the same series
+            # they should be shown in a separate GUI block
+            continue
+
         scores.append(PageSimilarityScore(page_id=page.id, score=0))
 
     # add points for common tags
@@ -24,6 +30,14 @@ def get_similar_pages(language: str, original_page: Page, number: int) -> list[P
 
         for tag in original_page.tags:
             if tag in site.similarity.ignore_similar_tags:
+                continue
+
+            # ignore series tags
+            if tag == original_page.series:
+                continue
+
+            # ignore series tags
+            if tag == page.series:
                 continue
 
             if tag in page.tags:
