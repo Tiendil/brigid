@@ -18,25 +18,34 @@
 
       {% if page.is_post %}
         {% if page.series %}
-          {# TODO: style #}
+          {% set series_info = page_series_info(page) %}
+
           <div class="brigid-series-read-next">
             <h2 class="brigid-series-footer-caption">
               {{translate_theme(current_url.language, 'article_is_part_of_series')}}
             </h2>
 
             <ul>
+              {% if series_info.next_page %}
               <li>
                 {{translate_theme(current_url.language, 'article_series_read_next')}}:
                 {{page_anchor(page, short=true)}}
               </li>
+            {% endif %}
+
+            {% if series_info.prev_page %}
               <li>
                 {{translate_theme(current_url.language, 'article_series_read_prev')}}:
                 {{page_anchor(page, short=true)}}
               </li>
+            {% endif %}
+
+            {% if series_info.first_page != page.article_id and series_info.first_page != series_info.prev_page %}
               <li>
                 {{translate_theme(current_url.language, 'article_series_read_first')}}:
                 {{page_anchor(page, short=true)}}
               </li>
+            {% endif %}
             </ul>
 
           </div>

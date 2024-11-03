@@ -5,7 +5,6 @@ from brigid.library.storage import storage
 
 # TODO: collect data to explain similarity
 # TODO: add similarity by vector embedings?
-# TODO: test series
 def get_similar_pages(language: str, original_page: Page, number: int) -> list[PageSimilarityScore]:  # noqa: CCR001
 
     site = storage.get_site()

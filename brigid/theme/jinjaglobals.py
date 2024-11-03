@@ -7,8 +7,9 @@ from markupsafe import Markup
 from brigid.domain import constants as domain_constants
 from brigid.domain import request_context as d_request_context
 from brigid.domain.urls import UrlsRoot
-from brigid.library.entities import Page
+from brigid.library.entities import Page, PageSeriesInfo
 from brigid.library.storage import Storage, storage
+from brigid.library.series import get_page_series_info
 from brigid.renderer.markdown_render import render_page as markdown_render_page
 from brigid.renderer.markdown_render import render_page_intro as markdown_render_page_intro
 from brigid.renderer.markdown_render import render_text as markdown_render_text
@@ -109,3 +110,8 @@ def request_context_get(name: str) -> Any:
 @jinjafilter
 def to_str(value: Any) -> str:
     return str(value)
+
+
+@jinjaglobal
+def page_series_info(page: Page) -> PageSeriesInfo:
+    return get_page_series_info(page)

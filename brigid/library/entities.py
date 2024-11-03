@@ -286,3 +286,9 @@ class Collection(BaseEntity):
                 classes.append(self.css_for_tags[tag])
 
         return classes
+
+
+class PageSeriesInfo(BaseEntity):
+    first_page: str
+    prev_page: str | None
+    next_page: str | None
