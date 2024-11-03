@@ -209,6 +209,8 @@ class Page(BaseEntity):
 
     template: str | None = None
 
+    series: str | None = None
+
     @cached_property
     def id(self) -> str:
         return f"page#{self.language}#{self.slug}"
