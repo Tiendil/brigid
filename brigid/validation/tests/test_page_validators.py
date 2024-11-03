@@ -6,7 +6,7 @@ from brigid.validation.page_validators import page_has_correct_series_tags, page
 
 
 def test_some_tags_are_in_configs() -> None:
-    "To not test in every test that tags are in configs"
+    """To not test in every test that tags are in configs"""
     for language in storage.get_site().languages.keys():
         allowed_tags = list(storage.get_site().languages[language].tags_translations.keys())
     assert allowed_tags
