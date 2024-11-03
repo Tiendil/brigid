@@ -1,4 +1,4 @@
-{% from "utils.html.j2" import page_anchor %}
+{% from "utils.html.j2" import page_anchor, page_title %}
 
 {% set storage = get_storage() %}
 
@@ -6,6 +6,12 @@
 
 <ol>
   {% for page in posts|reverse %}
-    <li>{{page_anchor(page, short=true)}}</li>
+    <li>
+      {% if current_page.id == page.id %}
+        <strong>{{page_title(page, short=true)}}</strong>
+      {% else %}
+        {{page_anchor(page, short=true)}}
+      {% endif %}
+    </li>
   {% endfor %}
 </ol>
