@@ -39,6 +39,7 @@ def page(  # noqa: CFQ002
     body: str | None = None,
     tags: Iterable[str] = (),
     template: str | None = None,
+        series: str | None = None,
 ) -> Page:
 
     if article is None:
@@ -70,6 +71,7 @@ def page(  # noqa: CFQ002
         body=body,
         tags=set(tags),
         template=template,
+        series=series,
     )
 
     storage.add_page(page)

@@ -15,7 +15,6 @@ def page_is_rendered(page: Page) -> list[Error]:
     return errors
 
 
-# TODO: tests
 def page_has_correct_tags(page: Page) -> list[Error]:
     errors = []
 
@@ -28,14 +27,13 @@ def page_has_correct_tags(page: Page) -> list[Error]:
     return errors
 
 
-# TODO: tests
 def page_has_correct_series_tags(page: Page) -> list[Error]:
     if page.series is None:
         return []
 
     errors = []
 
-    allowed_series_tags = set(storage.get_site().languages[page.language].series_translations.keys())
+    allowed_series_tags = set(storage.get_site().languages[page.language].tags_translations.keys())
 
     if page.series not in page.tags:
         errors.append(Error(filepath=page.path, message=f"Series tag {page.series} should be also in page tags"))
