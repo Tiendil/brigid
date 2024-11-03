@@ -15,6 +15,8 @@ def get_page_series_info(original_page: Page) -> PageSeriesInfo:
 
         series_pages.append(page.id)
 
+    series_pages.sort(key=lambda p_id: storage.get_page(p_id).published_at)
+
     first_page = series_pages[0]
     prev_page = None
     next_page = None

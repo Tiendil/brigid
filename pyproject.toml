@@ -133,3 +133,11 @@ ignore_missing_imports = true
 [[tool.mypy.overrides]]
 module = "pymdownx.*"
 ignore_missing_imports = true
+
+[tool.setuptools.packages.find]
+include = ["brigid*"]
+exclude = ["cache", "docker", "changes"]
+
+[project]
+name = "brigid"
+version = "0.9.0"
