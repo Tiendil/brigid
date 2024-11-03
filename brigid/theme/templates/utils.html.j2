@@ -35,11 +35,16 @@
 {% endmacro %}
 
 
-{% macro page_anchor(page, short=false, classes=(), anchor_title="") %}
+{# TODO: autodetect relations? #}
+{% macro page_anchor(page, short=false, classes=(), anchor_title="", rel="") %}
   {% set storage = get_storage() %}
   {% set article = storage.get_article(page.article_id) %}
 
-  <a href="{{root_url(page.language).to_post(article.slug).url()}}" class="{{' '.join(classes)}}" title="{{anchor_title}}">
+  <a href="{{root_url(page.language).to_post(article.slug).url()}}"
+     {% if classes %}class="{{' '.join(classes)}}"{% endif %}
+     {% if anchor_title %}title="{{anchor_title}}"{% endif %}
+     {% if rel %}rel="{{rel}}"{% endif %}
+     >
     {{page_title(page, short=short)}}
   </a>
 {% endmacro %}

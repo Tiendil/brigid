@@ -30,7 +30,7 @@
                 {% set series_next_page = get_storage().get_page(id=series_info.next_page) %}
               <li>
                 {{translate_theme(current_url.language, 'article_series_read_next')}}:
-                {{page_anchor(series_next_page, short=true)}}
+                {{page_anchor(series_next_page, short=true, rel='next')}}
               </li>
             {% endif %}
 
@@ -38,7 +38,7 @@
                 {% set series_prev_page = get_storage().get_page(id=series_info.prev_page) %}
               <li>
                 {{translate_theme(current_url.language, 'article_series_read_prev')}}:
-                {{page_anchor(series_prev_page, short=true)}}
+                {{page_anchor(series_prev_page, short=true, rel='prev')}}
               </li>
             {% endif %}
 
