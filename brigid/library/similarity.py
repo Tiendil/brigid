@@ -16,7 +16,7 @@ def get_similar_pages(language: str, original_page: Page, number: int) -> list[P
         if original_page.id == page.id:
             continue
 
-        if original_page.series == page.series:
+        if original_page.series is not None and original_page.series == page.series:
             # exclude pages from the same series
             # they should be shown in a separate GUI block
             continue
@@ -31,8 +31,11 @@ def get_similar_pages(language: str, original_page: Page, number: int) -> list[P
             if tag in site.similarity.ignore_similar_tags:
                 continue
 
-            # ignore pages from the same series
-            # but allow pages with the series tag but not in the series
+            # ignore original series tag
+            if tag == original_page.series:
+                continue
+
+            # ignore page series tag
             if tag == page.series:
                 continue
 
