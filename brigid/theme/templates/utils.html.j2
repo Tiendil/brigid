@@ -19,16 +19,16 @@
 
   {% if short %}
 
-    {{page.title}}
+    {{page.title|upper_first}}
 
   {% elif page.series %}
     {% set series_title = storage.get_site().languages[page.language].tags_translations[page.series] %}
 
-    {{series_title}}: {{page.title}}
+    {{series_title|upper_first}}: {{page.title|upper_first}}
 
   {% else %}
 
-  {{page.title}}
+  {{page.title|upper_first}}
 
   {% endif %}
 

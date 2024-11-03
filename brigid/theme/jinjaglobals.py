@@ -104,3 +104,8 @@ def brigid_repository() -> str:
 @jinjaglobal
 def request_context_get(name: str) -> Any:
     return d_request_context.get(name)
+
+
+@jinjafilter
+def to_str(value: Any) -> str:
+    return str(value)

@@ -6,7 +6,7 @@
 
       {% set similar_page = get_storage().get_page(id=similar_score.page_id) %}
       {% set similar_article = get_storage().get_article(id=similar_page.article_id) %}
-      {% set anchor_title= translate_theme(language, 'similarity_score_tooltip') + ': ' + similar_score.score %}
+      {% set anchor_title= translate_theme(language, 'similarity_score_tooltip') + ': ' + similar_score.score|to_str %}
 
       <li data-brigid-similarity-score="{{similar_score.score}}">
         {{page_anchor(similar_page, anchor_title=anchor_title)}}

@@ -1,6 +1,7 @@
 ---
 title = "Post with translation"
 tags = ["example", "basic", "languages"]
+series = "basic"
 published_at = "2024-03-04T13:00:00+00:00"
 seo_description = "Example post with translation."
 seo_image = ""

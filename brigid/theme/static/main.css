@@ -3403,6 +3403,14 @@ video {
       font-weight: 500;
     }
   }
+  .brigid-series-read-next{
+    margin-top: 2rem;
+  }
+  .brigid-series-read-next {
+    .brigid-series-footer-caption{
+      font-weight: 500;
+    }
+  }
 }
 
 .brigid-images{

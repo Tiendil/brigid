@@ -20,15 +20,24 @@
         {% if page.series %}
           {# TODO: style #}
           <div class="brigid-series-read-next">
-            <p>
-              {{translate_theme(current_url.language, 'article_is_part_of_series')}}:
-              <a href="{{root_url(page.language).to_filter(require=[page.series]).url()}}">{{translate_tag(page.language, tag)}}</a>
-            </p>
+            <h2 class="brigid-series-footer-caption">
+              {{translate_theme(current_url.language, 'article_is_part_of_series')}}
+            </h2>
 
-            <p>
-              {{translate_theme(current_url.language, 'article_series_read_next')}}:
-              {{page_anchor(similar_page, short=true)}}
-            </p>
+            <ul>
+              <li>
+                {{translate_theme(current_url.language, 'article_series_read_next')}}:
+                {{page_anchor(page, short=true)}}
+              </li>
+              <li>
+                {{translate_theme(current_url.language, 'article_series_read_prev')}}:
+                {{page_anchor(page, short=true)}}
+              </li>
+              <li>
+                {{translate_theme(current_url.language, 'article_series_read_first')}}:
+                {{page_anchor(page, short=true)}}
+              </li>
+            </ul>
 
           </div>
         {% endif %}
