@@ -9,6 +9,12 @@ seo_image = ""
 
 Here will be examples of basic elements rendering. Under the cut.
 
+This post is also test series functionality:
+
+/// brigid-series
+tag = "basic"
+///
+
 <!-- more -->
 
 Header 1 is not allowed in the post body, it is reserved for the title.
