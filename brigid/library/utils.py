@@ -1,6 +1,5 @@
-
-from brigid.library.storage import storage
 from brigid.library.entities import Page
+from brigid.library.storage import storage
 
 
 def page_title(page: Page, short: bool) -> str:
