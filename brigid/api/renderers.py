@@ -8,6 +8,7 @@ from brigid.api.utils import construct_index_description, construct_index_title,
 from brigid.core import errors
 from brigid.domain import request_context
 from brigid.domain.urls import UrlsFeedsAtom, UrlsPost, UrlsTags
+from brigid.library import utils as l_utils
 from brigid.library.similarity import get_similar_pages
 from brigid.library.storage import storage
 from brigid.theme.entities import MetaInfo, Template
@@ -161,7 +162,7 @@ def render_page(language: str, article_slug: str, status_code: int = 200) -> HTM
         site_title=site.languages[language].title,
         language=language,
         allowed_languages=[language for language in site.allowed_languages if language in article.pages],
-        title=page.title,
+        title=l_utils.page_title(page, short=False),
         seo_description=page.seo_description,
         author=site.languages[language].author,
         tags=[site.languages[language].tags_translations[tag] for tag in page.tags],
@@ -217,7 +218,7 @@ def render_atom_feed(language: str) -> HTMLResponse:
 
         feed.add_item(
             # TODO: do we need to render title as markdown?
-            title=page.title,
+            title=l_utils.page_title(page, short=False),
             link=post_url.url(),
             description=render_page_intro(page),
             author_name=author,
