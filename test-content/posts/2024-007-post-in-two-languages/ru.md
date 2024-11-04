@@ -1,6 +1,7 @@
 ---
 title = "Пост с переводом"
 tags = ["example", "basic", "languages"]
+series = "basic"
 published_at = "2024-03-04T13:00:00+00:00"
 seo_description = "Пример поста с переводом."
 seo_image = ""

@@ -11,3 +11,40 @@
     {{name}}
   </a>
 {% endmacro %}
+
+
+{% macro page_title(page, short=false) %}
+  {% set storage = get_storage() %}
+  {% set article = storage.get_article(page.article_id) %}
+
+  {% if short %}
+
+    {{page.title|upper_first}}
+
+  {% elif page.series %}
+    {% set series_title = storage.get_site().languages[page.language].tags_translations[page.series] %}
+
+    {{series_title|upper_first}}: {{page.title|upper_first}}
+
+  {% else %}
+
+  {{page.title|upper_first}}
+
+  {% endif %}
+
+{% endmacro %}
+
+
+{# TODO: autodetect relations? #}
+{% macro page_anchor(page, short=false, classes=(), anchor_title="", rel="") %}
+  {% set storage = get_storage() %}
+  {% set article = storage.get_article(page.article_id) %}
+
+  <a href="{{root_url(page.language).to_post(article.slug).url()}}"
+     {% if classes %}class="{{' '.join(classes)}}"{% endif %}
+     {% if anchor_title %}title="{{anchor_title}}"{% endif %}
+     {% if rel %}rel="{{rel}}"{% endif %}
+     >
+    {{page_title(page, short=short)}}
+  </a>
+{% endmacro %}

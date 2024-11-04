@@ -1,12 +1,19 @@
 ---
 title = "Variants of basic rendering"
 tags = ["example", "basic", "images"]
+series = "basic"
 published_at = "2024-02-16T12:00:00+00:00"
 seo_description = "Examples of rendering basic elements in web pages."
 seo_image = ""
 ---
 
 Here will be examples of basic elements rendering. Under the cut.
+
+This post is also test series functionality:
+
+/// brigid-series
+tag = "basic"
+///
 
 <!-- more -->
 

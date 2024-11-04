@@ -40,5 +40,13 @@
                 @apply font-medium;
             }
         }
+
+        .brigid-series-read-next {
+            @apply mt-8;
+
+            .brigid-series-footer-caption {
+                @apply font-medium;
+            }
+        }
     }
 }

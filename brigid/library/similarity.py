@@ -16,6 +16,11 @@ def get_similar_pages(language: str, original_page: Page, number: int) -> list[P
         if original_page.id == page.id:
             continue
 
+        if original_page.series is not None and original_page.series == page.series:
+            # exclude pages from the same series
+            # they should be shown in a separate GUI block
+            continue
+
         scores.append(PageSimilarityScore(page_id=page.id, score=0))
 
     # add points for common tags
@@ -24,6 +29,14 @@ def get_similar_pages(language: str, original_page: Page, number: int) -> list[P
 
         for tag in original_page.tags:
             if tag in site.similarity.ignore_similar_tags:
+                continue
+
+            # ignore original series tag
+            if tag == original_page.series:
+                continue
+
+            # ignore page series tag
+            if tag == page.series:
                 continue
 
             if tag in page.tags:

@@ -1,0 +1,17 @@
+{% from "utils.html.j2" import page_anchor, page_title %}
+
+{% set storage = get_storage() %}
+
+{% set posts = storage.get_posts(language=current_page.language, require_tags=[data.tag]) %}
+
+<ol>
+  {% for page in posts|reverse %}
+    <li>
+      {% if current_page.id == page.id %}
+        <strong>{{page_title(page, short=true)}}</strong>
+      {% else %}
+        {{page_anchor(page, short=true)}}
+      {% endif %}
+    </li>
+  {% endfor %}
+</ol>

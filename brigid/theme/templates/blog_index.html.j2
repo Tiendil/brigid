@@ -2,6 +2,7 @@
 {% from 'tags_filter.html.j2' import tags_filter %}
 {% from 'article_footer.html.j2' import article_footer %}
 {% from "pagination.html.j2" import pagination %}
+{% from "utils.html.j2" import page_anchor %}
 
 {% block content %}
   <div class="brigid-index-main">
@@ -14,7 +15,7 @@
 
             <div class="brigid-article">
               <h1>
-                <a class="{{test_marker('test-page-header-link')}}" href="{{root_url(language).to_post(article.slug).url()}}">{{page.title}}</a>
+                {{page_anchor(page, classes=[test_marker('test-page-header-link')])}}
               </h1>
 
               {{page|render_page_intro}}
