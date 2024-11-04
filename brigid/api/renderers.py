@@ -8,9 +8,9 @@ from brigid.api.utils import construct_index_description, construct_index_title,
 from brigid.core import errors
 from brigid.domain import request_context
 from brigid.domain.urls import UrlsFeedsAtom, UrlsPost, UrlsTags
+from brigid.library import utils as l_utils
 from brigid.library.similarity import get_similar_pages
 from brigid.library.storage import storage
-from brigid.library import utils as l_utils
 from brigid.theme.entities import MetaInfo, Template
 from brigid.theme.jinjaglobals import render_page_intro
 from brigid.theme.templates import render
