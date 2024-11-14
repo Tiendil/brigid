@@ -216,11 +216,13 @@ def render_atom_feed(language: str) -> HTMLResponse:
 
         post_url = UrlsPost(language=language, slug=article.slug)
 
+        # Note: str() converts Markup strings into normal strings
+        #       preventing double escaping in the feed
         feed.add_item(
             # TODO: do we need to render title as markdown?
-            title=l_utils.page_title(page, short=False),
+            title=str(l_utils.page_title(page, short=False)),
             link=post_url.url(),
-            description=render_page_intro(page),
+            description=str(render_page_intro(page)),
             author_name=author,
             pubdate=page.published_at,
             # TODO: now unique_id is constructed automatically like tag URI, which is expected by ATOM spec
