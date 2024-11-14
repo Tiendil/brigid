@@ -11,7 +11,7 @@ class TestCapitalizeFirst:
             ["", ""],
             ["tst test", "Tst test"],
             ["?sadasd", "?sadasd"],
-            ['ABBR some text ABBR some text ABBR', 'ABBR some text ABBR some text ABBR'],
+            ["ABBR some text ABBR some text ABBR", "ABBR some text ABBR some text ABBR"],
         ],
     )
     def test(self, text_input: str, text_expected: str) -> None:

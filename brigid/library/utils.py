@@ -1,7 +1,6 @@
+from brigid.domain.text import capitalize_first
 from brigid.library.entities import Page
 from brigid.library.storage import storage
-
-from brigid.domain.text import capitalize_first
 
 
 def page_title(page: Page, short: bool) -> str:

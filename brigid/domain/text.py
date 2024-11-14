@@ -1,5 +1,3 @@
-
-
 def capitalize_first(text: str) -> str:
     if not text:
         return text
