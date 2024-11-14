@@ -1,7 +1,7 @@
 import datetime
 import xml.etree.ElementTree as ET  # noqa: S405
 
-from brigid.domain.urls import UrlsPost, UrlsRoot, UrlsTags
+from brigid.domain.urls import UrlsPost, UrlsRoot
 from brigid.library.storage import storage
 
 # Google does not like too old dates like 0001-01-01
@@ -49,9 +49,6 @@ def build_sitemap_xml() -> str:
     for language in site.allowed_languages:
         add_index_url(sitemap, language)
 
-    for language in site.allowed_languages:
-        add_pagination_urls(sitemap, language)
-
     return ET.tostring(sitemap, encoding="unicode")
 
 
@@ -75,32 +72,6 @@ def add_index_url(sitemap, language) -> None:
 
     if len(site.allowed_languages) > 1:
         add_language_variants(url, root_url, site.allowed_languages)
-
-
-def add_pagination_urls(sitemap, language) -> None:
-
-    # add only index with no tags filter
-    pagination_urls = UrlsTags(language=language, page=1, required_tags=[], excluded_tags=[])
-
-    last_published_at = get_last_published_at(language)
-
-    while pagination_urls.page < pagination_urls.total_pages:
-        # do not add the first page, because it is already added
-        pagination_urls = pagination_urls.move_page(+1)
-
-        url = ET.SubElement(sitemap, "url")
-
-        loc = ET.SubElement(url, "loc")
-        loc.text = pagination_urls.url()
-
-        add_lastmod(url, last_published_at)
-
-        priority = ET.SubElement(url, "priority")
-        priority.text = "1.0"
-
-        # do not add language variants for pagination urls
-        # because sets of posts for each language will differ
-        # => pages will differ
 
 
 def add_page_url(sitemap, page) -> None:
