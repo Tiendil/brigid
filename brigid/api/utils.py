@@ -3,6 +3,7 @@ from typing import Iterable
 import fastapi
 
 from brigid.api.default_translations import translations
+from brigid.domain.text import capitalize_first
 
 
 def parse_accept_language(accept_language):
@@ -109,14 +110,14 @@ def construct_index_title(  # noqa: CCR001
         tags_required = tags_required[1:]
 
     if category:
-        title_parts.append(category.capitalize())
+        title_parts.append(capitalize_first(category))
 
     if page > 1:
         if category:
             title_parts.append(", ")
             title_parts.append(translate_seo(language, "page"))
         else:
-            title_parts.append(translate_seo(language, "page").capitalize())
+            title_parts.append(capitalize_first(translate_seo(language, "page")))
 
         title_parts.append(" ")
         title_parts.append(str(page))
@@ -161,14 +162,14 @@ def construct_index_description(  # noqa: CCR001
         tags_required = tags_required[1:]
 
     if category:
-        title_parts.append(category.capitalize())
+        title_parts.append(capitalize_first(category))
 
     if page > 1:
         if category:
             title_parts.append(", ")
             title_parts.append(translate_seo(language, "page"))
         else:
-            title_parts.append(translate_seo(language, "page").capitalize())
+            title_parts.append(capitalize_first(translate_seo(language, "page")))
 
         title_parts.append(" ")
         title_parts.append(str(page))
@@ -186,7 +187,7 @@ def construct_index_description(  # noqa: CCR001
         title_parts.append(", ".join([f"[{tag}]" for tag in tags_excluded]))
 
     title_parts.append(". ")
-    title_parts.append(subtitle.capitalize())
+    title_parts.append(capitalize_first(subtitle))
     title_parts.append(".")
 
     return "".join(title_parts)

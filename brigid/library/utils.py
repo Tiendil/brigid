@@ -1,14 +1,16 @@
 from brigid.library.entities import Page
 from brigid.library.storage import storage
 
+from brigid.domain.text import capitalize_first
+
 
 def page_title(page: Page, short: bool) -> str:
 
     if short:
-        return page.title.capitalize()
+        return capitalize_first(page.title)
 
     if page.series:
         series_title = storage.get_site().languages[page.language].tags_translations[page.series]
-        return f"{series_title.capitalize()}: {page.title.capitalize()}"
+        return f"{capitalize_first(series_title)}: {capitalize_first(page.title)}"
 
-    return page.title.capitalize()
+    return capitalize_first(page.title)
