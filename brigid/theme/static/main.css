@@ -1879,6 +1879,18 @@ video {
   .brigid-index-navigation-item{
     display: inline-block;
   }
+  .brigid-index-navigation-item {
+    button{
+      font-weight: 500;
+    }
+    button{
+      text-decoration-line: underline;
+    }
+  }
+}
+
+.brigid-tag-form{
+  display: inline-block;
 }
 
 #brigid-body{
@@ -3584,6 +3596,10 @@ video {
 
 .block{
   display: block;
+}
+
+.filter{
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 /* CSS is not placed in the components layer because these classes are not mentioned in HTML  */

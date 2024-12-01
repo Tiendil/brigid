@@ -14,15 +14,19 @@
 
 
 {% macro tags_url_button(name, url, class) %}
-  <button class="{{class}}"
-          onclick="window.location.href='{{url.url()}}';">
-    {{name}}
-  </button>
+  <form action="{{url.url()}}" class="brigid-tag-form" method="get">
+    <button class="{{class}}">
+      {{name}}
+    </button>
+</form>
 {% endmacro %}
 
 
 {% macro tags_url(name, url, class) %}
   {% if url.is_noindex() %}
+    {# We render links to tag filter as buttons #}
+    {# to prevent not-so-smart bots from following them #}
+    {# and trying to recursively index all possible combinations of tags #}
     {{ tags_url_button(name, url, class) }}
   {% else %}
     {{ tags_url_a(name, url, class) }}
