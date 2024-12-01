@@ -1,3 +1,5 @@
+{% from "utils.html.j2" import tags_url %}
+
 
 {% macro article_footer(page) %}
   <div class="brigid-article-footer">
@@ -7,7 +9,7 @@
     <div class="brigid-article-footer-tags">
       {%- for tag in page.tags_in_translation_order -%}
         {%- if not loop.first -%}, {%- endif %}
-        <a href="{{root_url(page.language).to_filter(require=[tag]).url()}}">{{translate_tag(page.language, tag)}}</a>
+        {{tags_url(translate_tag(page.language, tag), root_url(page.language).to_filter(require=[tag]), "")}}
       {%- endfor -%}
     </div>
   </div>

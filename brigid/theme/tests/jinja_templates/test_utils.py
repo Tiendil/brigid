@@ -26,7 +26,26 @@ class TestTagsUrl:
 
         return env().from_string(template).render(context)
 
-    def test(self) -> None:
+    def test__a(self) -> None:
+        url = self.url.to_filter(page=13)
+
+        context = {"current_url": url}
+
+        request_context.set("language", "en")
+        request_context.set("url", url)
+
+        result = self.render(context)
+
+        expected_result = """
+  <a class=""
+     href="http://0.0.0.0:8000/en/tags/13">
+    xxx
+  </a>
+ """
+
+        assert_compare_html(result, expected_result)
+
+    def test__button(self) -> None:
         context = {"current_url": self.url}
 
         request_context.set("language", "en")
@@ -35,15 +54,40 @@ class TestTagsUrl:
         result = self.render(context)
 
         expected_result = """
-  <a class=""
-     href="http://0.0.0.0:8000/en/tags/a/-b/-c/d/-e/13">
+<form action="http://0.0.0.0:8000/en/tags/a/-b/-c/d/-e/13" class="brigid-tag-form" method="get">
+    <button class="">
+      xxx
+    </button>
+</form>
+ """
+
+        assert_compare_html(result, expected_result)
+
+    def test_render_class__a(self) -> None:
+        template = """
+{% from "utils.html.j2" import tags_url %}
+{{tags_url("xxx", current_url, "aaa bbb") }}
+"""
+
+        url = self.url.to_filter(page=13)
+
+        context = {"current_url": url}
+
+        request_context.set("language", "en")
+        request_context.set("url", url)
+
+        result = self.render(context, template=template)
+
+        expected_result = """
+  <a class="aaa bbb"
+     href="http://0.0.0.0:8000/en/tags/13">
     xxx
   </a>
  """
 
         assert_compare_html(result, expected_result)
 
-    def test_render_class(self) -> None:
+    def test_render_class__button(self) -> None:
         template = """
 {% from "utils.html.j2" import tags_url %}
 {{tags_url("xxx", current_url, "aaa bbb") }}
@@ -57,21 +101,24 @@ class TestTagsUrl:
         result = self.render(context, template=template)
 
         expected_result = """
-  <a class="aaa bbb"
-     href="http://0.0.0.0:8000/en/tags/a/-b/-c/d/-e/13">
-    xxx
-  </a>
+<form action="http://0.0.0.0:8000/en/tags/a/-b/-c/d/-e/13" class="brigid-tag-form" method="get">
+    <button class="aaa bbb">
+      xxx
+    </button>
+</form>
  """
 
         assert_compare_html(result, expected_result)
 
     @mock.patch("brigid.domain.urls.UrlsTags.total_pages", 100500)
-    def test_prev(self) -> None:
-        context = {"current_url": self.url}
+    def test_prev__a(self) -> None:
+        url = self.url.to_filter(page=13)
 
-        page_url = self.url.move_page(1)
+        context = {"current_url": url}
 
-        assert self.url.is_prev_to(page_url)
+        page_url = url.move_page(1)
+
+        assert url.is_prev_to(page_url)
 
         request_context.set("language", "en")
         request_context.set("url", page_url)
@@ -79,19 +126,21 @@ class TestTagsUrl:
         result = self.render(context)
 
         expected_result = """
-  <a class="" rel="prev" href="http://0.0.0.0:8000/en/tags/a/-b/-c/d/-e/13">
+  <a class="" rel="prev" href="http://0.0.0.0:8000/en/tags/13">
     xxx
   </a>
  """
         assert_compare_html(result, expected_result)
 
     @mock.patch("brigid.domain.urls.UrlsTags.total_pages", 100500)
-    def test_next(self) -> None:
-        context = {"current_url": self.url}
+    def test_next__a(self) -> None:
+        url = self.url.to_filter(page=13)
 
-        page_url = self.url.move_page(-1)
+        context = {"current_url": url}
 
-        assert self.url.is_next_to(page_url)
+        page_url = url.move_page(-1)
+
+        assert url.is_next_to(page_url)
 
         request_context.set("language", "en")
         request_context.set("url", page_url)
@@ -101,7 +150,7 @@ class TestTagsUrl:
         expected_result = """
   <a class=""
      rel="next"
-     href="http://0.0.0.0:8000/en/tags/a/-b/-c/d/-e/13">
+     href="http://0.0.0.0:8000/en/tags/13">
     xxx
   </a>
  """

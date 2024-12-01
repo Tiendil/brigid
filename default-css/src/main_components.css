@@ -37,9 +37,16 @@
 
         .brigid-index-navigation-item {
             @apply inline-block;
+
+            button {
+                @apply underline font-medium;
+            }
         }
     }
 
+    .brigid-tag-form {
+        @apply inline-block;
+    }
 
     #brigid-body {
 
