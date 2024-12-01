@@ -1,5 +1,5 @@
 
-{% macro tags_url(name, url, class) %}
+{% macro tags_url_a(name, url, class) %}
   {%- set page_url = request_context_get('url') -%}
 
   <a class="{{class}}"
@@ -10,6 +10,23 @@
      href="{{url.url()}}">
     {{name}}
   </a>
+{% endmacro %}
+
+
+{% macro tags_url_button(name, url, class) %}
+  <button class="{{class}}"
+          onclick="window.location.href='{{url.url()}}';">
+    {{name}}
+  </button>
+{% endmacro %}
+
+
+{% macro tags_url(name, url, class) %}
+  {% if url.is_noindex() %}
+    {{ tags_url_button(name, url, class) }}
+  {% else %}
+    {{ tags_url_a(name, url, class) }}
+  {% endif %}
 {% endmacro %}
 
 
