@@ -33,13 +33,13 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.12"
 
-fastapi = "0.112.*"
+fastapi = "0.115.*"
 structlog = "24.1.*"
 
 toml = "0.10.*"
 
-pydantic = "2.5.*"
-pydantic-settings = "2.1.*"
+pydantic = "2.10.*"
+pydantic-settings = "2.6.*"
 pillow = "10.2.*"
 
 jinja2 = "3.1.*"
