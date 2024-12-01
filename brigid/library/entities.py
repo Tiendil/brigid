@@ -116,7 +116,7 @@ class SiteLanguage(BaseEntity):
 
 class Site(BaseEntity):
     prod_url: pydantic.HttpUrl
-    local_url: pydantic.HttpUrl = pydantic.Field("http://0.0.0.0:8000")
+    local_url: pydantic.HttpUrl = pydantic.Field("http://0.0.0.0:8000")  # type: ignore
     default_language: str
     allowed_languages: set[str] = pydantic.Field(default_factory=set)
     posts_per_page: int = 5
@@ -161,7 +161,7 @@ class Article(BaseEntity):
 
     pages: dict[str, str] = pydantic.Field(default_factory=dict)
 
-    tags: set[str] = pydantic.Field(default_factory=list)
+    tags: set[str] = pydantic.Field(default_factory=set)
 
     @cached_property
     def dir(self) -> pathlib.Path:
@@ -205,7 +205,7 @@ class Page(BaseEntity):
 
     body: str
 
-    tags: set[str] = pydantic.Field(default_factory=list)
+    tags: set[str] = pydantic.Field(default_factory=set)
 
     template: str | None = None
 
