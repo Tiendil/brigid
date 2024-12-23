@@ -1,13 +1,13 @@
 # Brigid
 
-A simple blog engine, but not simpler than it should be.
+A simple blog engine—but not simpler than it should be.
 
-## Demo
+## **Demo**
 
-- My blog: [tiendil.org](https://tiendil.org/) — look there to see all the features in action.
-- Sources of the blog: https://github.com/Tiendil/tiendil-org-content — look there to see how content is organized.
+- My blog: [tiendil.org](https://tiendil.org/) — see it in action with all features.
+- Sources of the blog: [tiendil-org-content](https://github.com/Tiendil/tiendil-org-content) — see how the content is organized.
 
-Or run from the root of the repository:
+Or run the project from the root of this repository:
 
 ```bash
 poetry install
@@ -17,61 +17,60 @@ poetry install
 
 ## Features
 
-- **Monolithic design** — install and run — no need to look for plugins and themes.
-- **Extensive tags support** for navigating and organizing content.
+- **Monolithic design** — install and run. No need to look for plugins or themes.
+- **Extensive tag support** for navigating and organizing content.
 - **Markdown as a source code** for posts.
 - **Multi-language support** by design.
 
-### Extensive tags support
+### Extensive tag support
 
-- Powerfull tags filtering of the posts. Especially useful if your blog is also your knowledge base.
-- Similar posts sugestion by common tags & links (configurable).
-- Organize posts in collections. For example, when you want to see on your page an allways actual list of posts with tags `travels` and `best`.
-- Organize posts in series. For example, when you want to have always actual content for your series of posts marked by a special tag like `my-cool-experiments-with-chatgpt`.
+- Powerful tag filtering for posts. Especially useful if your blog is also your knowledge base.
+- Similar post suggestions based on common tags & links (configurable).
+- Post collections: for instance, if you want an always-up-to-date list of posts tagged `travels` and `best`.
+- Post series: for example, if you want a dedicated set of posts marked by a special tag like `my-cool-experiments-with-chatgpt`.
 - Prev/Next post navigation for series of posts.
 
-### Markdown as a source code
+### Markdown as a source
 
 - Every page is a Markdown file.
-- Every Markdown file has a TOML frontmatter with metadata.
-
-In additional to standard markdown features, Brigid supports custom blocks:
-
-- List of posts in a collection.
-- Content of a post serie.
-- Image / gallery.
-- Youtube video.
-- Spoilters / details.
-- Info blocks (admonitions).
-- Tables.
-- Including content from another file (snippets).
+- Each Markdown file has a TOML frontmatter with metadata.
+- In addition to standard Markdown features, Brigid supports custom blocks:
+    - Lists of posts in a collection.
+    - Contents of a post series.
+    - Image / gallery.
+    - YouTube video.
+    - Spoilers / details.
+    - Info blocks (admonitions).
+    - Tables.
+    - Including content from other files (snippets).
 
 ### Multi-language support
 
-- Crosslinking between posts/pages in different languages.
+- Cross-linking between posts/pages in different languages.
 - SEO support for multi-language content.
 - Configurable translations.
-- Configurable per language site menu.
-- Auto-detect language by headers and redirect user to the right entry point for your blog: `my-cool-blog.org` -> `my-cool-blog.org/language/`
+- Configurable per-language site menu.
+- Auto-detect language by headers and redirect users to the right entry point, e.g. `my-cool-blog.org` -> `my-cool-blog.org/<language>/`
+- Auto-marking links to posts that are not translated yet. For example, if you have a post in German and want to link to your English post that currently lacks a German translation (but might have one later).
 
 ### Other features
 
 - Mobile-friendly.
 - SEO-friendly.
 - No default cookies.
-- You can add custom headers/footers with JS code.
-- Last Essays block on the post page.
-- Configurable redirects on the side of the blog content. No need to inject them in configs of your reverse proxy server.
+- Custom headers/footers with JS code.
+- Last posts block on the post page.
+- Configurable redirects on the content side—no need to inject them in your reverse proxy configs.
 
-## Design principles
+### Design principles
 
-A very subjective list of design principles I follow in this project:
+A subjective list of design principles I follow in this project:
 
 - One solid, stable, simple, up-to-date solution. Just install and run.
-- Markdown won => use markdown as the primary source for posts.
-- TOML won => use TOML for metadata and frontmatter instead of YAML.
+- Markdown won ⇒ use Markdown as the primary source for posts.
+- TOML won ⇒ use TOML for metadata and frontmatter instead of YAML.
 - No unnecessary or unused features.
-- Design for not trivial posts: long, multilanguage with images, tables, code, etc.
-- Server-side rendering is good. Use it as the primary approach.
-- Use minimum JS only when it is really required.
-- No CSS experiments, only stable verified solutions.
+- Designed for non-trivial posts: long, multi-language, with images, tables, code, etc.
+- Server-side rendering is good — use it as the primary approach.
+- Use minimal JS only when truly required.
+- No CSS experiments—only stable, verified solutions.
