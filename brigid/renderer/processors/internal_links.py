@@ -17,8 +17,8 @@ class Option(enum.StrEnum):
     language_title = "lang-title"
 
 
-def extract_options(parts: list[str]) -> tuple[str, list[str], dict[Option, Any]]:
-    options = {}
+def extract_options(parts: list[str]) -> tuple[str, list[str], dict[Option, Any]]:  # noqa: CCR001
+    options: dict[Option, Any] = {}
 
     tail = []
 
