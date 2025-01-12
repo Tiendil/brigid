@@ -132,6 +132,10 @@ raw link in corner brackets is a link: <https://example.com>
 
 _[italic link](https://example.com)_
 
+Here is a link with automatic title substitution: []{post:galery-types}
+
+Here is a link to a page in another language: []{post:@lang=ru:post-in-two-languages}
+
 ## Markup in galery captions
 
 /// brigid-images

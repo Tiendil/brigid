@@ -13,6 +13,8 @@ from brigid.renderer.context import render_context
 
 class Option(enum.StrEnum):
     choose_nearest_language = "choose-nearest-language"
+    language = "lang"
+    language_title = "lang-title"
 
 
 def extract_options(parts: list[str]) -> tuple[str, list[str], dict[Option, Any]]:
@@ -27,6 +29,14 @@ def extract_options(parts: list[str]) -> tuple[str, list[str], dict[Option, Any]
 
         if part[1:] == Option.choose_nearest_language:
             options[Option.choose_nearest_language] = True
+            continue
+
+        if part[1:].startswith(Option.language + '='):
+            options[Option.language] = part[1 + len(Option.language) + 1 :].strip()
+            continue
+
+        if part[1:].startswith(Option.language_title + '='):
+            options[Option.language_title] = part[1 + len(Option.language_title) + 1 :].strip()
             continue
 
         raise ValueError(f"Unknown option in local link: {part}")
@@ -90,7 +100,10 @@ class InternalLinkInlineProcessor(LinkInlineProcessor):
 
             article = storage.get_article(slug=slug)
 
-            if options.get(Option.choose_nearest_language, False):
+            if options.get(Option.language) is not None:
+                link_language = options[Option.language]
+
+            elif options.get(Option.choose_nearest_language, False):
                 link_language = article.first_language(
                     context.page.language, site.default_language, *site.allowed_languages
                 )
@@ -104,15 +117,22 @@ class InternalLinkInlineProcessor(LinkInlineProcessor):
                 )
                 return result  # type: ignore
 
+            target_page_id = article.pages[link_language]
+
+            target_page = storage.get_page(target_page_id)
+
             if link_language == context.page.language:
                 # we track connection only for the same language
                 # otherwise the "similar" section will be a mess
                 connectivity.add_connection(
-                    target_page_id=article.pages[link_language],
+                    target_page_id=target_page_id,
                     reference_page_id=context.page.id,
                 )
 
             new_href = UrlsPost(language=link_language, slug=slug).url()
+
+            if not result[0].text:
+                result[0].text = target_page.title
 
             if link_language != context.page.language:
                 # add `[language]` to the text in link
