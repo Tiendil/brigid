@@ -31,11 +31,11 @@ def extract_options(parts: list[str]) -> tuple[str, list[str], dict[Option, Any]
             options[Option.choose_nearest_language] = True
             continue
 
-        if part[1:].startswith(Option.language + '='):
+        if part[1:].startswith(Option.language + "="):
             options[Option.language] = part[1 + len(Option.language) + 1 :].strip()
             continue
 
-        if part[1:].startswith(Option.language_title + '='):
+        if part[1:].startswith(Option.language_title + "="):
             options[Option.language_title] = part[1 + len(Option.language_title) + 1 :].strip()
             continue
 
@@ -123,7 +123,7 @@ class InternalLinkInlineProcessor(LinkInlineProcessor):
                 link_title_language = link_language
 
             target_page_id = article.pages[link_language]
-            target_page = storage.get_page(target_page_id)
+            storage.get_page(target_page_id)
 
             target_tile_page_id = article.pages[link_title_language]
             target_title_page = storage.get_page(target_tile_page_id)
