@@ -117,9 +117,16 @@ class InternalLinkInlineProcessor(LinkInlineProcessor):
                 )
                 return result  # type: ignore
 
-            target_page_id = article.pages[link_language]
+            if options.get(Option.language_title) is not None:
+                link_title_language = options[Option.language_title]
+            else:
+                link_title_language = link_language
 
+            target_page_id = article.pages[link_language]
             target_page = storage.get_page(target_page_id)
+
+            target_tile_page_id = article.pages[link_title_language]
+            target_title_page = storage.get_page(target_tile_page_id)
 
             if link_language == context.page.language:
                 # we track connection only for the same language
@@ -132,9 +139,9 @@ class InternalLinkInlineProcessor(LinkInlineProcessor):
             new_href = UrlsPost(language=link_language, slug=slug).url()
 
             if not result[0].text:
-                result[0].text = target_page.title
+                result[0].text = target_title_page.title
 
-            if link_language != context.page.language:
+            if link_language != context.page.language or link_title_language != link_language:
                 # add `[language]` to the text in link
                 language_element = etree.Element("span")
                 language_element.text = f" [{link_language}]"
