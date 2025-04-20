@@ -34,6 +34,30 @@ caption = "Image 1"
 
 More text
 
+## SVG
+
+### Single image
+
+/// brigid-images
+src = "./svg/svg-1.svg"
+alt = "single image"
+///
+
+
+### Galery
+
+/// brigid-images
+caption = "Galery size 2"
+
+[[images]]
+src = "./svg/svg-1.svg"
+alt = "Vector 1"
+
+[[images]]
+src = "./svg/svg-2.svg"
+alt = "Vector 2"
+///
+
 ## Default layouts
 
 ### Galery size 1
