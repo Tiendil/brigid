@@ -1,6 +1,6 @@
 import pathlib
 
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 
 from brigid.core.entities import BaseEntity
 
@@ -21,8 +21,11 @@ class FilesInfo:
         if path in self._images:
             return self._images[path]
 
-        with Image.open(path) as img:
-            width, height = img.size
+        try:
+            with Image.open(path) as img:
+                width, height = img.size
+        except UnidentifiedImageError:
+            width, height = 0, 0
 
         self._images[path] = ImageInfo(path=path, width=width, height=height)
 
