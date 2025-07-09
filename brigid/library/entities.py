@@ -211,6 +211,8 @@ class Page(BaseEntity):
 
     series: str | None = None
 
+    exclude: bool = False
+
     @cached_property
     def id(self) -> str:
         return f"page#{self.language}#{self.slug}"

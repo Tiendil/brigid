@@ -107,6 +107,10 @@ def load_pages(directory: pathlib.Path) -> None:
 
     for page_path in page_paths:
         page = load_page(page_path)
+
+        if page.exclude:
+            continue
+
         storage.add_page(page)
 
 
