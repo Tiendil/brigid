@@ -1,6 +1,6 @@
 import jinja2
 from typing import Any
-from brigid.theme.plugin import Plugin
+from brigid.plugins.plugin import Plugin
 
 from brigid.theme.templates import get_jinjaglobals
 from brigid.plugins.photoswipe import jinjaglobals

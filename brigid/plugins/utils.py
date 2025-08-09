@@ -1,6 +1,9 @@
-
+from brigid.core import logging
 from brigid.plugins.settings import settings
 from brigid.plugins.plugin import Plugin
+
+
+logger = logging.get_module_logger()
 
 _plugins = None
 
@@ -14,9 +17,21 @@ def plugins() -> list[Plugin]:
     _plugins = []
 
     for plugin_path in settings.plugins:
+        logger.info("loading_plugin", plugin=plugin_path)
+
         module_name, plugin_name = plugin_path.rsplit(":", 1)
-        module = __import__(module_name, fromlist=[plugin_name])
-        plugin = getattr(module, plugin_name)
+
+        try:
+            module = __import__(module_name, fromlist=[plugin_name])
+        except ImportError as e:
+            logger.exception("error_loading_plugin", plugin=plugin_path, exc_info=e)
+            continue
+
+        try:
+            plugin = getattr(module, plugin_name)
+        except AttributeError as e:
+            logger.exception("error_getting_plugin", plugin=plugin_path, exc_info=e)
+            continue
 
         _plugins.append(plugin)
 

@@ -9,7 +9,7 @@ from brigid.core.settings import BaseSettings
 class Settings(BaseSettings):
     templates: pathlib.Path = pathlib.Path(__file__).parent / "templates"
 
-    model_config = pydantic_settings.SettingsConfigDict(env_prefix="BRIGID_THEME_PLUGIN_CORE_")
+    model_config = pydantic_settings.SettingsConfigDict(env_prefix="BRIGID_PLUGINS_CORE_")
 
 
 settings = Settings()

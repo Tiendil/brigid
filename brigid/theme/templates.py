@@ -40,16 +40,22 @@ def fill_globals(environment):
 
 
 def environment():
-    loader = jinja2.PrefixLoader({
+    plugin_loader = jinja2.PrefixLoader({
         plugin.slug: loader
         for plugin in plugins()
         if (loader := plugin.templates_loader()) is not None
     })
 
+    base_loader = jinja2.FileSystemLoader(
+        settings.templates, followlinks=True
+    )
+
+    loader = jinja2.ChoiceLoader([plugin_loader, base_loader])
+
     environment = jinja2.Environment(
         autoescape=True,
         trim_blocks=True,
-        auto_reload=settings.reload_templates,
+        auto_reload=settings.templates_reload,
         undefined=jinja2.StrictUndefined,
         loader=loader,
         extensions=["jinja2.ext.loopcontrols"],
