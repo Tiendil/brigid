@@ -1,10 +1,13 @@
-import jinja2
 from typing import Any
-from brigid.core import logging
-from brigid.theme.entities import MetaInfo, Info, Template, IndexInfo, PageInfo
+
+import jinja2
 from markupsafe import Markup
 
+from brigid.core import logging
+from brigid.theme.entities import IndexInfo, Info, MetaInfo, PageInfo
+
 logger = logging.get_module_logger()
+
 
 class Plugin:
 
@@ -17,65 +20,47 @@ class Plugin:
     def jinjaglobals(self) -> tuple[dict[str, Any], dict[str, Any]]:
         return {}, {}
 
-    def render_template_if_exists(self,
-                                  template_name: str,
-                                  info: Info,
-                                  meta: MetaInfo,
-                                  index: IndexInfo | None = None,
-                                  page: PageInfo | None = None,
-                                  default: str = "") -> str:
+    def render_template_if_exists(
+        self,
+        template_name: str,
+        info: Info,
+        meta: MetaInfo,
+        index: IndexInfo | None = None,
+        page: PageInfo | None = None,
+        default: str = "",
+    ) -> str:
         from brigid.theme.templates import render
+
         try:
-            return Markup(render(template_name,
-                          {
-                              "info": info,
-                              "meta_info": meta,
-                              "index_info": index,
-                              "page_info": page,
-                              'plugin': self
-                          },
-                          ))
+            return Markup(
+                render(
+                    template_name,
+                    {"info": info, "meta_info": meta, "index_info": index, "page_info": page, "plugin": self},
+                )
+            )
         except jinja2.TemplateNotFound:
             return default
         except BaseException as e:
-            logger.exception("plugin_render_error",
-                             template=template_name,
-                             plugin=self.slug,
-                             exc_info=e)
+            logger.exception("plugin_render_error", template=template_name, plugin=self.slug, exc_info=e)
             return str(e)
 
-    def render_head(self,
-                    info: Info,
-                    meta: MetaInfo,
-                    index: IndexInfo | None = None,
-                    page: PageInfo | None = None) -> str:
+    def render_head(
+        self, info: Info, meta: MetaInfo, index: IndexInfo | None = None, page: PageInfo | None = None
+    ) -> str:
         return self.render_template_if_exists(
-            f"{self.slug}/head.html.j2",
-            info=info,
-            meta=meta,
-            index=index,
-            page=page)
+            f"{self.slug}/head.html.j2", info=info, meta=meta, index=index, page=page
+        )
 
-    def render_body_before_content(self,
-                                   info: Info,
-                                   meta: MetaInfo,
-                                   index: IndexInfo | None = None,
-                                   page: PageInfo | None = None) -> str:
+    def render_body_before_content(
+        self, info: Info, meta: MetaInfo, index: IndexInfo | None = None, page: PageInfo | None = None
+    ) -> str:
         return self.render_template_if_exists(
-                f"{self.slug}/body_before_content.html.j2",
-                info=info,
-                meta=meta,
-                index=index,
-                page=page)
+            f"{self.slug}/body_before_content.html.j2", info=info, meta=meta, index=index, page=page
+        )
 
-    def render_body_after_content(self,
-                                  info: Info,
-                                  meta: MetaInfo,
-                                  index: IndexInfo | None = None,
-                                  page: PageInfo | None = None) -> str:
+    def render_body_after_content(
+        self, info: Info, meta: MetaInfo, index: IndexInfo | None = None, page: PageInfo | None = None
+    ) -> str:
         return self.render_template_if_exists(
-                f"{self.slug}/body_after_content.html.j2",
-                info=info,
-                meta=meta,
-                index=index,
-                page=page)
+            f"{self.slug}/body_after_content.html.j2", info=info, meta=meta, index=index, page=page
+        )

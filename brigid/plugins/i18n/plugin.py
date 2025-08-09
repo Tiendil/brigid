@@ -1,8 +1,7 @@
-import jinja2
 from typing import Any
-from brigid.plugins.plugin import Plugin
+
 from brigid.plugins.i18n import jinjaglobals
-from brigid.plugins.i18n.settings import settings
+from brigid.plugins.plugin import Plugin
 from brigid.theme.templates import get_jinjaglobals
 
 

@@ -1,10 +1,11 @@
 import datetime
 import enum
+
 import pydantic
 
-from brigid.domain.urls import UrlsBase
 from brigid.core.entities import BaseEntity
-from brigid.library.entities import Article, Collection, Page, Redirects, Site, PageSimilarityScore
+from brigid.domain.urls import UrlsBase
+from brigid.library.entities import Article, Page, PageSimilarityScore
 
 
 # TODO: template names should have prefixes

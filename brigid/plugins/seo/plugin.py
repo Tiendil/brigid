@@ -1,9 +1,7 @@
 import jinja2
-from brigid.plugins.plugin import Plugin
-from typing import Any
 
+from brigid.plugins.plugin import Plugin
 from brigid.plugins.seo.settings import settings
-from brigid.theme.templates import get_jinjaglobals
 
 
 class CorePlugin(Plugin):

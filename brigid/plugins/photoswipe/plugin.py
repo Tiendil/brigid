@@ -1,9 +1,7 @@
 import jinja2
-from typing import Any
-from brigid.plugins.plugin import Plugin
 
-from brigid.theme.templates import get_jinjaglobals
 from brigid.plugins.photoswipe.settings import settings
+from brigid.plugins.plugin import Plugin
 
 
 class CorePlugin(Plugin):

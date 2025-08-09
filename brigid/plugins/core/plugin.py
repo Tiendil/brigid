@@ -1,9 +1,10 @@
-import jinja2
-from brigid.plugins.plugin import Plugin
 from typing import Any
+
+import jinja2
 
 from brigid.plugins.core import jinjaglobals
 from brigid.plugins.core.settings import settings
+from brigid.plugins.plugin import Plugin
 from brigid.theme.templates import get_jinjaglobals
 
 

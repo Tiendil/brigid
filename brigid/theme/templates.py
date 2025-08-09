@@ -2,9 +2,9 @@ from typing import Any
 
 import jinja2
 
-from brigid.theme.settings import settings
-from brigid.plugins.utils import plugins
 from brigid.library.storage import storage
+from brigid.plugins.utils import plugins
+from brigid.theme.settings import settings
 
 
 def get_jinjaglobals(module):
@@ -27,9 +27,7 @@ def get_jinjaglobals(module):
 def fill_globals(environment):
     from brigid.theme import jinjaglobals
 
-    environment.globals.update({'site': storage.get_site(),
-                                'storage': storage,
-                                'plugins': plugins()})
+    environment.globals.update({"site": storage.get_site(), "storage": storage, "plugins": plugins()})
 
     for module in (jinjaglobals,):
         global_functions, filter_functions = get_jinjaglobals(module)
@@ -45,15 +43,11 @@ def fill_globals(environment):
 
 
 def environment():
-    plugin_loader = jinja2.PrefixLoader({
-        plugin.slug: loader
-        for plugin in plugins()
-        if (loader := plugin.templates_loader()) is not None
-    })
-
-    base_loader = jinja2.FileSystemLoader(
-        settings.templates, followlinks=True
+    plugin_loader = jinja2.PrefixLoader(
+        {plugin.slug: loader for plugin in plugins() if (loader := plugin.templates_loader()) is not None}
     )
+
+    base_loader = jinja2.FileSystemLoader(settings.templates, followlinks=True)
 
     loader = jinja2.ChoiceLoader([plugin_loader, base_loader])
 

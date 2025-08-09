@@ -1,5 +1,6 @@
 from typing import Any
-from brigid.theme.utils import jinjafilter, jinjaglobal
+
+from brigid.theme.utils import jinjafilter
 
 
 @jinjafilter

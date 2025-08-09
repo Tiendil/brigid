@@ -1,7 +1,6 @@
 from brigid.core import logging
-from brigid.plugins.settings import settings
 from brigid.plugins.plugin import Plugin
-
+from brigid.plugins.settings import settings
 
 logger = logging.get_module_logger()
 

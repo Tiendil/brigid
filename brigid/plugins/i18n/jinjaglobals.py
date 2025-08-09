@@ -1,9 +1,8 @@
-
-from brigid.theme.utils import jinjafilter, jinjaglobal
-from brigid.theme.settings import settings
-from brigid.plugins.i18n.default_translations import translations
-from brigid.library.storage import Storage, storage
 from markupsafe import Markup
+
+from brigid.library.storage import storage
+from brigid.plugins.i18n.default_translations import translations
+from brigid.theme.utils import jinjaglobal
 
 
 @jinjaglobal
