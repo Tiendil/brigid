@@ -1,4 +1,5 @@
 {% from 'header.html.j2' import header %}
+{% from 'footer.html.j2' import footer %}
 {% import "utils.html.j2" as utils %}
 
 <!DOCTYPE html>
@@ -20,44 +21,9 @@
 
       {{ utils.call_plugins('render_body_after_content', info, meta_info, index_info, page_info) }}
 
-      {% set site_language = site.languages[info.language] %}
-
-      <div class="brigid-footer brigid-article">
-        <ul>
-          {% if site_language.author %}
-            <li>© {{ site_language.author }}</li>
-          {% endif %}
-
-          {% if site_language.license %}
-            <li>
-              {{translate_theme(info.language, 'license')|upper_first}}:
-              <a href="{{ site_language.license.url }}" target="_blank">{{ site_language.license.name }}</a>
-            </li>
-          {% endif %}
-
-          {% if site.content_repository %}
-            <li>
-              {{translate_theme(info.language, 'content_repository')|upper_first}}:
-              <a href="{{ site.content_repository }}" target="_blank">{{site.content_repository}}</a>
-            </li>
-          {% endif %}
-
-          {% if site.show_brigid_link %}
-            <li>
-              {{translate_theme(info.language, 'site_is_created_with')|upper_first}}
-              <a href="{{brigid_repository()}}" target="_blank">Brigid</a>
-            </li>
-          {% endif %}
-
-          <li>
-            {{translate_theme(info.language, 'icons_attribution')|upper_first}}
-          </li>
-        </ul>
-      </div>
+      {{ footer(info.language) }}
 
       {{ utils.call_plugins('render_body_after_footer', info, meta_info, index_info, page_info) }}
-
     </div>
-
   </body>
 </html>

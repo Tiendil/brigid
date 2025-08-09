@@ -1,0 +1,39 @@
+
+{% macro footer(language) %}
+
+  {% set site_language = site.languages[language] %}
+
+  <div class="brigid-footer brigid-article">
+    <ul>
+      {% if site_language.author %}
+        <li>© {{ site_language.author }}</li>
+      {% endif %}
+
+      {% if site_language.license %}
+        <li>
+          {{translate_theme(language, 'license')|upper_first}}:
+          <a href="{{ site_language.license.url }}" target="_blank">{{ site_language.license.name }}</a>
+        </li>
+      {% endif %}
+
+      {% if site.content_repository %}
+        <li>
+          {{translate_theme(language, 'content_repository')|upper_first}}:
+          <a href="{{ site.content_repository }}" target="_blank">{{site.content_repository}}</a>
+        </li>
+      {% endif %}
+
+      {% if site.show_brigid_link %}
+        <li>
+          {{translate_theme(language, 'site_is_created_with')|upper_first}}
+          <a href="{{brigid_repository()}}" target="_blank">Brigid</a>
+        </li>
+      {% endif %}
+
+      <li>
+        {{translate_theme(language, 'icons_attribution')|upper_first}}
+      </li>
+    </ul>
+  </div>
+
+{% endmacro %}
