@@ -5,7 +5,7 @@ from markdown.extensions import Extension
 from markdown.treeprocessors import Treeprocessor
 
 from brigid.domain.urls import UrlsPost
-from brigid.renderer.context import render_context
+from brigid.markdown_render.context import render_context
 
 DISALLOWED_CHARS_PATTERN = re.compile(r"[^-a-zA-Z0-9]+")
 

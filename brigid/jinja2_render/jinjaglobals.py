@@ -10,11 +10,11 @@ from brigid.domain.urls import UrlsRoot
 from brigid.library import utils as l_utils
 from brigid.library.entities import Page, PageSeriesInfo
 from brigid.library.series import get_page_series_info
-from brigid.renderer.markdown_render import render_page as markdown_render_page
-from brigid.renderer.markdown_render import render_page_intro as markdown_render_page_intro
-from brigid.renderer.markdown_render import render_text as markdown_render_text
-from brigid.renderer.static_files import ImageInfo, files
-from brigid.theme.utils import jinjafilter, jinjaglobal
+from brigid.markdown_render.markdown_render import render_page as markdown_render_page
+from brigid.markdown_render.markdown_render import render_page_intro as markdown_render_page_intro
+from brigid.markdown_render.markdown_render import render_text as markdown_render_text
+from brigid.markdown_render.static_files import ImageInfo, files
+from brigid.jinja2_render.utils import jinjafilter, jinjaglobal
 
 
 @jinjafilter

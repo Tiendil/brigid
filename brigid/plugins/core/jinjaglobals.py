@@ -1,6 +1,6 @@
 from typing import Any
 
-from brigid.theme.utils import jinjafilter
+from brigid.jinja2_render.utils import jinjafilter
 
 
 @jinjafilter

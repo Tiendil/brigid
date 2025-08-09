@@ -6,7 +6,7 @@ import pydantic
 import toml
 from pymdownx.blocks.block import Block
 
-from brigid.renderer.context import render_context
+from brigid.markdown_render.context import render_context
 
 _renderer = None
 
@@ -59,6 +59,6 @@ class TomlBlock(Block):
         return data
 
     def render_in_theme(self, data: Any) -> str:
-        from brigid.theme.templates import render
+        from brigid.jinja2_render.templates import render
 
         return render(self.template, data)

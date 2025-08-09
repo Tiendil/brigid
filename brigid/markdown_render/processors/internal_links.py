@@ -8,7 +8,7 @@ from markdown.inlinepatterns import LinkInlineProcessor
 
 from brigid.domain.urls import UrlsFeedsAtom, UrlsPost, UrlsTags, normalize_url
 from brigid.library.storage import storage
-from brigid.renderer.context import render_context
+from brigid.markdown_render.context import render_context
 
 
 class Option(enum.StrEnum):

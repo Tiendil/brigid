@@ -4,8 +4,8 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from brigid.library.tests import make as library_make
-from brigid.renderer.markdown_render import render_page
-from brigid.renderer.processors.images_block import Image, ImageModel, ImagesBlock, ImagesModel
+from brigid.markdown_render.markdown_render import render_page
+from brigid.markdown_render.processors.images_block import Image, ImageModel, ImagesBlock, ImagesModel
 
 
 class TestImage:
@@ -123,7 +123,7 @@ caption = "some caption"
         article = library_make.article()
         page = library_make.page(article, body=text)
 
-        with patch("brigid.renderer.processors.images_block.ImagesBlock.render_in_theme", render_in_theme):
+        with patch("brigid.markdown_render.processors.images_block.ImagesBlock.render_in_theme", render_in_theme):
             result = render_page(page)
 
         assert result.page == page

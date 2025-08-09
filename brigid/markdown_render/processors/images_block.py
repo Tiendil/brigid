@@ -5,7 +5,7 @@ from pymdownx.blocks import BlocksExtension
 
 from brigid.core.entities import BaseEntity
 from brigid.domain.html import strip_html
-from brigid.renderer.processors.toml_block import TomlBlock
+from brigid.markdown_render.processors.toml_block import TomlBlock
 
 # TODO: remove duplicated code
 

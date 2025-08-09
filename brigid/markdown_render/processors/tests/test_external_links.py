@@ -1,6 +1,6 @@
 from brigid.library.storage import storage
 from brigid.library.tests import make as library_make
-from brigid.renderer.markdown_render import render_page
+from brigid.markdown_render.markdown_render import render_page
 
 
 class TestExternalLink:

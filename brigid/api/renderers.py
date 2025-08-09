@@ -11,9 +11,9 @@ from brigid.domain.urls import UrlsFeedsAtom, UrlsPost, UrlsTags
 from brigid.library import utils as l_utils
 from brigid.library.similarity import get_similar_pages
 from brigid.library.storage import storage
-from brigid.theme.entities import IndexInfo, Info, MetaInfo, PageInfo, Template
-from brigid.theme.jinjaglobals import render_page_intro
-from brigid.theme.templates import render
+from brigid.jinja2_render.entities import IndexInfo, Info, MetaInfo, PageInfo, Template
+from brigid.jinja2_render.jinjaglobals import render_page_intro
+from brigid.jinja2_render.templates import render
 
 
 def render_index(language: str, raw_tags: str) -> HTMLResponse:  # noqa: CCR001, CFQ001

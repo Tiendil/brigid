@@ -1,6 +1,6 @@
 from brigid.library.entities import Page
 from brigid.library.storage import storage
-from brigid.renderer.markdown_render import render_page
+from brigid.markdown_render.markdown_render import render_page
 from brigid.validation.entities import Error
 
 

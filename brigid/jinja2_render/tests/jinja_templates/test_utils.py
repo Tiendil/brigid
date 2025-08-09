@@ -4,7 +4,7 @@ from xml.dom import minidom  # noqa: S408
 
 from brigid.domain import request_context
 from brigid.domain.urls import UrlsTags
-from brigid.theme.templates import env
+from brigid.jinja2_render.templates import env
 
 
 def assert_compare_html(a: str, b: str):

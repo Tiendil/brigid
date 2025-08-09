@@ -1,6 +1,6 @@
 from markdown.inlinepatterns import IMAGE_LINK_RE, ImageInlineProcessor
 
-from brigid.renderer.context import render_context
+from brigid.markdown_render.context import render_context
 
 
 class ImageInlineValidator(ImageInlineProcessor):

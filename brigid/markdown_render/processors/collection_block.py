@@ -4,7 +4,7 @@ import pydantic
 from pymdownx.blocks import BlocksExtension
 
 from brigid.core.entities import BaseEntity
-from brigid.renderer.processors.toml_block import TomlBlock
+from brigid.markdown_render.processors.toml_block import TomlBlock
 
 
 class CollectionModel(BaseEntity):

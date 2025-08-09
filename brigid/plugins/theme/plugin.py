@@ -5,7 +5,7 @@ import jinja2
 
 from brigid.plugins.theme.settings import settings
 from brigid.plugins.plugin import Plugin
-from brigid.theme.templates import get_jinjaglobals
+from brigid.jinja2_render.templates import get_jinjaglobals
 
 
 class ThemePlugin(Plugin):

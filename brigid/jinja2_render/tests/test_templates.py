@@ -6,8 +6,8 @@ from brigid.domain import request_context
 from brigid.domain.urls import UrlsPost, UrlsTags
 from brigid.library.storage import storage
 from brigid.library.tests import make as library_make
-from brigid.theme.entities import MetaInfo, Template
-from brigid.theme.templates import render
+from brigid.jinja2_render.entities import MetaInfo, Template
+from brigid.jinja2_render.templates import render
 
 
 def assert_correct_html(text: str) -> None:

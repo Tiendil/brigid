@@ -4,7 +4,7 @@ import jinja2
 from markupsafe import Markup
 
 from brigid.core import logging
-from brigid.theme.entities import IndexInfo, Info, MetaInfo, PageInfo
+from brigid.jinja2_render.entities import IndexInfo, Info, MetaInfo, PageInfo
 
 logger = logging.get_module_logger()
 
@@ -29,7 +29,7 @@ class Plugin:
         page: PageInfo | None = None,
         default: str = "",
     ) -> str:
-        from brigid.theme.templates import render
+        from brigid.jinja2_render.templates import render
 
         try:
             return Markup(

@@ -2,7 +2,7 @@ from typing import Any
 
 from brigid.plugins.i18n import jinjaglobals
 from brigid.plugins.plugin import Plugin
-from brigid.theme.templates import get_jinjaglobals
+from brigid.jinja2_render.templates import get_jinjaglobals
 
 
 class I18nPlugin(Plugin):

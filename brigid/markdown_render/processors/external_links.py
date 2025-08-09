@@ -4,7 +4,7 @@ from markdown.inlinepatterns import LINK_RE as EXTERNAL_LINK_RE
 from markdown.inlinepatterns import LinkInlineProcessor
 
 from brigid.library.storage import storage
-from brigid.renderer.context import render_context
+from brigid.markdown_render.context import render_context
 
 
 class ExternalLinkInlineProcessor(LinkInlineProcessor):
