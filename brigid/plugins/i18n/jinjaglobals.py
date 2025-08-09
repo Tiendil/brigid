@@ -1,8 +1,8 @@
 from markupsafe import Markup
 
+from brigid.jinja2_render.utils import jinjaglobal
 from brigid.library.storage import storage
 from brigid.plugins.i18n.default_translations import translations
-from brigid.jinja2_render.utils import jinjaglobal
 
 
 @jinjaglobal

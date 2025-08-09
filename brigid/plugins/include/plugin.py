@@ -1,7 +1,7 @@
 import jinja2
 
-from brigid.plugins.plugin import Plugin
 from brigid.plugins.include.settings import settings
+from brigid.plugins.plugin import Plugin
 
 
 class CorePlugin(Plugin):

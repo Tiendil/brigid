@@ -7,6 +7,7 @@ from markupsafe import Markup
 from brigid.domain import constants as domain_constants
 from brigid.domain import request_context as d_request_context
 from brigid.domain.urls import UrlsRoot
+from brigid.jinja2_render.utils import jinjafilter, jinjaglobal
 from brigid.library import utils as l_utils
 from brigid.library.entities import Page, PageSeriesInfo
 from brigid.library.series import get_page_series_info
@@ -14,7 +15,6 @@ from brigid.markdown_render.markdown_render import render_page as markdown_rende
 from brigid.markdown_render.markdown_render import render_page_intro as markdown_render_page_intro
 from brigid.markdown_render.markdown_render import render_text as markdown_render_text
 from brigid.markdown_render.static_files import ImageInfo, files
-from brigid.jinja2_render.utils import jinjafilter, jinjaglobal
 
 
 @jinjafilter

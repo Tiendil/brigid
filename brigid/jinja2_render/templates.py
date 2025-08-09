@@ -2,9 +2,9 @@ from typing import Any
 
 import jinja2
 
+from brigid.jinja2_render.settings import settings
 from brigid.library.storage import storage
 from brigid.plugins.utils import plugins
-from brigid.jinja2_render.settings import settings
 
 
 def get_jinjaglobals(module):

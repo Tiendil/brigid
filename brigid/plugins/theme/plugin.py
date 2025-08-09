@@ -1,11 +1,7 @@
-
-from typing import Any
-
 import jinja2
 
-from brigid.plugins.theme.settings import settings
 from brigid.plugins.plugin import Plugin
-from brigid.jinja2_render.templates import get_jinjaglobals
+from brigid.plugins.theme.settings import settings
 
 
 class ThemePlugin(Plugin):
