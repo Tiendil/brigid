@@ -3,6 +3,7 @@ from typing import Any
 import jinja2
 
 from brigid.theme.settings import settings
+from brigid.plugins.utils import plugins
 
 
 def get_jinjaglobals(module):
@@ -31,14 +32,24 @@ def fill_globals(environment):
         environment.globals.update(global_functions)
         environment.filters.update(filter_functions)
 
+    for plugin in plugins():
+        global_functions, filter_functions = plugin.jinjaglobals()
+
+        environment.globals.update(global_functions)
+        environment.filters.update(filter_functions)
+
 
 def environment():
-    loader = jinja2.FileSystemLoader(settings.templates.directory, followlinks=True)
+    loader = jinja2.PrefixLoader({
+        plugin.slug: loader
+        for plugin in plugins()
+        if (loader := plugin.templates_loader()) is not None
+    })
 
     environment = jinja2.Environment(
         autoescape=True,
         trim_blocks=True,
-        auto_reload=settings.templates.reload,
+        auto_reload=settings.reload_templates,
         undefined=jinja2.StrictUndefined,
         loader=loader,
         extensions=["jinja2.ext.loopcontrols"],

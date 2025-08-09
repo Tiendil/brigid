@@ -15,14 +15,7 @@ from brigid.renderer.markdown_render import render_page as markdown_render_page
 from brigid.renderer.markdown_render import render_page_intro as markdown_render_page_intro
 from brigid.renderer.markdown_render import render_text as markdown_render_text
 from brigid.renderer.static_files import ImageInfo, files
-from brigid.theme.default_translations import translations
-from brigid.theme.settings import PhotoSwipe, settings
 from brigid.theme.utils import jinjafilter, jinjaglobal
-
-
-@jinjafilter
-def upper_first(text: str) -> str:
-    return text[0].upper() + text[1:]
 
 
 @jinjafilter
@@ -46,11 +39,6 @@ def get_storage() -> Storage:
 
 
 @jinjaglobal
-def photoswipe_settings() -> PhotoSwipe:
-    return settings.photoswipe
-
-
-@jinjaglobal
 def image_info(path: pathlib.Path) -> ImageInfo:
     return files.image_info(path)
 
@@ -58,35 +46,6 @@ def image_info(path: pathlib.Path) -> ImageInfo:
 @jinjaglobal
 def root_url(language: str) -> UrlsRoot:
     return UrlsRoot(language=language)
-
-
-@jinjaglobal
-def translate_tag(language: str, tag: str) -> str:
-    site = storage.get_site()
-    return site.languages[language].tags_translations[tag]
-
-
-def _translate(language: str, text_id: str) -> str:
-    site = storage.get_site()
-
-    if text_id in site.languages[language].theme_translations:
-        return site.languages[language].theme_translations[text_id]
-
-    if language not in translations:
-        language = site.default_language
-
-    if language not in translations:
-        language = "en"
-
-    if text_id in translations[language]:
-        return translations[language][text_id]
-
-    return text_id
-
-
-@jinjaglobal
-def translate_theme(language: str, text_id: str) -> str:
-    return Markup(_translate(language, text_id))
 
 
 @jinjaglobal
@@ -106,11 +65,6 @@ def brigid_repository() -> str:
 @jinjaglobal
 def request_context_get(name: str) -> Any:
     return d_request_context.get(name)
-
-
-@jinjafilter
-def to_str(value: Any) -> str:
-    return str(value)
 
 
 @jinjaglobal
