@@ -35,4 +35,6 @@ def plugins() -> list[Plugin]:
 
         _plugins.append(plugin)
 
+        logger.info("plugin_loaded", slug=plugin.slug)
+
     return _plugins

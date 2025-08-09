@@ -1,8 +1,10 @@
 import jinja2
 from typing import Any
+from brigid.core import logging
 from brigid.theme.entities import MetaInfo, Info, Template, IndexInfo, PageInfo
 from markupsafe import Markup
 
+logger = logging.get_module_logger()
 
 class Plugin:
 
@@ -27,14 +29,21 @@ class Plugin:
             return Markup(render(template_name,
                           {
                               "info": info,
-                              "meta": meta,
-                              "index": index,
-                              "page": page,
+                              "meta_info": meta,
+                              "index_info": index,
+                              "page_info": page,
                               'plugin': self
                           },
                           ))
         except jinja2.TemplateNotFound:
+            print(f"Template {template_name} not found in plugin {self.slug}.")
             return default
+        except BaseException as e:
+            logger.exception("plugin_render_error",
+                             template=template_name,
+                             plugin=self.slug,
+                             exc_info=e)
+            return str(e)
 
     def render_head(self,
                     info: Info,
@@ -42,7 +51,7 @@ class Plugin:
                     index: IndexInfo | None = None,
                     page: PageInfo | None = None) -> str:
         return self.render_template_if_exists(
-            f"{self.slug}/head.html",
+            f"{self.slug}/head.html.j2",
             info=info,
             meta=meta,
             index=index,
@@ -54,7 +63,7 @@ class Plugin:
                                    index: IndexInfo | None = None,
                                    page: PageInfo | None = None) -> str:
         return self.render_template_if_exists(
-                f"{self.slug}/body_before_content.html",
+                f"{self.slug}/body_before_content.html.j2",
                 info=info,
                 meta=meta,
                 index=index,
@@ -66,7 +75,7 @@ class Plugin:
                                   index: IndexInfo | None = None,
                                   page: PageInfo | None = None) -> str:
         return self.render_template_if_exists(
-                f"{self.slug}/body_after_content.html",
+                f"{self.slug}/body_after_content.html.j2",
                 info=info,
                 meta=meta,
                 index=index,

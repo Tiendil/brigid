@@ -1,19 +1,9 @@
 {% from 'header.html.j2' import header %}
-{% import "meta.html.j2" as meta %}
 {% import "utils.html.j2" as utils %}
 
 <!DOCTYPE html>
 <html lang="{{info.language}}" prefix="og: https://ogp.me/ns#">
   <head>
-    {{ meta.general_fields(meta_info, info.current_url) }}
-
-    {% if page_info %}
-      {{ meta.object_graph_fields_article(meta_info, info.current_url) }}
-      {{ meta.json_fd_article(meta_info, info.current_url) }}
-    {% else %}
-      {{ meta.object_graph_fields_website(meta_info, info.current_url) }}
-      {{ meta.json_fd_website(meta_info, info.current_url) }}
-    {% endif %}
 
     <link rel="stylesheet" href="/static/main.css">
 
