@@ -212,7 +212,7 @@ class Page(BaseEntity):
 
     @cached_property
     def id(self) -> str:
-        return f"page#{self.language}#{self.slug}"
+        return f"#page#{self.slug}#{self.language}"
 
     @cached_property
     def slug(self) -> str:

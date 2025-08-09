@@ -77,7 +77,7 @@ def render(text: str) -> str:
     if not context.errors:
         return content
 
-    logger.warning("markdown_render_errors", errors_number=len(context.errors))
+    logger.warning("markdown_render_errors", errors_number=len(context.errors), page=context.page.id)
 
     return repr(context.errors[0])
 

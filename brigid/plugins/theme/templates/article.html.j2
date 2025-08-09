@@ -30,7 +30,7 @@
 
             <ul>
               {% if series_info.next_page %}
-                {% set series_next_page = get_storage().get_page(id=series_info.next_page) %}
+                {% set series_next_page = storage.get_page(id=series_info.next_page) %}
               <li>
                 {{translate_theme(info.current_url.language, 'article_series_read_next')}}:
                 {{page_anchor(series_next_page, short=true, rel='next')}}
@@ -38,7 +38,7 @@
             {% endif %}
 
             {% if series_info.prev_page %}
-                {% set series_prev_page = get_storage().get_page(id=series_info.prev_page) %}
+                {% set series_prev_page = storage.get_page(id=series_info.prev_page) %}
               <li>
                 {{translate_theme(info.current_url.language, 'article_series_read_prev')}}:
                 {{page_anchor(series_prev_page, short=true, rel='prev')}}
@@ -46,7 +46,7 @@
             {% endif %}
 
             {% if series_info.first_page != page.id and series_info.first_page != series_info.prev_page %}
-              {% set series_first_page = get_storage().get_page(id=series_info.first_page) %}
+              {% set series_first_page = storage.get_page(id=series_info.first_page) %}
               <li>
                 {{translate_theme(info.current_url.language, 'article_series_read_first')}}:
                 {{page_anchor(series_first_page, short=true)}}
