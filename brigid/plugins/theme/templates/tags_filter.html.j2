@@ -2,7 +2,7 @@
 {% from "theme/utils.html.j2" import tags_url %}
 
 
-{% macro tags_filter(current_url, tags_count, site, pages_found) %}
+{% macro tags_filter(current_url, tags_count, pages_found) %}
 
   <p class="brigid-side-block-caption">
     {{ translate_theme(current_url.language, 'tags_filter_header') }}
