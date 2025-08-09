@@ -1,5 +1,6 @@
 {% from 'header.html.j2' import header %}
 {% import "meta.html.j2" as meta %}
+{% import "utils.html.j2" as utils %}
 
 <!DOCTYPE html>
 <html lang="{{info.language}}" prefix="og: https://ogp.me/ns#">
@@ -16,9 +17,7 @@
 
     <link rel="stylesheet" href="/static/main.css">
 
-    {% for plugin in plugins %}
-      {{ plugin.render_head(info, meta_info, index_info, page_info) }}
-    {% endfor %}
+    {{ utils.call_plugins('render_head', info, meta_info, index_info, page_info) }}
 
     {% if site.header_html %}
       {{ site().header_html | safe }}
@@ -29,15 +28,11 @@
     <div id="brigid-body">
       {{ header(info.language, page_info and page_info.article) }}
 
-      {% for plugin in plugins %}
-        {{ plugin.render_body_before_content(info, meta_info, index_info, page_info) }}
-      {% endfor %}
+      {{ utils.call_plugins('render_body_before_content', info, meta_info, index_info, page_info) }}
 
       {% block content %}{% endblock %}
 
-      {% for plugin in plugins %}
-        {{ plugin.render_body_after_content(info, meta_info, index_info, page_info) }}
-      {% endfor %}
+      {{ utils.call_plugins('render_body_after_content', info, meta_info, index_info, page_info) }}
 
       {% set site_language = site.languages[info.language] %}
 

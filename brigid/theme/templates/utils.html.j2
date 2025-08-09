@@ -46,3 +46,10 @@
     {{page_title(page, short=short)}}
   </a>
 {% endmacro %}
+
+
+{% macro call_plugins(method, info, meta_info, index_info, page_info) %}
+    {% for plugin in plugins %}
+      {{ plugin[method](info, meta_info, index_info, page_info) }}
+    {% endfor %}
+{% endmacro %}
