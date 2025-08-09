@@ -64,3 +64,10 @@ class Plugin:
         return self.render_template_if_exists(
             f"{self.slug}/body_after_content.html.j2", info=info, meta=meta, index=index, page=page
         )
+
+    def render_body_after_footer(
+        self, info: Info, meta: MetaInfo, index: IndexInfo | None = None, page: PageInfo | None = None
+    ) -> str:
+        return self.render_template_if_exists(
+            f"{self.slug}/body_after_footer.html.j2", info=info, meta=meta, index=index, page=page
+        )
