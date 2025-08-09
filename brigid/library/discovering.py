@@ -162,12 +162,6 @@ def load_site(directory: pathlib.Path) -> None:  # noqa: CCR001
     if site is None:
         raise NotImplementedError("meta.toml has not found")
 
-    if (directory / "site" / "footer.html").exists():
-        site.footer_html = (directory / "site" / "footer.html").read_text()
-
-    if (directory / "site" / "header.html").exists():
-        site.header_html = (directory / "site" / "header.html").read_text()
-
     site.languages.update(languages)
 
     storage.set_site(site)

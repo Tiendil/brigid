@@ -128,9 +128,6 @@ class Site(BaseEntity):
 
     path: pathlib.Path
 
-    footer_html: str | None = None
-    header_html: str | None = None
-
     content_repository: str | None = None
 
     show_brigid_link: bool = True
