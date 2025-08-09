@@ -21,6 +21,7 @@ poetry install
 - **Extensive tag support** for navigating and organizing content.
 - **Markdown as a source code** for posts.
 - **Multi-language support** by design.
+- **Themes** — allows using custom CSS, scripts, and HTML templates.
 
 ### Extensive tag support
 

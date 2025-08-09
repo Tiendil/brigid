@@ -1,0 +1,4 @@
+
+- [ ] configure attaching custom css/js files
+- [ ] add themes section into the readme
+- [ ] separate jinja templates into core and brigid theme
