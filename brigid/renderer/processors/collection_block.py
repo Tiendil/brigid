@@ -18,7 +18,7 @@ class CollectionBlock(TomlBlock):
     NAME = "brigid-collection"
     models = CollectionModel
     root_tag = "div"
-    template: str = "./blocks/collection.html.j2"
+    template: str = "theme/blocks/collection.html.j2"
 
     def root_css_classes(self, data: Any) -> list[str]:
         classes = ["brigid-collection", data.css_class]

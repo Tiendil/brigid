@@ -7,3 +7,5 @@
 - [ ] site.header_html & site.footer_html transform into plugin
 - [ ] migrate tiendil.org to new footer/header htmls (via plugin)
 - [ ] migrate blog.feeds.fun to new footer/header htmls (via plugin)
+- [ ] check all jinjaglobal functions, remove unused ones
+- [ ] how to sync markdown blocks with theme block templates?

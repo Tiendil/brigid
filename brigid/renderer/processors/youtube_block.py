@@ -23,7 +23,7 @@ class YouTubeBlock(TomlBlock):
     NAME = "brigid-youtube"
     models = YouTubeModel
     root_tag = "figure"
-    template = "./blocks/youtube.html.j2"
+    template = "theme/blocks/youtube.html.j2"
 
     def root_css_classes(self, data: Any) -> list[str]:
         classes = ["brigid-youtube", data.css_class]

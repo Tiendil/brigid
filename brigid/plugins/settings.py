@@ -9,6 +9,7 @@ class Settings(BaseSettings):
         "brigid.plugins.i18n.plugin:plugin",
         "brigid.plugins.seo.plugin:plugin",
         "brigid.plugins.include.plugin:plugin",
+        "brigid.plugins.theme.plugin:plugin",
         "brigid.plugins.photoswipe.plugin:plugin",
     ]
 

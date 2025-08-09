@@ -10,8 +10,8 @@ from brigid.library.entities import Article, Page, PageSimilarityScore
 
 # TODO: template names should have prefixes
 class Template(enum.StrEnum):
-    article_page = "article.html.j2"
-    index_page = "blog_index.html.j2"
+    article_page = "theme/article.html.j2"
+    index_page = "theme/blog_index.html.j2"
 
 
 class Info(BaseEntity):
