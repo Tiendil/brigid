@@ -16,8 +16,6 @@
 
     <link rel="stylesheet" href="/static/main.css">
 
-    {% set photoswipe = photoswipe_settings() %}
-
     {% for plugin in plugins %}
       {{ plugin.render_head(info, meta_info, index_info, page_info) }}
     {% endfor %}
