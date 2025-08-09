@@ -11,7 +11,7 @@ from brigid.domain.urls import UrlsFeedsAtom, UrlsPost, UrlsTags
 from brigid.library import utils as l_utils
 from brigid.library.similarity import get_similar_pages
 from brigid.library.storage import storage
-from brigid.theme.entities import MetaInfo, Template
+from brigid.theme.entities import MetaInfo, Info, Template, IndexInfo, PageInfo
 from brigid.theme.jinjaglobals import render_page_intro
 from brigid.theme.templates import render
 
@@ -108,17 +108,24 @@ def render_index(language: str, raw_tags: str) -> HTMLResponse:  # noqa: CCR001,
         seo_image_url=None,
     )
 
+    info = Info(
+        language=language,
+        current_url=filter_state
+    )
+
+    index_info = IndexInfo(
+        pages=pages,
+        pages_found=len(all_pages),
+        tags_count=tags_count,
+    )
+
     content = render(
         str(Template.index_page),
         {
-            "language": language,
+            "info": info,
             "meta_info": meta_info,
-            "site": site,
-            "pages": pages,
-            "current_url": filter_state,
-            "article": None,
-            "pages_found": len(all_pages),
-            "tags_count": tags_count,
+            "index_info": index_info,
+            "page_info": None,
         },
     )
 
@@ -170,16 +177,24 @@ def render_page(language: str, article_slug: str, status_code: int = 200) -> HTM
         seo_image_url=seo_image_url,
     )
 
+    info = Info(
+        language=language,
+        current_url=post_url,
+    )
+
+    page_info = PageInfo(
+        article=article,
+        page=page,
+        similar_pages=similar_pages,
+    )
+
     content = render(
         str(template),
         {
-            "language": language,
+            "info": info,
             "meta_info": meta_info,
-            "site": storage.get_site(),
-            "article": article,
-            "similar_pages": similar_pages,
-            "page": page,
-            "current_url": post_url,
+            "index_info": None,
+            "page_info": page_info,
         },
     )
 

@@ -4,6 +4,7 @@ import jinja2
 
 from brigid.theme.settings import settings
 from brigid.plugins.utils import plugins
+from brigid.library.storage import storage
 
 
 def get_jinjaglobals(module):
@@ -25,6 +26,9 @@ def get_jinjaglobals(module):
 
 def fill_globals(environment):
     from brigid.theme import jinjaglobals
+
+    environment.globals.update({'site': storage.get_site(),
+                                'storage': storage})
 
     for module in (jinjaglobals,):
         global_functions, filter_functions = get_jinjaglobals(module)

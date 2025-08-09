@@ -1,13 +1,25 @@
 import datetime
 import enum
+import pydantic
 
+from brigid.domain.urls import UrlsBase
 from brigid.core.entities import BaseEntity
+from brigid.library.entities import Article, Collection, Page, Redirects, Site, PageSimilarityScore
 
 
 # TODO: template names should have prefixes
 class Template(enum.StrEnum):
     article_page = "article.html.j2"
     index_page = "blog_index.html.j2"
+
+
+class Info(BaseEntity):
+    language: str
+    current_url: UrlsBase
+
+    model_config = pydantic.ConfigDict(
+        arbitrary_types_allowed=True,
+    )
 
 
 class MetaInfo(BaseEntity):
@@ -23,3 +35,15 @@ class MetaInfo(BaseEntity):
     published_at: datetime.datetime | None
 
     seo_image_url: str | None
+
+
+class IndexInfo(BaseEntity):
+    pages: list[Page]
+    pages_found: int
+    tags_count: dict[str, int]
+
+
+class PageInfo(BaseEntity):
+    article: Article
+    page: Page
+    similar_pages: list[PageSimilarityScore]

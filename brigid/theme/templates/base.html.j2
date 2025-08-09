@@ -2,16 +2,16 @@
 {% import "meta.html.j2" as meta %}
 
 <!DOCTYPE html>
-<html lang="{{language}}" prefix="og: https://ogp.me/ns#">
+<html lang="{{info.language}}" prefix="og: https://ogp.me/ns#">
   <head>
-    {{ meta.general_fields(meta_info, current_url) }}
+    {{ meta.general_fields(meta_info, info.current_url) }}
 
-    {% if article %}
-      {{ meta.object_graph_fields_article(meta_info, current_url) }}
-      {{ meta.json_fd_article(meta_info, current_url) }}
+    {% if page_info %}
+      {{ meta.object_graph_fields_article(meta_info, info.current_url) }}
+      {{ meta.json_fd_article(meta_info, info.current_url) }}
     {% else %}
-      {{ meta.object_graph_fields_website(meta_info, current_url) }}
-      {{ meta.json_fd_website(meta_info, current_url) }}
+      {{ meta.object_graph_fields_website(meta_info, info.current_url) }}
+      {{ meta.json_fd_website(meta_info, info.current_url) }}
     {% endif %}
 
     <link rel="stylesheet" href="/static/main.css">
@@ -21,13 +21,13 @@
     <link rel="stylesheet" href="{{photoswipe.stylesheet}}" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     {% if site.header_html %}
-      {{ site.header_html | safe }}
+      {{ site().header_html | safe }}
     {% endif %}
 
   </head>
   <body>
     <div id="brigid-body">
-      {{ header(language, site, article) }}
+      {{ header(info.language, page_info and page_info.article) }}
 
       {% block content %}{% endblock %}
 
@@ -50,7 +50,7 @@
 
       </script>
 
-      {% set site_language = site.languages[language] %}
+      {% set site_language = site.languages[info.language] %}
 
       <div class="brigid-footer brigid-article">
         <ul>
@@ -60,27 +60,27 @@
 
           {% if site_language.license %}
             <li>
-              {{translate_theme(language, 'license')|upper_first}}:
+              {{translate_theme(info.language, 'license')|upper_first}}:
               <a href="{{ site_language.license.url }}" target="_blank">{{ site_language.license.name }}</a>
             </li>
           {% endif %}
 
           {% if site.content_repository %}
             <li>
-              {{translate_theme(language, 'content_repository')|upper_first}}:
+              {{translate_theme(info.language, 'content_repository')|upper_first}}:
               <a href="{{ site.content_repository }}" target="_blank">{{site.content_repository}}</a>
             </li>
           {% endif %}
 
           {% if site.show_brigid_link %}
             <li>
-              {{translate_theme(language, 'site_is_created_with')|upper_first}}
+              {{translate_theme(info.language, 'site_is_created_with')|upper_first}}
               <a href="{{brigid_repository()}}" target="_blank">Brigid</a>
             </li>
           {% endif %}
 
           <li>
-            {{translate_theme(language, 'icons_attribution')|upper_first}}
+            {{translate_theme(info.language, 'icons_attribution')|upper_first}}
           </li>
         </ul>
       </div>

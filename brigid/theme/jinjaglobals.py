@@ -16,6 +16,7 @@ from brigid.renderer.markdown_render import render_page_intro as markdown_render
 from brigid.renderer.markdown_render import render_text as markdown_render_text
 from brigid.renderer.static_files import ImageInfo, files
 from brigid.theme.utils import jinjafilter, jinjaglobal
+from brigid.plugins import utils as plugin_utils
 
 
 @jinjafilter
@@ -31,11 +32,6 @@ def render_page_intro(page: Page) -> str:
 @jinjafilter
 def render_text(text: str) -> str:
     return Markup(markdown_render_text(text).content)
-
-
-@jinjaglobal
-def get_storage() -> Storage:
-    return storage
 
 
 @jinjaglobal
@@ -75,3 +71,8 @@ def page_series_info(page: Page) -> PageSeriesInfo:
 @jinjaglobal
 def page_title(page: Page, short: bool = False) -> str:
     return l_utils.page_title(page=page, short=short)
+
+
+@jinjaglobal
+def plugins() -> list:
+    return plugin_utils.plugins()

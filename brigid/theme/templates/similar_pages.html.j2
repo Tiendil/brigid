@@ -4,8 +4,8 @@
   <ul>
     {% for similar_score in similar_pages %}
 
-      {% set similar_page = get_storage().get_page(id=similar_score.page_id) %}
-      {% set similar_article = get_storage().get_article(id=similar_page.article_id) %}
+      {% set similar_page = storage.get_page(id=similar_score.page_id) %}
+      {% set similar_article = storage.get_article(id=similar_page.article_id) %}
       {% set anchor_title= translate_theme(language, 'similarity_score_tooltip') + ': ' + similar_score.score|to_str %}
 
       <li data-brigid-similarity-score="{{similar_score.score}}">
