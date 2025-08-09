@@ -36,7 +36,6 @@ class Plugin:
                           },
                           ))
         except jinja2.TemplateNotFound:
-            print(f"Template {template_name} not found in plugin {self.slug}.")
             return default
         except BaseException as e:
             logger.exception("plugin_render_error",
