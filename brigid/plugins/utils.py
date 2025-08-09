@@ -23,13 +23,13 @@ def plugins() -> list[Plugin]:
 
         try:
             module = __import__(module_name, fromlist=[plugin_name])
-        except ImportError as e:
+        except BaseException as e:
             logger.exception("error_loading_plugin", plugin=plugin_path, exc_info=e)
             continue
 
         try:
             plugin = getattr(module, plugin_name)
-        except AttributeError as e:
+        except BaseException as e:
             logger.exception("error_getting_plugin", plugin=plugin_path, exc_info=e)
             continue
 

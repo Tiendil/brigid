@@ -8,7 +8,8 @@ from brigid.plugins.photoswipe.settings import settings
 
 
 class CorePlugin(Plugin):
-    def __init__(self, **kwargs):
+    def __init__(self, settings, **kwargs):
+        self.settings = settings
         super().__init__(**kwargs)
 
     def templates_loader(self) -> jinja2.BaseLoader:
@@ -18,4 +19,4 @@ class CorePlugin(Plugin):
         return get_jinjaglobals(jinjaglobals)
 
 
-plugin = CorePlugin(slug="photoswipe")
+plugin = CorePlugin(slug="photoswipe", settings=settings)

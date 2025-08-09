@@ -28,7 +28,8 @@ def fill_globals(environment):
     from brigid.theme import jinjaglobals
 
     environment.globals.update({'site': storage.get_site(),
-                                'storage': storage})
+                                'storage': storage,
+                                'plugins': plugins()})
 
     for module in (jinjaglobals,):
         global_functions, filter_functions = get_jinjaglobals(module)

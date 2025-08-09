@@ -10,13 +10,11 @@ from brigid.domain.urls import UrlsRoot
 from brigid.library import utils as l_utils
 from brigid.library.entities import Page, PageSeriesInfo
 from brigid.library.series import get_page_series_info
-from brigid.library.storage import Storage, storage
 from brigid.renderer.markdown_render import render_page as markdown_render_page
 from brigid.renderer.markdown_render import render_page_intro as markdown_render_page_intro
 from brigid.renderer.markdown_render import render_text as markdown_render_text
 from brigid.renderer.static_files import ImageInfo, files
 from brigid.theme.utils import jinjafilter, jinjaglobal
-from brigid.plugins import utils as plugin_utils
 
 
 @jinjafilter
@@ -71,8 +69,3 @@ def page_series_info(page: Page) -> PageSeriesInfo:
 @jinjaglobal
 def page_title(page: Page, short: bool = False) -> str:
     return l_utils.page_title(page=page, short=short)
-
-
-@jinjaglobal
-def plugins() -> list:
-    return plugin_utils.plugins()

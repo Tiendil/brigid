@@ -1,0 +1,19 @@
+
+<script type="module">
+    import Lightbox from '{{plugin.settings.lightbox}}';
+
+    const pswpModule = () => import('{{plugin.settings.pswp}}')
+
+    const galleries = document.querySelectorAll('.brigid-images');
+
+    galleries.forEach(gallery => {
+
+    const lightbox = new Lightbox({
+      gallery: gallery,
+      children: '.brigid-image-link',
+      pswpModule: pswpModule
+      });
+    lightbox.init();
+    });
+
+</script>

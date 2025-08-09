@@ -18,7 +18,9 @@
 
     {% set photoswipe = photoswipe_settings() %}
 
-    <link rel="stylesheet" href="{{photoswipe.stylesheet}}" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    {% for plugin in plugins %}
+      {{ plugin.render_head(info, meta_info, index_info, page_info) }}
+    {% endfor %}
 
     {% if site.header_html %}
       {{ site().header_html | safe }}
@@ -29,26 +31,15 @@
     <div id="brigid-body">
       {{ header(info.language, page_info and page_info.article) }}
 
+      {% for plugin in plugins %}
+        {{ plugin.render_body_before_content(info, meta_info, index_info, page_info) }}
+      {% endfor %}
+
       {% block content %}{% endblock %}
 
-      <script type="module">
-        import Lightbox from '{{photoswipe.lightbox}}';
-
-        const pswpModule = () => import('{{photoswipe.pswp}}')
-
-        const galleries = document.querySelectorAll('.brigid-images');
-
-        galleries.forEach(gallery => {
-
-        const lightbox = new Lightbox({
-          gallery: gallery,
-          children: '.brigid-image-link',
-          pswpModule: pswpModule
-          });
-        lightbox.init();
-        });
-
-      </script>
+      {% for plugin in plugins %}
+        {{ plugin.render_body_after_content(info, meta_info, index_info, page_info) }}
+      {% endfor %}
 
       {% set site_language = site.languages[info.language] %}
 
