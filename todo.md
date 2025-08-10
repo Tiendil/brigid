@@ -8,6 +8,5 @@
 - [ ] migrate blog.feeds.fun to new footer/header htmls (via plugin)
 - [x] check all jinjaglobal functions, remove unused ones
 - [x] check if FileNotFound processed correctly
-- [ ] do not pass setting objects to plugins, pass conrete values?
 - [ ] move translations from the site configs?
 - [ ] fill changes
