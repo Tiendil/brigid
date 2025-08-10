@@ -74,7 +74,7 @@
             }
 
             nav {
-                @apply border-t-4 border-b-4 border-double border-gray-500 uppercase mt-2 mb-8;
+                @apply border-t-4 border-b-4 border-double border-gray-500 mt-2 mb-8;
 
                 a {
                     @apply inline-block px-2 py-2;

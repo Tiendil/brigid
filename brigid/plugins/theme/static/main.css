@@ -2015,9 +2015,6 @@ video {
       --tw-border-opacity: 1;
       border-color: rgb(107 114 128 / var(--tw-border-opacity));
     }
-    nav{
-      text-transform: uppercase;
-    }
     nav {
       a{
         display: inline-block;
