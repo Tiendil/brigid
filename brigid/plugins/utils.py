@@ -5,6 +5,7 @@ from brigid.plugins.settings import settings
 logger = logging.get_module_logger()
 
 _plugins = None
+_plugins_dict = None
 
 
 def plugins() -> list[Plugin]:
@@ -37,3 +38,18 @@ def plugins() -> list[Plugin]:
         logger.info("plugin_loaded", slug=plugin.slug)
 
     return _plugins
+
+
+def plugins_dict() -> dict[str, Plugin]:
+    global _plugins_dict
+
+    if _plugins_dict:
+        return _plugins_dict
+
+    _plugins_dict = {plugin.slug: plugin for plugin in plugins()}
+
+    return _plugins_dict
+
+
+def get_plugin(slug: str) -> Plugin | None:
+    return plugins_dict().get(slug)

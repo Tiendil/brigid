@@ -6,7 +6,7 @@ from markupsafe import Markup
 
 from brigid.domain import constants as domain_constants
 from brigid.domain import request_context as d_request_context
-from brigid.domain.urls import UrlsRoot
+from brigid.domain.urls import UrlsRoot, UrlsPlugin
 from brigid.jinja2_render.utils import jinjafilter, jinjaglobal
 from brigid.library import utils as l_utils
 from brigid.library.entities import Page, PageSeriesInfo
@@ -40,6 +40,11 @@ def image_info(path: pathlib.Path) -> ImageInfo:
 @jinjaglobal
 def root_url(language: str) -> UrlsRoot:
     return UrlsRoot(language=language)
+
+
+@jinjaglobal
+def plugin_url(plugin: str, language: str) -> UrlsRoot:
+    return UrlsPlugin(plugin, language=language)
 
 
 @jinjaglobal

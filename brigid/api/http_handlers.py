@@ -7,9 +7,10 @@ from brigid.api import renderers
 from brigid.api.sitemaps import build_sitemap_xml
 from brigid.api.static_cache import cache
 from brigid.api.utils import choose_language
-from brigid.core import logging
+from brigid.core import logging, errors
 from brigid.domain.urls import UrlsRoot
 from brigid.library.storage import storage
+from brigid.plugins.utils import get_plugin
 
 router = fastapi.APIRouter()
 
@@ -41,13 +42,21 @@ async def site_map() -> PlainTextResponse:
     return PlainTextResponse(content, media_type="application/xml; charset=utf-8")
 
 
-@router.get("/static/main.css")
-async def page_css() -> FileResponse:
-    css_file = pathlib.Path(__file__).parent.parent / "theme" / "static" / "main.css"
+@router.get("/static/plugins/{plugin_slug}/{filename:path}")
+async def plugin_static(request: fastapi.Request, plugin_slug: str, filename: str) -> FileResponse:
+    plugin = get_plugin(plugin_slug)
 
-    cache().set("/static/main.css", css_file)
+    if plugin is None:
+        raise errors.FileNotFound()
 
-    return FileResponse(css_file, media_type="text/css")
+    file_info = plugin.static_file_info(filename)
+
+    if file_info is None:
+        raise errors.FileNotFound()
+
+    cache().set(request.url.path, file_info.sys_path)
+
+    return FileResponse(file_info.sys_path, media_type=file_info.media_type)
 
 
 @router.get("/static/posts/{article_slug}/{filename:path}")

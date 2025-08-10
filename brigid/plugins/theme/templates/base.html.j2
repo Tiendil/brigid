@@ -6,7 +6,7 @@
 <html lang="{{info.language}}" prefix="og: https://ogp.me/ns#">
   <head>
 
-    <link rel="stylesheet" href="/static/main.css">
+    {{ utils.render_plugins_static(info) }}
 
     {{ utils.call_plugins('render_head', info, meta_info, index_info, page_info) }}
 

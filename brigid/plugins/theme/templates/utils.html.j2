@@ -53,3 +53,20 @@
       {{ plugin[method](info, meta_info, index_info, page_info) }}
     {% endfor %}
 {% endmacro %}
+
+
+{% macro render_plugins_static(info) %}
+  {% for plugin in plugins %}
+    {% for file_info in plugin.static_files() %}
+
+      {% set url = plugin_url(plugin.slug, info.language) %}
+
+      {% if file_info.is_stylesheet %}
+        <link rel="stylesheet" href="{{url.file_url(file_info.url_path)}}">
+      {% elif file_info.is_javascript %}
+        <script type="application/javascript" src="{{url.file_url(file_info.url_path)}}"></script>
+      {% endif %}
+
+    {% endfor %}
+  {% endfor %}
+{% endmacro %}
