@@ -1975,16 +1975,13 @@ video {
       margin-bottom: 2rem;
     }
     nav{
-      border-top-width: 1px;
+      border-top-width: 4px;
     }
     nav{
-      border-bottom-width: 1px;
+      border-bottom-width: 4px;
     }
     nav{
-      border-top-width: 2px;
-    }
-    nav{
-      border-bottom-width: 2px;
+      border-style: double;
     }
     nav{
       --tw-border-opacity: 1;
