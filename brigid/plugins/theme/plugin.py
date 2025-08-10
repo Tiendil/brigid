@@ -1,12 +1,15 @@
 import os
 import pathlib
+from typing import Any
 
 import jinja2
 
 from brigid.core import logging
+from brigid.jinja2_render.templates import get_jinjaglobals
 from brigid.plugins.entities import FileInfo
 from brigid.plugins.plugin import Plugin
 from brigid.plugins.theme.settings import settings
+from brigid.plugins.theme import jinjaglobals
 
 logger = logging.get_module_logger()
 
@@ -43,6 +46,9 @@ class ThemePlugin(Plugin):
                     self._static_files_map[file] = FileInfo(
                         sys_path=file_path, url_path=url_path, media_type=media_type
                     )
+
+    def jinjaglobals(self) -> tuple[dict[str, Any], dict[str, Any]]:
+        return get_jinjaglobals(jinjaglobals)
 
     def templates_loader(self) -> jinja2.BaseLoader:
         loaders = [jinja2.FileSystemLoader(settings.templates_base, followlinks=True)]

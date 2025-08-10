@@ -4,7 +4,6 @@ from typing import Any
 
 from markupsafe import Markup
 
-from brigid.domain import constants as domain_constants
 from brigid.domain import request_context as d_request_context
 from brigid.domain.urls import UrlsPlugin, UrlsRoot
 from brigid.jinja2_render.utils import jinjafilter, jinjaglobal
@@ -54,11 +53,6 @@ def test_marker(marker: str) -> str:
         return ""
 
     return Markup(marker)
-
-
-@jinjaglobal
-def brigid_repository() -> str:
-    return domain_constants.brigid_repository
 
 
 @jinjaglobal
