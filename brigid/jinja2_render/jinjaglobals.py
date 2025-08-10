@@ -6,7 +6,7 @@ from markupsafe import Markup
 
 from brigid.domain import constants as domain_constants
 from brigid.domain import request_context as d_request_context
-from brigid.domain.urls import UrlsRoot, UrlsPlugin
+from brigid.domain.urls import UrlsPlugin, UrlsRoot
 from brigid.jinja2_render.utils import jinjafilter, jinjaglobal
 from brigid.library import utils as l_utils
 from brigid.library.entities import Page, PageSeriesInfo

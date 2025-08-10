@@ -1,5 +1,3 @@
-import pathlib
-
 import fastapi
 from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse, RedirectResponse
 
@@ -7,7 +5,7 @@ from brigid.api import renderers
 from brigid.api.sitemaps import build_sitemap_xml
 from brigid.api.static_cache import cache
 from brigid.api.utils import choose_language
-from brigid.core import logging, errors
+from brigid.core import errors, logging
 from brigid.domain.urls import UrlsRoot
 from brigid.library.storage import storage
 from brigid.plugins.utils import get_plugin

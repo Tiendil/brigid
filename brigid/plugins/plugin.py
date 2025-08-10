@@ -3,7 +3,6 @@ from typing import Any
 import jinja2
 from markupsafe import Markup
 
-from brigid.domain.urls import UrlsPlugin
 from brigid.core import logging
 from brigid.jinja2_render.entities import IndexInfo, Info, MetaInfo, PageInfo
 from brigid.plugins.entities import FileInfo
@@ -22,7 +21,7 @@ class Plugin:
     def jinjaglobals(self) -> tuple[dict[str, Any], dict[str, Any]]:
         return {}, {}
 
-    def static_file_info(self, filename: str) -> FileInfo | None:   # pylint: disable=W0613
+    def static_file_info(self, filename: str) -> FileInfo | None:  # pylint: disable=W0613
         return None
 
     def static_files(self) -> list[FileInfo]:

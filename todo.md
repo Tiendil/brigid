@@ -1,9 +1,8 @@
 
 - [x] remove html files from site config
-- [ ] configure attaching custom css/js files
+- [x] configure attaching custom css/js files
 - [ ] add themes section into the readme
 - [x] separate jinja templates into core and brigid theme
-- [ ] prefixes for jinjaglobal names?
 - [x] site.header_html & site.footer_html transform into plugin
 - [ ] migrate tiendil.org to new footer/header htmls (via plugin)
 - [ ] migrate blog.feeds.fun to new footer/header htmls (via plugin)

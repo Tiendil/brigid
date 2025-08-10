@@ -1,4 +1,5 @@
 import pathlib
+
 from brigid.core.entities import BaseEntity
 
 

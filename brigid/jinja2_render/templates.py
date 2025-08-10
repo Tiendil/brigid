@@ -35,6 +35,7 @@ def fill_globals(environment):
         environment.globals.update(global_functions)
         environment.filters.update(filter_functions)
 
+    # process plugins after default globals, and in defined order to allow plugins to override them
     for plugin in plugins():
         global_functions, filter_functions = plugin.jinjaglobals()
 

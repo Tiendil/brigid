@@ -1,5 +1,3 @@
-import pathlib
-
 import pydantic_settings
 
 from brigid.core.settings import BaseSettings

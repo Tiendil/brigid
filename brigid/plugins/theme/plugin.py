@@ -1,11 +1,12 @@
 import os
-import jinja2
 import pathlib
 
+import jinja2
+
 from brigid.core import logging
+from brigid.plugins.entities import FileInfo
 from brigid.plugins.plugin import Plugin
 from brigid.plugins.theme.settings import settings
-from brigid.plugins.entities import FileInfo
 
 logger = logging.get_module_logger()
 
@@ -39,9 +40,9 @@ class ThemePlugin(Plugin):
 
                     url_path = str(pathlib.Path(file_path.relative_to(path)))
 
-                    self._static_files_map[file] = FileInfo(sys_path=file_path,
-                                                            url_path=url_path,
-                                                            media_type=media_type)
+                    self._static_files_map[file] = FileInfo(
+                        sys_path=file_path, url_path=url_path, media_type=media_type
+                    )
 
     def templates_loader(self) -> jinja2.BaseLoader:
         loaders = [jinja2.FileSystemLoader(settings.templates_base, followlinks=True)]
