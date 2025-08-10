@@ -43,6 +43,9 @@ class ThemePlugin(Plugin):
 
                     url_path = str(pathlib.Path(file_path.relative_to(path)))
 
+                    if file in self._static_files_map:
+                        continue
+
                     self._static_files_map[file] = FileInfo(
                         sys_path=file_path, url_path=url_path, media_type=media_type
                     )
