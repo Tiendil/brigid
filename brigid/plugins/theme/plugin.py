@@ -51,10 +51,12 @@ class ThemePlugin(Plugin):
         return get_jinjaglobals(jinjaglobals)
 
     def templates_loader(self) -> jinja2.BaseLoader:
-        loaders = [jinja2.FileSystemLoader(settings.templates_base, followlinks=True)]
+        loaders = []
 
         if settings.templates_redefined:
             loaders.append(jinja2.FileSystemLoader(settings.templates_redefined, followlinks=True))
+
+        loaders.append(jinja2.FileSystemLoader(settings.templates_base, followlinks=True))
 
         return jinja2.ChoiceLoader(loaders)
 
