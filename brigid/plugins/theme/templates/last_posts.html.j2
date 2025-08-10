@@ -5,7 +5,7 @@
     {% set pages = storage.get_posts(language=language) %}
 
     {% for page in pages[:number] %}
-      <li class="brigid-side-block-post-link">{{page_anchor(page)}}</li>
+      <li class="brigid-side-block-post-link">{{page_anchor(page, anchor_title=page_title(page, short=false))}}</li>
     {% endfor %}
   </ul>
 {% endmacro %}
