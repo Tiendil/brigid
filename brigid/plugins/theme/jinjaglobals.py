@@ -1,5 +1,3 @@
-from typing import Any
-
 from brigid.jinja2_render.utils import jinjaglobal
 
 

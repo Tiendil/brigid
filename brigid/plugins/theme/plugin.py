@@ -8,8 +8,8 @@ from brigid.core import logging
 from brigid.jinja2_render.templates import get_jinjaglobals
 from brigid.plugins.entities import FileInfo
 from brigid.plugins.plugin import Plugin
-from brigid.plugins.theme.settings import settings
 from brigid.plugins.theme import jinjaglobals
+from brigid.plugins.theme.settings import settings
 
 logger = logging.get_module_logger()
 
