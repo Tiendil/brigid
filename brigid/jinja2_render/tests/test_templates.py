@@ -4,7 +4,7 @@ from html5lib import HTMLParser
 
 from brigid.domain import request_context
 from brigid.domain.urls import UrlsPost, UrlsTags
-from brigid.jinja2_render.entities import MetaInfo, Template
+from brigid.jinja2_render.entities import MetaInfo, Template, Info, PageInfo, IndexInfo
 from brigid.jinja2_render.templates import render
 from brigid.library.storage import storage
 from brigid.library.tests import make as library_make
@@ -51,21 +51,24 @@ class TestPageRender:
 
         post_url = UrlsPost(language=page.language, slug=article.slug)
 
+        info = Info(language=page.language, current_url=post_url)
+
+        page_info = PageInfo(
+            article=article,
+            page=page,
+            similar_pages=[],
+        )
+
         request_context.set("language", page.language)
         request_context.set("url", post_url)
 
         content = render(
             str(Template.article_page),
             {
-                "language": page.language,
+                "info": info,
                 "meta_info": meta_info,
-                "site": storage.get_site(),
-                "article": article,
-                # TODO: add similar pages
-                "similar_pages": [],
-                "page": page,
-                # TODO: add post_url
-                "current_url": post_url,
+                "page_info": page_info,
+                "index_info": None,
             },
         )
 
@@ -109,21 +112,24 @@ class TestIndexRender:
             excluded_tags=[],
         )
 
+        info = Info(language=language, current_url=filter_state)
+
+        index_info = IndexInfo(
+            pages=pages,
+            pages_found=len(pages),
+            tags_count={},
+        )
+
         request_context.set("language", language)
         request_context.set("url", filter_state)
 
         content = render(
-            "./blog_index.html.j2",
+            str(Template.index_page),
             {
-                "language": language,
+                "info": info,
                 "meta_info": meta_info,
-                "site": storage.get_site(),
-                "pages": pages,
-                "current_url": filter_state,
-                "article": None,
-                "pages_found": len(pages),  # TODO: add more hidden pages
-                # TODO: add tags_count
-                "tags_count": {},
+                "index_info": index_info,
+                "page_info": None,
             },
         )
 
@@ -162,21 +168,26 @@ class TestIndexRender:
             excluded_tags=[],
         )
 
+        info = Info(language=language, current_url=filter_state)
+
+        pages = [page_1, page_2]
+
+        index_info = IndexInfo(
+            pages=pages,
+            pages_found=len(pages),
+            tags_count={},
+        )
+
         request_context.set("language", language)
         request_context.set("url", filter_state)
 
         content = render(
-            "./blog_index.html.j2",
+            str(Template.index_page),
             {
-                "language": language,
+                "info": info,
                 "meta_info": meta_info,
-                "site": storage.get_site(),
-                "pages": [page_1, page_2],
-                "current_url": filter_state,
-                "article": None,
-                "pages_found": 2,  # TODO: add more hidden pages
-                # TODO: add tags_count
-                "tags_count": {},
+                "index_info": index_info,
+                "page_info": None,
             },
         )
 

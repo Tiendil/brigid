@@ -14,7 +14,7 @@ def assert_compare_html(a: str, b: str):
 class TestTagsUrl:
 
     template = """
-{% from "utils.html.j2" import tags_url %}
+{% from "theme/utils.html.j2" import tags_url %}
 {{tags_url("xxx", current_url, "") }}
 """
 
@@ -65,7 +65,7 @@ class TestTagsUrl:
 
     def test_render_class__a(self) -> None:
         template = """
-{% from "utils.html.j2" import tags_url %}
+{% from "theme/utils.html.j2" import tags_url %}
 {{tags_url("xxx", current_url, "aaa bbb") }}
 """
 
@@ -89,7 +89,7 @@ class TestTagsUrl:
 
     def test_render_class__button(self) -> None:
         template = """
-{% from "utils.html.j2" import tags_url %}
+{% from "theme/utils.html.j2" import tags_url %}
 {{tags_url("xxx", current_url, "aaa bbb") }}
 """
 
