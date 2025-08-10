@@ -10,3 +10,4 @@
 - [x] check if FileNotFound processed correctly
 - [ ] do not pass setting objects to plugins, pass conrete values?
 - [ ] move translations from the site configs?
+- [ ] fill changes
