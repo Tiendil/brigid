@@ -1321,7 +1321,7 @@ video {
     margin-bottom: 0.125rem;
   }
   .brigid-side-block-caption{
-    margin-left: 1.5rem;
+    margin-left: 0.5rem;
   }
   .brigid-side-block-caption{
     padding-bottom: 0.125rem;
@@ -1362,9 +1362,37 @@ video {
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  ul{
+  .brigid-side-block-tags-list{
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
+  }
+  .brigid-side-block-tags-list{
+    list-style-type: none;
+  }
+  .brigid-side-block-tags-list{
+    padding: 0px;
+  }
+  .brigid-side-block-tags-list{
+    padding-top: 0.5rem;
+  }
+  .brigid-side-block-last-posts{
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .brigid-side-block-last-posts{
+    list-style-type: none;
+  }
+  .brigid-side-block-last-posts{
+    padding: 0px;
+  }
+  .brigid-side-block-last-posts{
+    padding-top: 0.5rem;
+  }
+  .brigid-list-marker{
+    display: inline-block;
+  }
+  .brigid-list-marker{
+    width: 0.5rem;
   }
 }
 
@@ -3621,10 +3649,6 @@ video {
 
 .block{
   display: block;
-}
-
-.pt-2{
-  padding-top: 0.5rem;
 }
 
 .filter{

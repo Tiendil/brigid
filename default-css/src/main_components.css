@@ -6,7 +6,7 @@
         @apply max-w-80;
 
         .brigid-side-block-caption {
-            @apply ml-6 my-0.5 pb-0.5 decoration-from-font font-medium text-xl text-gray-900;
+            @apply ml-2 my-0.5 pb-0.5 decoration-from-font font-medium text-xl text-gray-900;
         }
 
         .brigid-tags-filter {
@@ -17,8 +17,16 @@
             @apply truncate;
         }
 
-        ul {
-            @apply my-2;
+        .brigid-side-block-tags-list {
+            @apply my-2 list-none p-0 pt-2;
+        }
+
+        .brigid-side-block-last-posts {
+            @apply my-2 list-none p-0 pt-2;
+        }
+
+        .brigid-list-marker {
+            @apply w-2 inline-block;
         }
     }
 

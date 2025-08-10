@@ -7,3 +7,4 @@
 - [x] last essays in one line with …
 - [ ] check wide pages on tiendil.org
 - [x] sidebar header — make smaller?
+- [ ] bug with best/interesing posts
