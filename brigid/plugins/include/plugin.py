@@ -9,8 +9,6 @@ class CorePlugin(Plugin):
         super().__init__(**kwargs)
 
     def templates_loader(self) -> jinja2.BaseLoader | None:
-        if not settings.templates:
-            return None
         return jinja2.FileSystemLoader(settings.templates, followlinks=True)
 
 
