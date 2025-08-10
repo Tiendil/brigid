@@ -21,7 +21,7 @@ class ThemePlugin(Plugin):
         self._static_files_map = {}
         self._discover_static_files()
 
-    def _discover_static_files(self) -> None:
+    def _discover_static_files(self) -> None:  # noqa: CCR001
         for path in [self.settings.static_redefined, self.settings.static_base]:
             if path is None:
                 continue

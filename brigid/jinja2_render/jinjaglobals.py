@@ -42,7 +42,7 @@ def root_url(language: str) -> UrlsRoot:
 
 
 @jinjaglobal
-def plugin_url(plugin: str, language: str) -> UrlsRoot:
+def plugin_url(plugin: str, language: str) -> UrlsPlugin:
     return UrlsPlugin(plugin, language=language)
 
 

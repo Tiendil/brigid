@@ -58,7 +58,7 @@ async def run_copy(destination: pathlib.Path) -> None:
 
 @templates_cli.command()
 def copy(destination: pathlib.Path) -> None:
-    """Copies all Jinja2 templates to the specified destination directory.
+    """Copy all Jinja2 templates to the specified destination directory.
 
     May be helpfull:
 

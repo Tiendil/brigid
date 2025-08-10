@@ -4,8 +4,8 @@ from brigid.plugins.settings import settings
 
 logger = logging.get_module_logger()
 
-_plugins = None
-_plugins_dict = None
+_plugins: list['Plugin'] | None = None
+_plugins_dict: dict[str, 'Plugin'] | None = None
 
 
 def plugins() -> list[Plugin]:

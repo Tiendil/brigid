@@ -27,7 +27,7 @@ class Plugin:
     def static_files(self) -> list[FileInfo]:
         return []
 
-    def render_template_if_exists(
+    def render_template_if_exists(  # noqa: CFQ002
         self,
         template_name: str,
         info: Info,
