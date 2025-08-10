@@ -3,6 +3,7 @@
     .brigid-side-block {
         @apply prose prose-sm prose-a:font-normal prose-a:no-underline ml-4;
         @apply hidden lg:block;
+        @apply max-w-80;
 
         .brigid-side-block-caption {
             @apply ml-6 my-0 decoration-from-font font-medium text-2xl text-gray-900;

@@ -1314,7 +1314,8 @@ video {
   }
 }
 
-.brigid-side-block {
+.brigid-side-block{
+  max-width: 20rem;
   .brigid-side-block-caption{
     margin-top: 0px;
     margin-bottom: 0px;
