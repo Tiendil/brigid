@@ -3,17 +3,30 @@
     .brigid-side-block {
         @apply prose prose-sm prose-a:font-normal prose-a:no-underline ml-4;
         @apply hidden lg:block;
+        @apply max-w-80;
 
         .brigid-side-block-caption {
-            @apply ml-6 text-lg my-0;
+            @apply ml-2 my-0.5 pb-0.5 decoration-from-font font-medium text-xl text-gray-900;
         }
 
         .brigid-tags-filter {
             @apply border border-gray-400 rounded px-2 mt-2;
         }
 
-        ul {
-            @apply my-2;
+        .brigid-side-block-post-link {
+            @apply truncate;
+        }
+
+        .brigid-side-block-tags-list {
+            @apply my-2 list-none p-0 pt-2;
+        }
+
+        .brigid-side-block-last-posts {
+            @apply my-2 list-none p-0 pt-2;
+        }
+
+        .brigid-list-marker {
+            @apply w-2 inline-block;
         }
     }
 
@@ -33,7 +46,7 @@
 
     .brigid-index-navigation {
 
-        @apply prose border-b-4 border-double max-w-2xl;
+        @apply prose border-b-4 border-double max-w-2xl border-gray-500;
 
         .brigid-index-navigation-item {
             @apply inline-block;
@@ -61,7 +74,7 @@
             }
 
             nav {
-                @apply border-t border-b border-t-2 border-b-2 uppercase mt-2 mb-8;
+                @apply border-t-4 border-b-4 border-double border-gray-500 mt-2 mb-8 text-lg;
 
                 a {
                     @apply inline-block px-2 py-2;

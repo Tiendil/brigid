@@ -2,7 +2,7 @@ from collections import defaultdict
 
 from brigid.domain import request_context
 from brigid.library.storage import storage
-from brigid.renderer.markdown_render import render_page
+from brigid.markdown_render.markdown_render import render_page
 
 
 class Connectivity:

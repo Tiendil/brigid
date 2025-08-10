@@ -135,9 +135,9 @@ module = "pymdownx.*"
 ignore_missing_imports = true
 
 
-# [tool.setuptools]
-# packages = ["brigid"]
+[tool.setuptools]
+packages = ["brigid"]
 
-# [project]
-# name = "brigid"
-# version = "0.10.1"
+[project]
+name = "brigid"
+version = "0.12.4"

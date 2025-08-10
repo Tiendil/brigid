@@ -1,0 +1,21 @@
+{% extends 'theme/base.html.j2' %}
+{% from 'theme/last_posts.html.j2' import last_posts %}
+{% from 'theme/languages_links.html.j2' import languages_links %}
+{% from "theme/utils.html.j2" import page_anchor %}
+
+{% block content %}
+  <div class="brigid-article-main">
+
+    <article class="brigid-article brigid-article-wide">
+      <h1>
+        {{page_anchor(page_info.page)}}
+        {{languages_links(info.language, page_info.article)}}
+      </h1>
+
+      {{page_info.page|render_page}}
+
+    </article>
+
+  </div>
+
+{% endblock %}

@@ -79,6 +79,9 @@ class UrlsBase:
     def to_site_map_full(self) -> "UrlsSiteMapFull":
         return UrlsSiteMapFull(language=self.language)
 
+    def to_plugin(self, plugin: str) -> "UrlsPlugin":
+        return UrlsPlugin(plugin=plugin, language=self.language)
+
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, self.__class__):
             return False
@@ -112,6 +115,17 @@ class UrlsSiteMapFull(UrlsBase):
 
     def url(self) -> str:
         return normalize_url(f"{_base_url()}/sitemap.xml")
+
+
+class UrlsPlugin(UrlsBase):
+    __slots__ = ("plugin_slug",)
+
+    def __init__(self, plugin: str, language: str) -> None:
+        super().__init__(language=language)
+        self.plugin_slug = plugin
+
+    def file_url(self, relative_path: str) -> str:
+        return normalize_url(f"{_base_url()}/static/plugins/{self.plugin_slug}/{relative_path}")
 
 
 class UrlsPost(UrlsBase):

@@ -1,0 +1,82 @@
+{% extends 'theme/base.html.j2' %}
+{% from 'theme/last_posts.html.j2' import last_posts %}
+{% from 'theme/article_footer.html.j2' import article_footer %}
+{% from 'theme/languages_links.html.j2' import languages_links %}
+{% from 'theme/similar_pages.html.j2' import similar_pages as render_similar_pages %}
+{% from "theme/utils.html.j2" import page_anchor %}
+
+{% block content %}
+  {% set page = page_info.page %}
+  {% set article = page_info.article %}
+
+  <div class="brigid-article-main">
+
+    <article class="brigid-article">
+      <h1>
+        {{page_anchor(page)}}
+        {{languages_links(info.language, article)}}
+      </h1>
+
+      {{page|render_page}}
+
+      {% if page.is_post %}
+        {% if page.series %}
+          {% set series_info = page_series_info(page) %}
+
+          <div class="brigid-series-read-next">
+            <h2 class="brigid-series-footer-caption">
+              {{translate_theme(info.current_url.language, 'article_is_part_of_series')}}
+            </h2>
+
+            <ul>
+              {% if series_info.next_page %}
+                {% set series_next_page = storage.get_page(id=series_info.next_page) %}
+              <li>
+                {{translate_theme(info.current_url.language, 'article_series_read_next')}}:
+                {{page_anchor(series_next_page, short=true, rel='next')}}
+              </li>
+            {% endif %}
+
+            {% if series_info.prev_page %}
+                {% set series_prev_page = storage.get_page(id=series_info.prev_page) %}
+              <li>
+                {{translate_theme(info.current_url.language, 'article_series_read_prev')}}:
+                {{page_anchor(series_prev_page, short=true, rel='prev')}}
+              </li>
+            {% endif %}
+
+            {% if series_info.first_page != page.id and series_info.first_page != series_info.prev_page %}
+              {% set series_first_page = storage.get_page(id=series_info.first_page) %}
+              <li>
+                {{translate_theme(info.current_url.language, 'article_series_read_first')}}:
+                {{page_anchor(series_first_page, short=true)}}
+              </li>
+            {% endif %}
+            </ul>
+
+          </div>
+        {% endif %}
+
+        <div class="brigid-similar-articles">
+          <h2 class="brigid-similar-articles-caption">
+            {{translate_theme(info.current_url.language, 'article_similar_header')}}
+          </h2>
+          {{ render_similar_pages(info.language, page_info.similar_pages) }}
+        </div>
+
+        {{ article_footer(page) }}
+
+      {% endif %}
+
+    </article>
+
+    <nav class="brigid-side-block">
+      <p class="brigid-side-block-caption">
+        {{ translate_theme(info.current_url.language, 'last_posts_header') }}
+      </p>
+      {{ last_posts(language=info.language, number=site.posts_in_latest) }}
+    </nav>
+
+  </div>
+
+{% endblock %}

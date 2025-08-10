@@ -1,0 +1,22 @@
+{% from "theme/utils.html.j2" import page_anchor %}
+
+{% macro similar_pages(language, similar_pages) %}
+  <ul>
+    {% for similar_score in similar_pages %}
+
+      {% set similar_page = storage.get_page(id=similar_score.page_id) %}
+      {% set similar_article = storage.get_article(id=similar_page.article_id) %}
+      {% set anchor_title= translate_theme(language, 'similarity_score_tooltip') + ': ' + similar_score.score|to_str %}
+
+      <li data-brigid-similarity-score="{{similar_score.score}}">
+        {{page_anchor(similar_page, anchor_title=anchor_title)}}
+
+        {# <ul> #}
+        {#   {% for explanation in similar_score.explanations %} #}
+        {#     <li>{{explanation}}</li> #}
+        {#   {% endfor %} #}
+        {# </ul> #}
+      </li>
+    {% endfor %}
+  </ul>
+{% endmacro %}

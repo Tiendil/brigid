@@ -1,0 +1,11 @@
+{% import plugin.slug+"/meta.html.j2" as meta %}
+
+{{ meta.general_fields(meta_info, info.current_url) }}
+
+{% if page_info %}
+ {{ meta.object_graph_fields_article(meta_info, info.current_url) }}
+ {{ meta.json_fd_article(meta_info, info.current_url) }}
+{% else %}
+ {{ meta.object_graph_fields_website(meta_info, info.current_url) }}
+ {{ meta.json_fd_website(meta_info, info.current_url) }}
+{% endif %}

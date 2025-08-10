@@ -1,0 +1,54 @@
+{% extends 'theme/base.html.j2' %}
+{% from 'theme/tags_filter.html.j2' import tags_filter %}
+{% from 'theme/article_footer.html.j2' import article_footer %}
+{% from "theme/pagination.html.j2" import pagination %}
+{% from "theme/utils.html.j2" import page_anchor %}
+
+{% block content %}
+  {% set pages = index_info.pages %}
+  <div class="brigid-index-main">
+
+    <div class="brigid-index-posts-container">
+      {% if pages %}
+        <div class="brigid-index-posts">
+          {% for page in pages %}
+            {% set article = storage.get_article(id=page.article_id) %}
+
+            <div class="brigid-article">
+              <h1>
+                {{page_anchor(page, classes=[test_marker('test-page-header-link')])}}
+              </h1>
+
+              {{page|render_page_intro}}
+
+              {% if page.has_more %}
+                <p>
+                  <a class="{{test_marker('test-page-more-link')}}" href="{{root_url(info.language).to_post(article.slug).url()}}">
+                    {{translate_theme(info.language, 'read_more')}}
+                  </a>
+                </p>
+              {% endif %}
+
+              {{ article_footer(page) }}
+            </div>
+          {% endfor %}
+        </div>
+        {{ pagination(current_url=info.current_url) }}
+      {% else %}
+        {# TODO: better styles #}
+        <div class="brigid-index-posts">
+          <div class="brigid-article">
+            <p>
+              {{translate_theme(info.language, 'no_posts_found')}}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <nav class="brigid-side-block">
+      {{ tags_filter(current_url=info.current_url, tags_count=index_info.tags_count, pages_found=index_info.pages_found) }}
+    </nav>
+
+  </div>
+
+{% endblock %}

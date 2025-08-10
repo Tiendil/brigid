@@ -1,0 +1,29 @@
+{% from 'theme/header.html.j2' import header %}
+{% from 'theme/footer.html.j2' import footer %}
+{% import "theme/utils.html.j2" as utils %}
+
+<!DOCTYPE html>
+<html lang="{{info.language}}" prefix="og: https://ogp.me/ns#">
+  <head>
+
+    {{ utils.render_plugins_static(info) }}
+
+    {{ utils.call_plugins('render_head', info, meta_info, index_info, page_info) }}
+
+  </head>
+  <body>
+    <div id="brigid-body">
+      {{ header(info.language, page_info and page_info.article) }}
+
+      {{ utils.call_plugins('render_body_before_content', info, meta_info, index_info, page_info) }}
+
+      {% block content %}{% endblock %}
+
+      {{ utils.call_plugins('render_body_after_content', info, meta_info, index_info, page_info) }}
+
+      {{ footer(info.language) }}
+
+      {{ utils.call_plugins('render_body_after_footer', info, meta_info, index_info, page_info) }}
+    </div>
+  </body>
+</html>

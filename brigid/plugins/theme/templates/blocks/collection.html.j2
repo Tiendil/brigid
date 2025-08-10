@@ -1,0 +1,16 @@
+{% from "theme/utils.html.j2" import page_anchor %}
+
+{% set collection = storage.get_collection(data.id) %}
+
+{% set posts = storage.get_posts(language=current_page.language, require_tags=collection.required_tags, exclude_tags=collection.excluded_tags) %}
+
+{% if collection.order == 'asc' %}
+  {% set posts = posts|reverse %}
+{% endif %}
+
+<ul>
+  {% for page in posts %}
+    {% set classes = collection.classes_for_tags(page.tags) %}
+    <li>{{page_anchor(page, classes=classes)}}</li>
+  {% endfor %}
+</ul>

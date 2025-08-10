@@ -1,0 +1,72 @@
+
+{% macro tags_url_a(name, url, class) %}
+  {%- set page_url = request_context_get('url') -%}
+
+  <a class="{{class}}"
+
+     {% if url.is_prev_to(page_url) %}rel="prev"{% endif %}
+     {% if url.is_next_to(page_url) %}rel="next"{% endif %}
+
+     href="{{url.url()}}">
+    {{name}}
+  </a>
+{% endmacro %}
+
+
+{% macro tags_url_button(name, url, class) %}
+  <form action="{{url.url()}}" class="brigid-tag-form" method="get">
+    <button class="{{class}}">
+      {{name}}
+    </button>
+</form>
+{% endmacro %}
+
+
+{% macro tags_url(name, url, class) %}
+  {% if url.is_noindex() %}
+    {# We render links to tag filter as buttons #}
+    {# to prevent not-so-smart bots from following them #}
+    {# and trying to recursively index all possible combinations of tags #}
+    {{ tags_url_button(name, url, class) }}
+  {% else %}
+    {{ tags_url_a(name, url, class) }}
+  {% endif %}
+{% endmacro %}
+
+
+{# TODO: autodetect relations? #}
+{% macro page_anchor(page, short=false, classes=(), anchor_title="", rel="") %}
+  {% set article = storage.get_article(page.article_id) %}
+
+  <a href="{{root_url(page.language).to_post(article.slug).url()}}"
+     {% if classes %}class="{{' '.join(classes)}}"{% endif %}
+     {% if anchor_title %}title="{{anchor_title}}"{% endif %}
+     {% if rel %}rel="{{rel}}"{% endif %}
+     >
+    {{page_title(page, short=short)}}
+  </a>
+{% endmacro %}
+
+
+{% macro call_plugins(method, info, meta_info, index_info, page_info) %}
+    {% for plugin in plugins %}
+      {{ plugin[method](info, meta_info, index_info, page_info) }}
+    {% endfor %}
+{% endmacro %}
+
+
+{% macro render_plugins_static(info) %}
+  {% for plugin in plugins %}
+    {% for file_info in plugin.static_files() %}
+
+      {% set url = plugin_url(plugin.slug, info.language) %}
+
+      {% if file_info.is_stylesheet %}
+        <link rel="stylesheet" href="{{url.file_url(file_info.url_path)}}">
+      {% elif file_info.is_javascript %}
+        <script type="application/javascript" src="{{url.file_url(file_info.url_path)}}"></script>
+      {% endif %}
+
+    {% endfor %}
+  {% endfor %}
+{% endmacro %}

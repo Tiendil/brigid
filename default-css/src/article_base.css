@@ -6,8 +6,8 @@
         @apply prose-a:font-normal;
 
         @apply max-w-none max-w-2xl grow;
-        @apply border-b-4 border-double;
-        @apply mb-8 pb-4 last-of-type:mb-0;
+        @apply border-b-4 border-double border-gray-500;
+        @apply mb-8 pb-8 last-of-type:mb-0 last-of-type:pb-2;
 
         strong a {
             @apply font-semibold;

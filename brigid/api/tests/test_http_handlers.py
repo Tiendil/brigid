@@ -29,11 +29,11 @@ class TestSiteMap:
         assert response.headers["content-type"] == "application/xml; charset=utf-8"
 
 
-class TestMainCss:
+class TestPluginStatic:
 
     @pytest.mark.asyncio
     async def test_works(self, client: TestClient) -> None:
-        response = client.get("/static/main.css")
+        response = client.get("/static/plugins/theme/main.css")
         assert response.status_code == 200
         assert response.headers["content-type"] == "text/css; charset=utf-8"
 

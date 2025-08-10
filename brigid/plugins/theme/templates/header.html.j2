@@ -1,0 +1,28 @@
+{% from 'theme/languages_links.html.j2' import languages_links %}
+
+{% macro header(language, current_article) %}
+
+  <header>
+    <div class="brigid-blog-title">
+      <a href="{{root_url(language).url()}}">{{site.languages[language].title}}</a>
+      {{languages_links(language, none)}}
+    </div>
+
+    <div>{{site.languages[language].subtitle}}</div>
+
+    <nav>
+
+      {% for item in site.languages[language].menu %}
+        <a href="{{item.url}}"
+           {% if item.open_on_blank_page %}target="_blank"{% endif %}
+           {% if item.tooltip %}title="{{item.tooltip}}"{% endif %}
+           class="{% if item.is_active(current_article and current_article.slug) %}brigid-active-menu-item{% endif %} {{item.css_classes or ''}}">
+           {{item.name}}
+        </a>
+      {% endfor %}
+
+    </nav>
+
+  </header>
+
+{% endmacro %}

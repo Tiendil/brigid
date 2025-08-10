@@ -1,0 +1,22 @@
+
+{% for image in data.images %}
+
+  {% set src = root_url(current_page.language).to_post(current_article.slug).file_url(image.src) %}
+
+  {% set image_info = image_info(current_article.dir / image.src) %}
+
+  <a href="{{src}}"
+     class="brigid-image-link"
+     {# TODO: we should keep here native brigid attributes only #}
+     {#       move data-pswp-* processing to photoswipe plugin #}
+     data-pswp-width="{{image_info.width}}"
+     data-pswp-height="{{image_info.height}}"
+     target="_blank">
+     <img src="{{src}}" alt="{{image.alt}}" />
+  </a>
+
+{% endfor %}
+
+{% if data.caption %}
+  <figcaption>{{data.caption|render_text}}</figcaption>
+{% endif %}
