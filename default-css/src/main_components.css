@@ -6,7 +6,7 @@
         @apply max-w-80;
 
         .brigid-side-block-caption {
-            @apply ml-6 my-0 decoration-from-font font-medium text-2xl text-gray-900;
+            @apply ml-6 my-0.5 pb-0.5 decoration-from-font font-medium text-xl text-gray-900;
         }
 
         .brigid-tags-filter {
@@ -38,7 +38,7 @@
 
     .brigid-index-navigation {
 
-        @apply prose border-b-4 border-double max-w-2xl;
+        @apply prose border-b-4 border-double max-w-2xl border-gray-500;
 
         .brigid-index-navigation-item {
             @apply inline-block;
@@ -66,7 +66,7 @@
             }
 
             nav {
-                @apply border-t border-b border-t-2 border-b-2 uppercase mt-2 mb-8;
+                @apply border-t border-b border-t-2 border-b-2 border-gray-500 uppercase mt-2 mb-8;
 
                 a {
                     @apply inline-block px-2 py-2;

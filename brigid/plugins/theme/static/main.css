@@ -1317,15 +1317,18 @@ video {
 .brigid-side-block{
   max-width: 20rem;
   .brigid-side-block-caption{
-    margin-top: 0px;
-    margin-bottom: 0px;
+    margin-top: 0.125rem;
+    margin-bottom: 0.125rem;
   }
   .brigid-side-block-caption{
     margin-left: 1.5rem;
   }
   .brigid-side-block-caption{
-    font-size: 1.5rem;
-    line-height: 2rem;
+    padding-bottom: 0.125rem;
+  }
+  .brigid-side-block-caption{
+    font-size: 1.25rem;
+    line-height: 1.75rem;
   }
   .brigid-side-block-caption{
     font-weight: 500;
@@ -1892,6 +1895,8 @@ video {
   max-width: 42rem;
   border-bottom-width: 4px;
   border-style: double;
+  --tw-border-opacity: 1;
+  border-color: rgb(107 114 128 / var(--tw-border-opacity));
   .brigid-index-navigation-item{
     display: inline-block;
   }
@@ -1980,6 +1985,10 @@ video {
     }
     nav{
       border-bottom-width: 2px;
+    }
+    nav{
+      --tw-border-opacity: 1;
+      border-color: rgb(107 114 128 / var(--tw-border-opacity));
     }
     nav{
       text-transform: uppercase;
@@ -2595,12 +2604,15 @@ video {
   flex-grow: 1;
   border-bottom-width: 4px;
   border-style: double;
+  --tw-border-opacity: 1;
+  border-color: rgb(107 114 128 / var(--tw-border-opacity));
   margin-bottom: 2rem;
-  padding-bottom: 1rem;
+  padding-bottom: 2rem;
 }
 
 .brigid-article:last-of-type{
   margin-bottom: 0px;
+  padding-bottom: 0.5rem;
 }
 
 .brigid-article {

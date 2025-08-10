@@ -6,3 +6,4 @@
 - [x] darker color for the headers on the side bar
 - [x] last essays in one line with …
 - [ ] check wide pages on tiendil.org
+- [ ] sidebar header — make smaller?
