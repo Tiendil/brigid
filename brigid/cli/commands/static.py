@@ -1,15 +1,16 @@
 import asyncio
-import sys
-import typer
 import pathlib
-from brigid.library.storage import storage
+import sys
+
+import typer
+
 from brigid.application.application import with_app
 from brigid.cli.application import app
 from brigid.core import logging
-from brigid.jinja2_render.templates import environment
-from brigid.plugins.utils import plugins
-from brigid.domain.urls import UrlsPlugin, UrlsRoot
 from brigid.domain import request_context
+from brigid.domain.urls import UrlsPlugin
+from brigid.library.storage import storage
+from brigid.plugins.utils import plugins
 
 logger = logging.get_module_logger()
 
@@ -35,7 +36,7 @@ async def run() -> None:
 
         files.sort()
 
-        sys.stdout.write('\n'.join(files) + '\n')
+        sys.stdout.write("\n".join(files) + "\n")
 
 
 @static_cli.command()

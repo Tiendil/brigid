@@ -1,7 +1,8 @@
 import asyncio
-import sys
-import typer
 import pathlib
+import sys
+
+import typer
 
 from brigid.application.application import with_app
 from brigid.cli.application import app
@@ -26,7 +27,7 @@ async def run_list() -> None:
 
         templates.sort()
 
-        sys.stdout.write('\n'.join(templates) + '\n')
+        sys.stdout.write("\n".join(templates) + "\n")
 
 
 @templates_cli.command()
@@ -51,8 +52,8 @@ async def run_copy(destination: pathlib.Path) -> None:
 
             logger.info("copying_template", source=str(full_path), destination=str(destination_file))
 
-            with open(destination_file, 'w', encoding='utf-8') as f:
-                f.write(full_path.read_text(encoding='utf-8'))
+            with open(destination_file, "w", encoding="utf-8") as f:
+                f.write(full_path.read_text(encoding="utf-8"))
 
 
 @templates_cli.command()
