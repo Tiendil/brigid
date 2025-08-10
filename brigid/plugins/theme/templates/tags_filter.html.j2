@@ -4,10 +4,10 @@
 
 {% macro tags_filter(current_url, tags_count, pages_found) %}
 
-  <p class="brigid-side-block-caption">
+  <div class="brigid-side-block-caption">
     {{ translate_theme(current_url.language, 'tags_filter_header') }}
     {{pages_found}}
-  </p>
+  </div>
 
   {% if current_url.selected_tags %}
     <ul>

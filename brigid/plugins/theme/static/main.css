@@ -1323,8 +1323,18 @@ video {
     margin-left: 1.5rem;
   }
   .brigid-side-block-caption{
-    font-size: 1.125rem;
-    line-height: 1.75rem;
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+  .brigid-side-block-caption{
+    font-weight: 500;
+  }
+  .brigid-side-block-caption{
+    --tw-text-opacity: 1;
+    color: rgb(17 24 39 / var(--tw-text-opacity));
+  }
+  .brigid-side-block-caption{
+    text-decoration-thickness: from-font;
   }
   .brigid-tags-filter{
     margin-top: 0.5rem;
@@ -1342,6 +1352,11 @@ video {
   .brigid-tags-filter{
     padding-left: 0.5rem;
     padding-right: 0.5rem;
+  }
+  .brigid-side-block-post-link{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   ul{
     margin-top: 0.5rem;
@@ -3596,6 +3611,10 @@ video {
 
 .block{
   display: block;
+}
+
+.pt-2{
+  padding-top: 0.5rem;
 }
 
 .filter{

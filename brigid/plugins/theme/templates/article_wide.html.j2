@@ -8,11 +8,11 @@
 
     <article class="brigid-article brigid-article-wide">
       <h1>
-        {{page_anchor(page)}}
-        {{languages_links(language, site, article)}}
+        {{page_anchor(page_info.page)}}
+        {{languages_links(info.language, page_info.article)}}
       </h1>
 
-      {{page|render_page}}
+      {{page_info.page|render_page}}
 
     </article>
 

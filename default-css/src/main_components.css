@@ -5,11 +5,15 @@
         @apply hidden lg:block;
 
         .brigid-side-block-caption {
-            @apply ml-6 text-lg my-0;
+            @apply ml-6 my-0 decoration-from-font font-medium text-2xl text-gray-900;
         }
 
         .brigid-tags-filter {
             @apply border border-gray-400 rounded px-2 mt-2;
+        }
+
+        .brigid-side-block-post-link {
+            @apply truncate;
         }
 
         ul {

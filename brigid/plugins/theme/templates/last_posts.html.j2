@@ -1,11 +1,11 @@
 {% from "theme/utils.html.j2" import page_anchor %}
 
 {% macro last_posts(language, number) %}
-  <ul>
+  <ul class="pt-2">
     {% set pages = storage.get_posts(language=language) %}
 
     {% for page in pages[:number] %}
-      <li>{{page_anchor(page)}}</li>
+      <li class="brigid-side-block-post-link">{{page_anchor(page)}}</li>
     {% endfor %}
   </ul>
 {% endmacro %}

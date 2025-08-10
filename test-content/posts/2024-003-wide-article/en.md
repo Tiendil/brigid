@@ -1,7 +1,7 @@
 ---
-title = "Wide artice"
+title = "Wide artice and very-very wide caption so it will appear on two lines"
 tags = ["wide", "example"]
-template = "article_wide.html.j2"
+template = "theme/article_wide.html.j2"
 published_at = "2024-02-16T15:00:00+00:00"
 seo_description = "Examples of wide article rendering."
 seo_image = ""
