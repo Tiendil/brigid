@@ -4,9 +4,8 @@ from html5lib import HTMLParser
 
 from brigid.domain import request_context
 from brigid.domain.urls import UrlsPost, UrlsTags
-from brigid.jinja2_render.entities import MetaInfo, Template, Info, PageInfo, IndexInfo
+from brigid.jinja2_render.entities import IndexInfo, Info, MetaInfo, PageInfo, Template
 from brigid.jinja2_render.templates import render
-from brigid.library.storage import storage
 from brigid.library.tests import make as library_make
 
 

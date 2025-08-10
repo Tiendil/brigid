@@ -7,3 +7,4 @@
 **Changes**:
 
 - gh-120 — Added plugins. Monolithic rendering is partially split into default plugins. The work will continue in the future.
+- gh-120 — Minor theme improvements.
