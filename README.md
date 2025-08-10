@@ -21,7 +21,7 @@ poetry install
 - **Extensive tag support** for navigating and organizing content.
 - **Markdown as a source code** for posts.
 - **Multi-language support** by design.
-- **Themes** — allows using custom CSS, scripts, and HTML templates.
+- **Plugins** — allow using custom CSS, scripts, and HTML templates.
 
 ### Extensive tag support
 
@@ -53,6 +53,10 @@ poetry install
 - Configurable per-language site menu.
 - Auto-detect language by headers and redirect users to the right entry point, e.g. `my-cool-blog.org` -> `my-cool-blog.org/<language>/`
 - Auto-marking links to posts that are not translated yet. For example, if you have a post in German and want to link to your English post that currently lacks a German translation (but might have one later).
+
+### Plugins
+
+For examples check [brigid.plugins](./brigid/plugins) directory.
 
 ### Other features
 
