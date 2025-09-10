@@ -42,9 +42,7 @@ async def use_sentry() -> AsyncGenerator[None, None]:
 
     sentry.initialize(
         dsn=settings.sentry.dsn,
-        enable_tracing=settings.sentry.enable_tracing,
         sample_rate=settings.sentry.sample_rate,
-        traces_sample_rate=settings.sentry.traces_sample_rate,
         environment=settings.environment,
     )
 
