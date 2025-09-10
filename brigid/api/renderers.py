@@ -243,4 +243,4 @@ def render_atom_feed(language: str) -> HTMLResponse:
 
     xml = feed.writeString("utf-8")
 
-    return HTMLResponse(content=xml, media_type=feed.mime_type)
+    return HTMLResponse(content=xml, media_type=feed.content_type)
