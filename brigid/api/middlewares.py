@@ -48,6 +48,11 @@ async def remove_double_slashes(request: fastapi.Request, call_next: Any):
 async def remove_trailing_slash(request: fastapi.Request, call_next: Any):
     path = request.url.path
 
+    # TODO: find a better way to use middlewares with mcp
+    # do not remove trailing slash for /mcp/ paths
+    if path.startswith("/mcp/"):
+        return await call_next(request)
+
     if path != "" and path != "/" and path[-1] == "/":
         return RedirectResponse(path[:-1], status_code=301)
 

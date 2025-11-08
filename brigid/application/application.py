@@ -54,16 +54,13 @@ async def use_sentry() -> AsyncGenerator[None, None]:
     logger.info("sentry_disabled")
 
 
-MCP_BASE_PATH = "/mcp"
-
-
 def create_app() -> fastapi.FastAPI:  # noqa: CCR001
     logging.initialize(use_sentry=settings.sentry.enabled)
 
     logger.info("create_app")
 
     mcp = fastmcp.FastMCP("Tools")  # TODO: configurable name
-    mcp_app = mcp.http_app(path=MCP_BASE_PATH)
+    mcp_app = mcp.http_app(path="/")
 
     @contextlib.asynccontextmanager
     async def lifespan(app: fastapi.FastAPI) -> AsyncGenerator[None, None]:
@@ -98,7 +95,7 @@ def create_app() -> fastapi.FastAPI:  # noqa: CCR001
         allow_headers=[],
     )
 
-    app.mount(MCP_BASE_PATH, mcp_app)
+    app.mount("/mcp", mcp_app)
 
     # print(app.routes)  # TODO: remove
 
