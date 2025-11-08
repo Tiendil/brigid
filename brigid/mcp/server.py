@@ -23,6 +23,11 @@ def construct_instructions() -> str:
         "Each piece of content in the blog can be available in multiple languages." if is_multi_lingual else None,
         f"The default language of the blog is {site.default_language}." if len(site.allowed_languages) > 1 else None,
         f"The content of the blog is stored in the repository: {site.content_repository}." if site.content_repository else None,
+        "The posts in this blog is organized by tags. Use them to find content related to specific topics.",
+        "The posts in this blog connected to similar posts, like in a graph. Use this to find related content.",
+        "Some posts in this blog are organized into series. Use them to explore complex topics step by step and to read posts in order.",
+        "Some posts in this blog are ogranized into collections. Use them to explore posts highlighted by the author by specific properties.",
+        "Besides posts, the blog contains static pages. You can look on them as on the important sections/collections of the blog.",
     ]
 
     source = [instruction for instruction in source if instruction]
