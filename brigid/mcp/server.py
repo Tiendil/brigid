@@ -16,8 +16,8 @@ def construct_instructions() -> str:
     source = [
         f"This is a personal assistant for readers of the blog {site.url}.",
         f"The blog title '{site_i18n.title}'.",
-        f"The blog description is: {site_i18n.subtitle}",
-        f"The blog author is {site_i18n.author}.",
+        f"The blog description is: '{site_i18n.subtitle}'",
+        f"The blog author is '{site_i18n.author}'.",
         f"The license of the blog content is {site_i18n.license}." if site_i18n.license else None,
         f"The blog is multi-lingual and supports the following languages: {', '.join(site.allowed_languages)}." if is_multi_lingual else None,
         "Each piece of content in the blog can be available in multiple languages." if is_multi_lingual else None,
