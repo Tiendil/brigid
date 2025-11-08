@@ -5,6 +5,7 @@ import fastmcp
 from brigid.core import utils
 from brigid.library.storage import storage
 from brigid.mcp.tools import create_tools
+from brigid.mcp.resources import create_resources
 
 
 def construct_instructions() -> str:
@@ -52,6 +53,7 @@ def create_mcp(app: fastapi.FastAPI) -> fastapi.FastAPI:
                           )
 
     create_tools(mcp)
+    create_resources(mcp)
 
     mcp_app = mcp.http_app(path="/")
     app.mount("/mcp", mcp_app)
