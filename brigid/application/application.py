@@ -2,13 +2,13 @@ import contextlib
 from typing import AsyncGenerator
 
 import fastapi
-import fastmcp
 from fastapi.middleware.cors import CORSMiddleware
 
 from brigid.api import http_handlers as api_http_handlers
 from brigid.api import middlewares as api_middlewares
 from brigid.api import static_cache as api_static_cache
 from brigid.api.settings import settings as api_settings
+from brigid.mcp.server import mcp
 from brigid.application.settings import settings
 from brigid.core import logging, sentry
 from brigid.library import discovering
@@ -59,9 +59,6 @@ def create_app() -> fastapi.FastAPI:  # noqa: CCR001
 
     logger.info("create_app")
 
-    mcp = fastmcp.FastMCP("Tools")  # TODO: configurable name
-    mcp_app = mcp.http_app(path="/")
-
     @contextlib.asynccontextmanager
     async def lifespan(app: fastapi.FastAPI) -> AsyncGenerator[None, None]:
         async with contextlib.AsyncExitStack() as stack:
@@ -95,9 +92,8 @@ def create_app() -> fastapi.FastAPI:  # noqa: CCR001
         allow_headers=[],
     )
 
+    mcp_app = mcp.http_app(path="/")
     app.mount("/mcp", mcp_app)
-
-    # print(app.routes)  # TODO: remove
 
     logger.info("app_created")
 
