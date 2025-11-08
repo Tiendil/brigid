@@ -8,7 +8,7 @@ from brigid.api import http_handlers as api_http_handlers
 from brigid.api import middlewares as api_middlewares
 from brigid.api import static_cache as api_static_cache
 from brigid.api.settings import settings as api_settings
-from brigid.mcp.server import mcp
+from brigid.mcp.server import create_mcp
 from brigid.application.settings import settings
 from brigid.core import logging, sentry
 from brigid.library import discovering
@@ -65,10 +65,12 @@ def create_app() -> fastapi.FastAPI:  # noqa: CCR001
             if settings.sentry.enabled:
                 await stack.enter_async_context(use_sentry())
 
-            await app.router.startup()
-
             # TODO: must be skipped in tests?
             discovering.load(directory=library_settings.directory)
+
+            mcp_app = create_mcp(app)
+
+            await app.router.startup()
 
             async with mcp_app.lifespan(app):
                 yield
@@ -91,9 +93,6 @@ def create_app() -> fastapi.FastAPI:  # noqa: CCR001
         allow_methods=[],
         allow_headers=[],
     )
-
-    mcp_app = mcp.http_app(path="/")
-    app.mount("/mcp", mcp_app)
 
     logger.info("app_created")
 

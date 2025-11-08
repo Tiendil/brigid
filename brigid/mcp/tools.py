@@ -1,7 +1,9 @@
 
-from brigid.mcp.server import mcp
+import fastmcp
 
 
-@mcp.tool()
-def ping() -> str:
-    return "pong"
+def create_tools(mcp: fastmcp.FastMCP) -> None:
+
+    @mcp.tool()
+    def ping() -> str:
+        return "pong"
