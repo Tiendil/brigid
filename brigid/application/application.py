@@ -2,6 +2,7 @@ import contextlib
 from typing import AsyncGenerator
 
 import fastapi
+import fastmcp
 from fastapi.middleware.cors import CORSMiddleware
 
 from brigid.api import http_handlers as api_http_handlers
@@ -53,10 +54,16 @@ async def use_sentry() -> AsyncGenerator[None, None]:
     logger.info("sentry_disabled")
 
 
+MCP_BASE_PATH = "/mcp"
+
+
 def create_app() -> fastapi.FastAPI:  # noqa: CCR001
     logging.initialize(use_sentry=settings.sentry.enabled)
 
     logger.info("create_app")
+
+    mcp = fastmcp.FastMCP("Tools")  # TODO: configurable name
+    mcp_app = mcp.http_app(path=MCP_BASE_PATH)
 
     @contextlib.asynccontextmanager
     async def lifespan(app: fastapi.FastAPI) -> AsyncGenerator[None, None]:
@@ -69,7 +76,8 @@ def create_app() -> fastapi.FastAPI:  # noqa: CCR001
             # TODO: must be skipped in tests?
             discovering.load(directory=library_settings.directory)
 
-            yield
+            async with mcp_app.lifespan(app):
+                yield
 
             await app.router.shutdown()
 
@@ -89,6 +97,10 @@ def create_app() -> fastapi.FastAPI:  # noqa: CCR001
         allow_methods=[],
         allow_headers=[],
     )
+
+    app.mount(MCP_BASE_PATH, mcp_app)
+
+    # print(app.routes)  # TODO: remove
 
     logger.info("app_created")
 
