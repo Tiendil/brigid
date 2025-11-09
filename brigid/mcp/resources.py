@@ -1,5 +1,8 @@
 
 import fastmcp
+from pydantic import Field
+
+from typing import Literal, Annotated
 
 from brigid.library.storage import storage
 
@@ -12,33 +15,19 @@ def create_resources(mcp: fastmcp.FastMCP) -> None:
     # TODO: improve
     domain = site.url.replace("https://", "").replace("http://", "")
 
-    prefix = f"blog://{domain}"
-
     # TODO: User Elicitation if the post for the language is not found
     # TODO: unify page getting code with the api renderers?
+    # TODO: should we render markdown in a special format for MCP? To support backlinks, images as resources, etc.?
+    # TODO: should we add an instruction about the markdown format used in the blog?
 
-# from typing import Annotated
-# from pydantic import Field
+    Language = Annotated[Literal[*site.allowed_languages], Field(description="Language code of the content")]
+    Slug = Annotated[str, Field(description="Slug identifier of the blog post")]
 
-# @mcp.tool
-# def process_image(
-#     image_url: Annotated[str, Field(description="URL of the image to process")],
-#     resize: Annotated[bool, Field(description="Whether to resize the image")] = False,
-#     width: Annotated[int, Field(description="Target width in pixels", ge=1, le=2000)] = 800,
-#     format: Annotated[
-#         Literal["jpeg", "png", "webp"],
-#         Field(description="Output image format")
-#     ] = "jpeg"
-# ) -> dict:
-#     """Process an image with optional resizing."""
-#     # Implementation...
-
-    # fallback: none, closest
-    @mcp.resource(uri=prefix + "blog://posts/{language}/{slug}.md{?fallback}",
+    @mcp.resource(uri="blog://posts/{language}/{slug}.md",
                   name="post_markdown",
                   mime_type="text/markdown")
-    def post_markdown(language: str, slug: str, fallback: str | None = None) -> str | None:
-        """
+    def post_markdown(language: Language, slug: Slug) -> str | None:
+        """Markdown source of the blog post with the front-matter.
         """
 
         if language not in site.allowed_languages:
