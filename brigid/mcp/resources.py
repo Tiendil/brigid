@@ -4,14 +4,37 @@ from pydantic import Field
 
 from typing import Literal, Annotated
 
+from brigid.library.entities import Page
 from brigid.library.storage import storage
 from brigid.markdown_render.markdown_render import render_page
+from brigid.mcp.entities import PageInfo
+
+
+def page_info(page: Page) -> PageInfo:
+    article = storage.get_article(id=page.article_id)
+
+    # TODO: similar posts
+    # TODO: series info
+
+    return PageInfo(
+        published_at=page.published_at,
+        language=page.language,
+        slug=article.slug,
+        title=page.title,
+        seo_description=page.seo_description,
+        seo_image=page.seo_image,
+        tags=page.tags,
+        series=page.series,
+        type=article.type,
+        intro=page.intro,
+        has_more=page.has_more,
+    )
 
 
 def create_resources(mcp: fastmcp.FastMCP) -> None:
 
     site = storage.get_site()
-    site_i18n = site.languages[site.default_language]
+    # site_i18n = site.languages[site.default_language]
 
     # TODO: User Elicitation if the post for the language is not found
     # TODO: unify page getting code with the api renderers?
@@ -24,6 +47,23 @@ def create_resources(mcp: fastmcp.FastMCP) -> None:
     Language = Annotated[Literal[*site.allowed_languages], Field(description="Language code of the content")]
     Slug = Annotated[str, Field(description="Slug identifier of the blog post")]
 
+    def get_page(language: str, slug: str) -> Page | None:
+        if language not in site.allowed_languages:
+            # TODO: send notification or error?
+            return None
+
+        if not storage.has_article(slug=slug):
+            # TODO: send notification or error?
+            return None
+
+        article = storage.get_article(slug=slug)
+
+        if language not in article.pages:
+            # TODO: send notification or error?
+            return None
+
+        return storage.get_page(id=article.pages[language])
+
     @mcp.resource(uri="blog://posts/{language}/{slug}.md",
                   name="post_markdown",
                   mime_type="text/markdown")
@@ -34,21 +74,8 @@ def create_resources(mcp: fastmcp.FastMCP) -> None:
         # TODO: front-matter from the file is generally not full — it doesn't contain default values
         #       maybe we should reconstruct it form the actual page info?
 
-        if language not in site.allowed_languages:
-            # TODO: send notification or error?
+        if (page := get_page(language=language, slug=slug)) is None:
             return None
-
-        if not storage.has_article(slug=slug):
-            # TODO: send notification or error?
-            return None
-
-        article = storage.get_article(slug=slug)
-
-        if language not in article.pages:
-            # TODO: send notification or error?
-            return None
-
-        page = storage.get_page(id=article.pages[language])
 
         return page.path.read_text(encoding="utf-8")
 
@@ -59,22 +86,21 @@ def create_resources(mcp: fastmcp.FastMCP) -> None:
         """HTML-rendered content of the blog post.
         """
 
-        if language not in site.allowed_languages:
-            # TODO: send notification or error?
+        if (page := get_page(language=language, slug=slug)) is None:
             return None
-
-        if not storage.has_article(slug=slug):
-            # TODO: send notification or error?
-            return None
-
-        article = storage.get_article(slug=slug)
-
-        if language not in article.pages:
-            # TODO: send notification or error?
-            return None
-
-        page = storage.get_page(id=article.pages[language])
 
         render_context = render_page(page)
 
         return render_context.content
+
+    @mcp.resource(uri="blog://posts/{language}/{slug}/meta.json",
+                  name="post_meta",
+                  mime_type="application/json")
+    def post_meta(language: Language, slug: Slug) -> PageInfo:
+        """JSON metadata of the blog post.
+        """
+
+        if (page := get_page(language=language, slug=slug)) is None:
+            return None
+
+        return page_info(page)
