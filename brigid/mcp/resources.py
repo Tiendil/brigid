@@ -12,9 +12,6 @@ def create_resources(mcp: fastmcp.FastMCP) -> None:
     site = storage.get_site()
     site_i18n = site.languages[site.default_language]
 
-    # TODO: improve
-    domain = site.url.replace("https://", "").replace("http://", "")
-
     # TODO: User Elicitation if the post for the language is not found
     # TODO: unify page getting code with the api renderers?
     # TODO: should we render markdown in a special format for MCP? To support backlinks, images as resources, etc.?
@@ -29,6 +26,9 @@ def create_resources(mcp: fastmcp.FastMCP) -> None:
     def post_markdown(language: Language, slug: Slug) -> str | None:
         """Markdown source of the blog post with the front-matter.
         """
+
+        # TODO: front-matter from the file is generally not full — it doesn't contain default values
+        #       maybe we should reconstruct it form the actual page info?
 
         if language not in site.allowed_languages:
             # TODO: send notification or error?
