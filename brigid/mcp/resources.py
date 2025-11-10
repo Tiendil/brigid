@@ -111,3 +111,10 @@ def create_resources(mcp: fastmcp.FastMCP) -> None:
             return None
 
         return page_info(page)
+
+    @mcp.resource(uri="blog://tags/{language}/meta.json",
+                  name="tags_list",
+                  description="JSON dict of all tags used in the blog with verbose names.",
+                  mime_type="application/json")
+    def tags_list(language: Language) -> dict[str, str]:
+        return site.languages[language].tags_translations
