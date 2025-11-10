@@ -10,6 +10,11 @@ from brigid.domain import request_context as d_request_context
 from brigid.library.storage import storage
 
 
+def is_mcp_request(request: fastapi.Request) -> bool:
+    path = request.url.path
+    return path.startswith("/mcp/") or path == "/mcp"
+
+
 async def process_404(request, _):
     redirects = storage.get_redirects()
 
@@ -46,12 +51,11 @@ async def remove_double_slashes(request: fastapi.Request, call_next: Any):
 
 
 async def remove_trailing_slash(request: fastapi.Request, call_next: Any):
-    path = request.url.path
 
-    # TODO: find a better way to use middlewares with mcp
-    # do not remove trailing slash for /mcp/ paths
-    if path.startswith("/mcp/"):
+    if is_mcp_request(request):
         return await call_next(request)
+
+    path = request.url.path
 
     if path != "" and path != "/" and path[-1] == "/":
         return RedirectResponse(path[:-1], status_code=301)
@@ -60,6 +64,9 @@ async def remove_trailing_slash(request: fastapi.Request, call_next: Any):
 
 
 async def set_content_language(request: fastapi.Request, call_next: Any):
+    if is_mcp_request(request):
+        return await call_next(request)
+
     response = await call_next(request)
 
     if response.status_code != 200:
