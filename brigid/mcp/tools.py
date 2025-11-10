@@ -30,15 +30,7 @@ def create_tools(mcp: fastmcp.FastMCP) -> None:
             "",
             "Recomendations:",
             "",
-            "- Filter posts by tags gradually — add one tag at a time — in response you'll find tag counts for the tags in the filtered posts.",
-            "",
-            "" "Response specification:",
-            "",
-            FilteredPosts.format_specification(),
-            "",
-            "PostInfo specification:",
-            "",
-            PageInfo.format_specification(),
+            "- Filter posts by tags gradually — add one tag at a time — in response you'll find tag counts for the tags in the filtered posts."
         ]
     )
 
@@ -71,6 +63,11 @@ def create_tools(mcp: fastmcp.FastMCP) -> None:
 
     # TODO: description
     get_post_description = "\n".join([
+        "Returns the full content of a blog post identified by its slug in the specified language.",
+        "",
+        "Recommendations:",
+        "",
+        "- Prefer `html` as the render format for the content that will be displayed to the user.",
     ])
 
     @mcp.tool(name="get_post", description=get_post_description)
@@ -93,8 +90,12 @@ def create_tools(mcp: fastmcp.FastMCP) -> None:
 
         return domain.create_post(post, render_format)
 
-    # TODO: description
     get_tags_description = "\n".join([
+        "Returns a list of all tags used in blog posts for the specified language, along with the count of posts associated with each tag.",
+        "",
+        "Recommendations:",
+        "",
+        "- Use this tool when the user requested information about specific topics: get all tags -> choose relevant tags -> get posts with these tags.",
     ])
 
     @mcp.tool(name="get_tags", description=get_tags_description)

@@ -22,6 +22,7 @@ poetry install
 - **Markdown as a source code** for posts.
 - **Multi-language support** by design.
 - **Plugins** — allow using custom CSS, scripts, and HTML templates.
+- **[Experimental] MCP server** — allows LLMs to access your blog content.
 
 ### Extensive tag support
 
