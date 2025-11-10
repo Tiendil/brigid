@@ -1,3 +1,4 @@
+import os
 import fastapi
 import fastmcp
 from fastmcp.server.http import StarletteWithLifespan
@@ -60,6 +61,12 @@ def create_mcp(app: fastapi.FastAPI) -> StarletteWithLifespan:
     site = storage.get_site()
     site_i18n = site.languages[site.default_language]
 
+    # There are issues with continuing session after server restart
+    # For example, OpenAI does not handle it well
+    # TODO: try to rollback to stateful sessions in the future
+    if 'FASTMCP_STATELESS_HTTP' not in os.environ:
+        os.environ['FASTMCP_STATELESS_HTTP'] = '1'
+
     # TODO: website_url, icons (fastmcp 2.14.0+)
     mcp = fastmcp.FastMCP(
         name=site_i18n.title,
@@ -67,10 +74,6 @@ def create_mcp(app: fastapi.FastAPI) -> StarletteWithLifespan:
         version=utils.version(),
         auth=None,
         strict_input_validation=False,  # allow Pydantic to be flexible
-        # There are issues with continuing session after server restart
-        # For example, OpenAI does not handle it well
-        # TODO: try to rollback to stateful sessions in the future
-        stateless_http=True,
     )
 
     create_tools(mcp)
