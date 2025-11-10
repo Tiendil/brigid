@@ -1,6 +1,6 @@
 import asyncio
 import os
-from typing import AsyncGenerator, Generator, Any
+from typing import Any, AsyncGenerator, Generator
 
 import fastapi
 import pytest

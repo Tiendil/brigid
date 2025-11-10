@@ -1,4 +1,5 @@
 import os
+
 import fastapi
 import fastmcp
 from fastmcp.server.http import StarletteWithLifespan
@@ -64,8 +65,8 @@ def create_mcp(app: fastapi.FastAPI) -> StarletteWithLifespan:
     # There are issues with continuing session after server restart
     # For example, OpenAI does not handle it well
     # TODO: try to rollback to stateful sessions in the future
-    if 'FASTMCP_STATELESS_HTTP' not in os.environ:
-        os.environ['FASTMCP_STATELESS_HTTP'] = '1'
+    if "FASTMCP_STATELESS_HTTP" not in os.environ:
+        os.environ["FASTMCP_STATELESS_HTTP"] = "1"
 
     # TODO: website_url, icons (fastmcp 2.14.0+)
     mcp = fastmcp.FastMCP(
