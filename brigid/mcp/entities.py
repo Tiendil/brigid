@@ -30,6 +30,7 @@ class PageInfo(BaseEntity, DocMixin):
     published_at: Annotated[datetime.datetime, Field(description="Publication date and time of the blog post")]
     language: Language
     slug: Slug
+    mcp_resource_uri: Annotated[str, Field(description="MCP resource URI of the blog post")]
     title: Annotated[str, Field(description="Title of the blog post")]
     seo_description: Annotated[str, Field(description="SEO description of the blog post")]
     seo_image: Annotated[str | None, Field(description="SEO image URL of the blog post")]
@@ -41,6 +42,7 @@ class PageInfo(BaseEntity, DocMixin):
 
 
 class FilteredPosts(BaseEntity, DocMixin):
+    total_posts: Annotated[int, Field(description="Total number of posts available after filtering")]
     total_pages: Annotated[int, Field(description="Total number of pages available after filtering")]
     page_number: PageNumber
     posts: Annotated[list[PageInfo], Field(description="List of blog posts")]

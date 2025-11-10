@@ -22,6 +22,7 @@ def create_tools(mcp: fastmcp.FastMCP) -> None:
             "Recomendations:",
             "",
             "- Filter posts by tags gradually — add one tag at a time — in response you'll find tag counts for the tags in the filtered posts.",
+            "",
             "" "Response specification:",
             "",
             FilteredPosts.format_specification(),
@@ -50,6 +51,7 @@ def create_tools(mcp: fastmcp.FastMCP) -> None:
         total_pages = (len(all_posts) + site.posts_per_page - 1) // site.posts_per_page
 
         return FilteredPosts(
+            total_posts=len(all_posts),
             total_pages=total_pages,
             page_number=page_number,
             posts=[domain.page_info(post) for post in posts],

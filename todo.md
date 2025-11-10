@@ -6,3 +6,4 @@
 - [ ] what is audience parameter? It is different in docs of FastMCP and MCP standard
 - [ ] image and files resources?
 - [ ] Completion: https://modelcontextprotocol.io/specification/draft/server/utilities/completion
+- [ ] return number of filtered posts in MCP response

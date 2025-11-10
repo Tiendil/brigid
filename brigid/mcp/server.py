@@ -58,6 +58,10 @@ def create_mcp(app: fastapi.FastAPI) -> fastapi.FastAPI:
         version=utils.version(),
         auth=None,
         strict_input_validation=False,  # allow Pydantic to be flexible
+        # There are issues with continuing session after server restart
+        # For example, OpenAI does not handle it well
+        # TODO: try to rollback to stateful sessions in the future
+        stateless_http=True,
     )
 
     create_tools(mcp)

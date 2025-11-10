@@ -39,3 +39,13 @@ services:
     # ports:
     #   - "6274:6274"
     #   - "6277:6277"
+
+  ngrok:
+    image: ngrok/ngrok:latest
+
+    # network_mode: "host"
+
+    command: http brigid:8000 --log=stdout
+
+    environment:
+      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
