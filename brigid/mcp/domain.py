@@ -1,7 +1,7 @@
 from brigid.library.entities import Page
 from brigid.library.storage import storage
-from brigid.mcp.entities import PostInfo, PostMeta, RenderFormat, Post, TagInfo, Language
 from brigid.markdown_render.markdown_render import render_page
+from brigid.mcp.entities import Language, Post, PostInfo, PostMeta, RenderFormat, TagInfo
 
 
 def create_post_meta(post: Page) -> PostMeta:
@@ -29,11 +29,7 @@ def create_post_info(post: Page, render_format: RenderFormat) -> PostInfo:
             raise ValueError(f"Unsupported render format: {render_format}")
 
     return PostInfo(
-        meta=meta,
-        title=post.title,
-        intro_format=render_format,
-        intro_body=intro_body,
-        has_more=post.has_more
+        meta=meta, title=post.title, intro_format=render_format, intro_body=intro_body, has_more=post.has_more
     )
 
 
@@ -48,18 +44,13 @@ def create_post(post: Page, render_format: RenderFormat) -> PostInfo:
         case _:
             raise ValueError(f"Unsupported render format: {render_format}")
 
-    return Post(
-        meta=meta,
-        title=post.title,
-        body_format=render_format,
-        body=body
-    )
+    return Post(meta=meta, title=post.title, body_format=render_format, body=body)
 
 
 def create_tag_infos(language: Language, tag_count: dict[str, int]) -> list[TagInfo]:
     site = storage.get_site()
 
-    return [TagInfo(tag=tag,
-                    name=site.languages[language].tags_translations[tag],
-                    count=count)
-            for tag, count in tag_count.items()]
+    return [
+        TagInfo(tag=tag, name=site.languages[language].tags_translations[tag], count=count)
+        for tag, count in tag_count.items()
+    ]

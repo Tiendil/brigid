@@ -2,11 +2,19 @@ from collections import Counter
 
 import fastmcp
 
-from brigid.library.entities import Page
 from brigid.library.storage import storage
 from brigid.mcp import domain
-from brigid.mcp.entities import ExcludedTags, FilteredPosts, Language, PageInfo, PageNumber, RequiredTags, RenderFormat, Slug, Post, RenderFormat, TagInfo
-
+from brigid.mcp.entities import (
+    ExcludedTags,
+    FilteredPosts,
+    Language,
+    PageNumber,
+    Post,
+    RenderFormat,
+    RequiredTags,
+    Slug,
+    TagInfo,
+)
 
 # TODO: User Elicitation if the post for the language is not found
 # TODO: unify page getting code with the api renderers?
@@ -15,6 +23,7 @@ from brigid.mcp.entities import ExcludedTags, FilteredPosts, Language, PageInfo,
 # TODO: add mcp url constructors, like with http urls?
 # TODO: maybe we should has on unviersal resource, that returns
 #       all info and representations about the post with meta info?
+
 
 def create_tools(mcp: fastmcp.FastMCP) -> None:
     site = storage.get_site()
@@ -30,7 +39,7 @@ def create_tools(mcp: fastmcp.FastMCP) -> None:
             "",
             "Recomendations:",
             "",
-            "- Filter posts by tags gradually — add one tag at a time — in response you'll find tag counts for the tags in the filtered posts."
+            "- Filter posts by tags gradually — add one tag at a time — in response you'll find tag counts for the tags in the filtered posts.",
         ]
     )
 
@@ -38,7 +47,11 @@ def create_tools(mcp: fastmcp.FastMCP) -> None:
     # TODO: add annotations
     @mcp.tool(name="get_posts", description=get_posts_description)
     def get_posts(
-            language: Language, page_number: PageNumber, required_tags: RequiredTags, excluded_tags: ExcludedTags, render_format: RenderFormat
+        language: Language,
+        page_number: PageNumber,
+        required_tags: RequiredTags,
+        excluded_tags: ExcludedTags,
+        render_format: RenderFormat,
     ) -> FilteredPosts:
         all_posts = storage.get_posts(language=language, require_tags=required_tags, exclude_tags=excluded_tags)
 
@@ -62,13 +75,15 @@ def create_tools(mcp: fastmcp.FastMCP) -> None:
         )
 
     # TODO: description
-    get_post_description = "\n".join([
-        "Returns the full content of a blog post identified by its slug in the specified language.",
-        "",
-        "Recommendations:",
-        "",
-        "- Prefer `html` as the render format for the content that will be displayed to the user.",
-    ])
+    get_post_description = "\n".join(
+        [
+            "Returns the full content of a blog post identified by its slug in the specified language.",
+            "",
+            "Recommendations:",
+            "",
+            "- Prefer `html` as the render format for the content that will be displayed to the user.",
+        ]
+    )
 
     @mcp.tool(name="get_post", description=get_post_description)
     def get_post(language: Language, slug: Slug, render_format: RenderFormat) -> Post | None:
@@ -90,13 +105,15 @@ def create_tools(mcp: fastmcp.FastMCP) -> None:
 
         return domain.create_post(post, render_format)
 
-    get_tags_description = "\n".join([
-        "Returns a list of all tags used in blog posts for the specified language, along with the count of posts associated with each tag.",
-        "",
-        "Recommendations:",
-        "",
-        "- Use this tool when the user requested information about specific topics: get all tags -> choose relevant tags -> get posts with these tags.",
-    ])
+    get_tags_description = "\n".join(
+        [
+            "Returns a list of all tags used in blog posts for the specified language, along with the count of posts associated with each tag.",
+            "",
+            "Recommendations:",
+            "",
+            "- Use this tool when the user requested information about specific topics: get all tags -> choose relevant tags -> get posts with these tags.",
+        ]
+    )
 
     @mcp.tool(name="get_tags", description=get_tags_description)
     def get_tags(language: Language) -> list[TagInfo]:

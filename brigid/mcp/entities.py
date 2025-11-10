@@ -1,6 +1,6 @@
 import datetime
-import enums
-from typing import Annotated, Literal
+import enum
+from typing import Annotated
 
 from pydantic import Field
 
@@ -8,15 +8,16 @@ from brigid.core.entities import BaseEntity
 from brigid.library.entities import ArticleType
 
 
-class RenderFormat(str, enums.StrEnum):
+class RenderFormat(enum.StrEnum):
     markdown = "markdown"
     html = "html"
 
 
 Language = Annotated[str, Field(description="Language code of the content")]
 Slug = Annotated[str, Field(description="Slug identifier of the blog post")]
-RenderFormatType = Annotated[RenderFormat, Field(description="Format of the rendered content",
-                                                 default=RenderFormat.html)]
+RenderFormatType = Annotated[
+    RenderFormat, Field(description="Format of the rendered content", default=RenderFormat.html)
+]
 PageNumber = Annotated[int, Field(description="Page number for pagination, starts with 1", default=1, ge=1)]
 RequiredTags = Annotated[
     set[str], Field(description="Set of required tags for filtering blog posts", default_factory=set)
@@ -25,7 +26,7 @@ ExcludedTags = Annotated[
     set[str], Field(description="Set of excluded tags for filtering blog posts", default_factory=set)
 ]
 PostTitle = Annotated[str, Field(description="Title of the blog post")]
-TagInfos = Annotated[list['TagInfo'], Field(description="List of tags with their counts for filtered posts")]
+TagInfos = Annotated[list["TagInfo"], Field(description="List of tags with their counts for filtered posts")]
 
 
 class DocMixin:
