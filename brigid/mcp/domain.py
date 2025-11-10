@@ -20,7 +20,7 @@ def create_post_meta(post: Page) -> PostMeta:
         tags=create_tag_infos(post.language, {tag: 1 for tag in post.tags}),
         series=post.series,
         type=storage.get_article(id=post.article_id).type,
-        http_url=post_url.url()
+        http_url=post_url.url(),
     )
 
 

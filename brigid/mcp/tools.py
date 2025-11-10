@@ -46,7 +46,7 @@ def create_tools(mcp: fastmcp.FastMCP) -> None:
         page_number: PageNumber,
         required_tags: RequiredTags,
         excluded_tags: ExcludedTags,
-        render_format: RenderFormatType
+        render_format: RenderFormatType,
     ) -> FilteredPosts:
         all_posts = storage.get_posts(language=language, require_tags=required_tags, exclude_tags=excluded_tags)
 
