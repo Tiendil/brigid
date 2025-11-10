@@ -11,6 +11,7 @@ from brigid.mcp.entities import PageInfo, Language, Slug
 from brigid.mcp import utils, domain
 
 
+# TODO: we may want to switch resource for tools, since tools provide data sceme
 def create_resources(mcp: fastmcp.FastMCP) -> None:
 
     site = storage.get_site()

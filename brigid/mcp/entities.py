@@ -8,9 +8,12 @@ from brigid.library.entities import ArticleType
 
 Language = Annotated[str, Field(description="Language code of the content")]
 Slug = Annotated[str, Field(description="Slug identifier of the blog post")]
-PageNumber = Annotated[int, Field(description="Page number for pagination")]
-RequiredTags = Annotated[set[str], Field(description="Set of required tags for filtering blog posts")]
-ExcludedTags = Annotated[set[str], Field(description="Set of excluded tags for filtering blog posts")]
+PageNumber = Annotated[int, Field(description="Page number for pagination, starts with 1",
+                                  default=1, ge=1)]
+RequiredTags = Annotated[set[str], Field(description="Set of required tags for filtering blog posts",
+                                         default_factory=set)]
+ExcludedTags = Annotated[set[str], Field(description="Set of excluded tags for filtering blog posts",
+                                         default_factory=set)]
 
 
 class DocMixin:
@@ -20,6 +23,7 @@ class DocMixin:
         return model_description(cls)
 
 
+# TODO: add resource uri
 class PageInfo(BaseEntity, DocMixin):
     published_at: Annotated[datetime.datetime,
                             Field(description="Publication date and time of the blog post")]
