@@ -1,4 +1,5 @@
 import contextlib
+import os
 from typing import AsyncGenerator
 
 import fastapi
@@ -12,6 +13,7 @@ from brigid.application.settings import settings
 from brigid.core import logging, sentry
 from brigid.library import discovering
 from brigid.library.settings import settings as library_settings
+from brigid.mcp.server import create_mcp
 
 logger = logging.get_module_logger()
 
@@ -64,10 +66,19 @@ def create_app() -> fastapi.FastAPI:  # noqa: CCR001
             if settings.sentry.enabled:
                 await stack.enter_async_context(use_sentry())
 
-            await app.router.startup()
-
             # TODO: must be skipped in tests?
             discovering.load(directory=library_settings.directory)
+
+            mcp_app = create_mcp(app)
+
+            await app.router.startup()
+
+            # There is a strange bug in fastmcp/mcp/anyio with lifespan context
+            # `RuntimeError: Attempted to exit cancel scope in a different task than it was entered in`
+            # so, we turn off MCP server during tests, for now
+            # TODO: try to fix it properly later
+            if not os.environ.get("BRIGID_TESTS_RUNNING"):
+                await stack.enter_async_context(mcp_app.lifespan(app))
 
             yield
 

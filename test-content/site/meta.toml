@@ -1,5 +1,5 @@
 prod_url = "https://example.com"
-local_url = "http://0.0.0.0:8000"
+local_url = "http://0.0.0.0:8000/"
 default_language = 'en'
 allowed_languages = ['en', 'ru']
 posts_per_page = 5

@@ -41,3 +41,17 @@ def discover_submodules(parent_module: str) -> list[types.ModuleType]:
 
 def now() -> datetime.datetime:
     return datetime.datetime.now(tz=datetime.timezone.utc)
+
+
+_version = None
+
+
+def version() -> str:
+    global _version
+
+    if _version is not None:
+        return _version
+
+    _version = importlib.metadata.version("brigid")
+
+    return _version
