@@ -8,6 +8,7 @@ from brigid.library.entities import Page
 from brigid.library.storage import storage
 from brigid.markdown_render.markdown_render import render_page
 from brigid.mcp.entities import PageInfo
+from brigid.mcp import utils
 
 
 def page_info(page: Page) -> PageInfo:
@@ -93,13 +94,19 @@ def create_resources(mcp: fastmcp.FastMCP) -> None:
 
         return render_context.content
 
+    post_meta_description = '\n'.join([
+        "JSON metadata of the blog post.",
+        "",
+        "Return data description:",
+        "",
+        PageInfo.format_specification()
+    ])
+
     @mcp.resource(uri="blog://posts/{language}/{slug}/meta.json",
                   name="post_meta",
+                  description=post_meta_description,
                   mime_type="application/json")
     def post_meta(language: Language, slug: Slug) -> PageInfo:
-        """JSON metadata of the blog post.
-        """
-
         if (page := get_page(language=language, slug=slug)) is None:
             return None
 
