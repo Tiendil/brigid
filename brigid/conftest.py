@@ -1,6 +1,6 @@
 import asyncio
 import os
-from typing import AsyncGenerator, Generator
+from typing import AsyncGenerator, Generator, Any
 
 import fastapi
 import pytest
@@ -32,7 +32,7 @@ def reset_request_context():
 
 
 @pytest_asyncio.fixture(scope="session", autouse=True)
-async def app() -> AsyncGenerator[fastapi.FastAPI, None]:
+async def app(mark_tests_running: Any) -> AsyncGenerator[fastapi.FastAPI, None]:
     async with application.with_app() as app:
         yield app
 
