@@ -1,6 +1,5 @@
 import fastapi
 import fastmcp
-
 from fastmcp.server.http import StarletteWithLifespan
 
 from brigid.core import utils

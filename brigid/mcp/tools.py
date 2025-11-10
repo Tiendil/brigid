@@ -79,8 +79,10 @@ def create_tools(mcp: fastmcp.FastMCP) -> None:  # noqa: CCR001, CFQ001
             "Recommendations:",
             "",
             "- Prefer `html` as the render format when you need working links to other posts or resources.",
-            ("- Prefer `html` as the render format when you need to display the post content "
-             "'as it rendered' directly to the user."),
+            (
+                "- Prefer `html` as the render format when you need to display the post content "
+                "'as it rendered' directly to the user."
+            ),
             "- Prefer `markdown` as the render format when you need 'just this post content'.",
             "- Prefer `markdown` as the render format when you do automatic processing of the post content.",
         ]
@@ -108,13 +110,17 @@ def create_tools(mcp: fastmcp.FastMCP) -> None:  # noqa: CCR001, CFQ001
 
     get_tags_description = "\n".join(
         [
-            ("Returns a list of all tags used in blog posts for the specified language, "
-             "along with the count of posts associated with each tag."),
+            (
+                "Returns a list of all tags used in blog posts for the specified language, "
+                "along with the count of posts associated with each tag."
+            ),
             "",
             "Recommendations:",
             "",
-            ("- Use this tool when the user requested information about specific topics: "
-             "get all tags -> choose relevant tags -> get posts with these tags."),
+            (
+                "- Use this tool when the user requested information about specific topics: "
+                "get all tags -> choose relevant tags -> get posts with these tags."
+            ),
         ]
     )
 
