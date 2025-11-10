@@ -16,14 +16,8 @@ from brigid.library.similarity import get_similar_pages
 from brigid.library.storage import storage
 
 
-def render_index(language: str, raw_tags: str) -> HTMLResponse:  # noqa: CCR001, CFQ001
-    site = storage.get_site()
-
-    if language not in site.allowed_languages:
-        raise errors.PageNotFound()
-
-    request_context.set("language", language)
-
+# TODO: check index page behavior with tags
+def parse_tags(raw_tags: str) -> tuple[int, set[str], set[str]]:  # noqa: CCR001, CFQ001
     required = set()
     excluded = set()
     page_number = 1
@@ -44,6 +38,19 @@ def render_index(language: str, raw_tags: str) -> HTMLResponse:  # noqa: CCR001,
             excluded.add(tag[1:])
         else:
             required.add(tag)
+
+    return page_number, required, excluded
+
+
+def render_index(language: str, raw_tags: str) -> HTMLResponse:  # noqa: CCR001, CFQ001
+    site = storage.get_site()
+
+    if language not in site.allowed_languages:
+        raise errors.PageNotFound()
+
+    request_context.set("language", language)
+
+    page_number, required, excluded = parse_tags(raw_tags)
 
     for tag in chain(required, excluded):
         if tag not in site.languages[language].tags_translations:

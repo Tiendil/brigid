@@ -7,7 +7,7 @@ from typing import Literal, Annotated
 from brigid.library.entities import Page
 from brigid.library.storage import storage
 from brigid.markdown_render.markdown_render import render_page
-from brigid.mcp.entities import PageInfo
+from brigid.mcp.entities import PageInfo, Language, Slug
 from brigid.mcp import utils
 
 
@@ -44,9 +44,6 @@ def create_resources(mcp: fastmcp.FastMCP) -> None:
     # TODO: add mcp url constructors, like with http urls?
     # TODO: maybe we should has on unviersal resource, that returns
     #       all info and representations about the post with meta info?
-
-    Language = Annotated[Literal[*site.allowed_languages], Field(description="Language code of the content")]
-    Slug = Annotated[str, Field(description="Slug identifier of the blog post")]
 
     def get_page(language: str, slug: str) -> Page | None:
         if language not in site.allowed_languages:
