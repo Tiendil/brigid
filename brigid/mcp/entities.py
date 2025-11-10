@@ -42,12 +42,14 @@ class PostMeta(BaseEntity, DocMixin):
 
     published_at: Annotated[datetime.datetime, Field(description="Publication date and time of the blog post")]
     language: Language
+    translated_into: Annotated[set[Language], Field(description="List of languages the blog post is translated into")]
     slug: Slug
     seo_description: Annotated[str, Field(description="SEO description of the blog post")]
     seo_image: Annotated[str | None, Field(description="SEO image URL of the blog post")]
     tags: TagInfos
     series: Annotated[str | None, Field(description="Series identifier if the blog post is part of a series")]
     type: Annotated[ArticleType, Field(description="Type of the article, e.g., post or page")]
+    http_url: Annotated[str, Field(description="HTTP URL of the blog post")]
 
 
 class PostInfo(BaseEntity, DocMixin):

@@ -83,7 +83,7 @@ def create_tools(mcp: fastmcp.FastMCP) -> None:
             "",
             "- Prefer `html` as the render format when you need working links to other posts or resources.",
             "- Prefer `html` as the render format when you need to display the post content 'as it rendered' directly to the user.",
-            "- Prefer `markdown` as the render format when you need 'just this post content'."
+            "- Prefer `markdown` as the render format when you need 'just this post content'.",
             "- Prefer `markdown` as the render format when you do automatic processing of the post content.",
         ]
     )

@@ -1,3 +1,4 @@
+from brigid.domain.urls import UrlsPost
 from brigid.library.entities import Page
 from brigid.library.storage import storage
 from brigid.markdown_render.markdown_render import render_page, render_page_intro
@@ -5,15 +6,21 @@ from brigid.mcp.entities import Language, Post, PostInfo, PostMeta, RenderFormat
 
 
 def create_post_meta(post: Page) -> PostMeta:
+    article = storage.get_article(id=post.article_id)
+
+    post_url = UrlsPost(language=post.language, slug=article.slug)
+
     return PostMeta(
         published_at=post.published_at,
         language=post.language,
-        slug=storage.get_article(id=post.article_id).slug,
+        translated_into=set(article.pages.keys()),
+        slug=article.slug,
         seo_description=post.seo_description,
         seo_image=post.seo_image,
         tags=create_tag_infos(post.language, {tag: 1 for tag in post.tags}),
         series=post.series,
         type=storage.get_article(id=post.article_id).type,
+        http_url=post_url.url()
     )
 
 
