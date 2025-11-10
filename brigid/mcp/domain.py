@@ -1,24 +1,65 @@
 from brigid.library.entities import Page
 from brigid.library.storage import storage
-from brigid.mcp.entities import PageInfo
+from brigid.mcp.entities import PostInfo, PostMeta, RenderFormat, Post, TagInfo, Language
+from brigid.markdown_render.markdown_render import render_page
 
 
-def page_info(page: Page) -> PageInfo:
-    article = storage.get_article(id=page.article_id)
-
-    # TODO: similar posts
-    # TODO: series info
-
-    return PageInfo(
-        published_at=page.published_at,
-        language=page.language,
-        slug=article.slug,
-        title=page.title,
-        seo_description=page.seo_description,
-        seo_image=page.seo_image,
-        tags=page.tags,
-        series=page.series,
-        type=article.type,
-        intro=page.intro,
-        has_more=page.has_more,
+def create_post_meta(post: Page) -> PostMeta:
+    return PostMeta(
+        published_at=post.published_at,
+        language=post.language,
+        slug=storage.get_article(id=post.article_id).slug,
+        seo_description=post.seo_description,
+        seo_image=post.seo_image,
+        tags=create_tag_infos(post.language, {tag: 1 for tag in post.tags}),
+        series=post.series,
+        type=storage.get_article(id=post.article_id).type,
     )
+
+
+def create_post_info(post: Page, render_format: RenderFormat) -> PostInfo:
+    meta = create_post_meta(post)
+
+    match render_format:
+        case RenderFormat.markdown:
+            intro_body = post.intro
+        case RenderFormat.html:
+            intro_body = render_page(post)  # TODO: render only intro
+        case _:
+            raise ValueError(f"Unsupported render format: {render_format}")
+
+    return PostInfo(
+        meta=meta,
+        title=post.title,
+        intro_format=render_format,
+        intro_body=intro_body,
+        has_more=post.has_more
+    )
+
+
+def create_post(post: Page, render_format: RenderFormat) -> PostInfo:
+    meta = create_post_meta(post)
+
+    match render_format:
+        case RenderFormat.markdown:
+            body = post.body
+        case RenderFormat.html:
+            body = render_page(post)
+        case _:
+            raise ValueError(f"Unsupported render format: {render_format}")
+
+    return Post(
+        meta=meta,
+        title=post.title,
+        body_format=render_format,
+        body=body
+    )
+
+
+def create_tag_infos(language: Language, tag_count: dict[str, int]) -> list[TagInfo]:
+    site = storage.get_site()
+
+    return [TagInfo(tag=tag,
+                    name=site.languages[language].tags_translations[tag],
+                    count=count)
+            for tag, count in tag_count.items()]

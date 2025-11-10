@@ -2,10 +2,19 @@ from collections import Counter
 
 import fastmcp
 
+from brigid.library.entities import Page
 from brigid.library.storage import storage
 from brigid.mcp import domain
-from brigid.mcp.entities import ExcludedTags, FilteredPosts, Language, PageInfo, PageNumber, RequiredTags
+from brigid.mcp.entities import ExcludedTags, FilteredPosts, Language, PageInfo, PageNumber, RequiredTags, RenderFormat, Slug, Post, RenderFormat, TagInfo
 
+
+# TODO: User Elicitation if the post for the language is not found
+# TODO: unify page getting code with the api renderers?
+# TODO: should we render markdown in a special format for MCP? To support backlinks, images as resources, etc.?
+# TODO: should we add an instruction about the markdown format used in the blog?
+# TODO: add mcp url constructors, like with http urls?
+# TODO: maybe we should has on unviersal resource, that returns
+#       all info and representations about the post with meta info?
 
 def create_tools(mcp: fastmcp.FastMCP) -> None:
     site = storage.get_site()
@@ -37,7 +46,7 @@ def create_tools(mcp: fastmcp.FastMCP) -> None:
     # TODO: add annotations
     @mcp.tool(name="get_posts", description=get_posts_description)
     def get_posts(
-        language: Language, page_number: PageNumber, required_tags: RequiredTags, excluded_tags: ExcludedTags
+            language: Language, page_number: PageNumber, required_tags: RequiredTags, excluded_tags: ExcludedTags, render_format: RenderFormat
     ) -> FilteredPosts:
         all_posts = storage.get_posts(language=language, require_tags=required_tags, exclude_tags=excluded_tags)
 
@@ -54,8 +63,47 @@ def create_tools(mcp: fastmcp.FastMCP) -> None:
             total_posts=len(all_posts),
             total_pages=total_pages,
             page_number=page_number,
-            posts=[domain.page_info(post) for post in posts],
+            posts=[domain.create_post_info(post, render_format) for post in posts],
             required_tags=required_tags,
             excluded_tags=excluded_tags,
-            tags=dict(tags_count),
+            tags=domain.create_tag_infos(language, tags_count),
         )
+
+    # TODO: description
+    get_post_description = "\n".join([
+    ])
+
+    @mcp.tool(name="get_post", description=get_post_description)
+    def get_post(language: Language, slug: Slug, render_format: RenderFormat) -> Post | None:
+        if language not in site.allowed_languages:
+            # TODO: send notification or error?
+            return None
+
+        if not storage.has_article(slug=slug):
+            # TODO: send notification or error?
+            return None
+
+        article = storage.get_article(slug=slug)
+
+        if language not in article.pages:
+            # TODO: send notification or error?
+            return None
+
+        post = storage.get_page(id=article.pages[language])
+
+        return domain.create_post(post, render_format)
+
+    # TODO: description
+    get_tags_description = "\n".join([
+    ])
+
+    @mcp.tool(name="get_tags", description=get_tags_description)
+    def get_tags(language: Language) -> list[TagInfo]:
+        all_posts = storage.get_posts(language=language, require_tags=(), exclude_tags=())
+
+        tags_count: Counter[str] = Counter()
+
+        for post in all_posts:
+            tags_count.update(post.tags)
+
+        return domain.create_tag_infos(language, tags_count)

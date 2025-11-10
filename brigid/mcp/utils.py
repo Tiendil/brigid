@@ -2,6 +2,7 @@ import pydantic
 import tabulate
 
 
+# TODO: remove?
 # TODO: generate recursive descriptions for nested models
 def model_description(model: type[pydantic.BaseModel]) -> str:
     headers = ["Field", "Description"]
