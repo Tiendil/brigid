@@ -8,6 +8,9 @@ from brigid.library.entities import ArticleType
 
 Language = Annotated[str, Field(description="Language code of the content")]
 Slug = Annotated[str, Field(description="Slug identifier of the blog post")]
+PageNumber = Annotated[int, Field(description="Page number for pagination")]
+RequiredTags = Annotated[set[str], Field(description="Set of required tags for filtering blog posts")]
+ExcludedTags = Annotated[set[str], Field(description="Set of excluded tags for filtering blog posts")]
 
 
 class DocMixin:
@@ -38,3 +41,15 @@ class PageInfo(BaseEntity, DocMixin):
                      Field(description="Introductory content of the blog post")]
     has_more: Annotated[bool,
                         Field(description="Indicates if the blog post has a 'read more' section")]
+
+
+class FilteredPosts(BaseEntity, DocMixin):
+    total_pages: Annotated[int,
+                           Field(description="Total number of pages available after filtering")]
+    page_number: PageNumber
+    posts: Annotated[list[PageInfo],
+                     Field(description="List of blog posts")]
+    required_tags: RequiredTags
+    excluded_tags: ExcludedTags
+    tags: Annotated[dict[str, int],
+                    Field(description="Tag counts of the filtered posts")]

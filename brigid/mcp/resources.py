@@ -8,28 +8,7 @@ from brigid.library.entities import Page
 from brigid.library.storage import storage
 from brigid.markdown_render.markdown_render import render_page
 from brigid.mcp.entities import PageInfo, Language, Slug
-from brigid.mcp import utils
-
-
-def page_info(page: Page) -> PageInfo:
-    article = storage.get_article(id=page.article_id)
-
-    # TODO: similar posts
-    # TODO: series info
-
-    return PageInfo(
-        published_at=page.published_at,
-        language=page.language,
-        slug=article.slug,
-        title=page.title,
-        seo_description=page.seo_description,
-        seo_image=page.seo_image,
-        tags=page.tags,
-        series=page.series,
-        type=article.type,
-        intro=page.intro,
-        has_more=page.has_more,
-    )
+from brigid.mcp import utils, domain
 
 
 def create_resources(mcp: fastmcp.FastMCP) -> None:
@@ -107,7 +86,7 @@ def create_resources(mcp: fastmcp.FastMCP) -> None:
         if (page := get_page(language=language, slug=slug)) is None:
             return None
 
-        return page_info(page)
+        return domain.page_info(page)
 
     @mcp.resource(uri="blog://tags/{language}/meta.json",
                   name="tags_list",
