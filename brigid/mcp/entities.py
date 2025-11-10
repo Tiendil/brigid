@@ -29,15 +29,7 @@ PostTitle = Annotated[str, Field(description="Title of the blog post")]
 TagInfos = Annotated[list["TagInfo"], Field(description="List of tags with their counts for filtered posts")]
 
 
-class DocMixin:
-    @classmethod
-    def format_specification(cls) -> str:
-        from brigid.mcp.utils import model_description
-
-        return model_description(cls)
-
-
-class PostMeta(BaseEntity, DocMixin):
+class PostMeta(BaseEntity):
     """Metadata information about a blog post."""
 
     published_at: Annotated[datetime.datetime, Field(description="Publication date and time of the blog post")]
@@ -52,7 +44,7 @@ class PostMeta(BaseEntity, DocMixin):
     http_url: Annotated[str, Field(description="HTTP URL of the blog post")]
 
 
-class PostInfo(BaseEntity, DocMixin):
+class PostInfo(BaseEntity):
     meta: PostMeta
     title: PostTitle
     intro_format: RenderFormatType
@@ -60,14 +52,14 @@ class PostInfo(BaseEntity, DocMixin):
     has_more: Annotated[bool, Field(description="Indicates if the blog post has a 'read more' section")]
 
 
-class Post(BaseEntity, DocMixin):
+class Post(BaseEntity):
     meta: PostMeta
     title: PostTitle
     body_format: RenderFormatType
     body: Annotated[str, Field(description="Full content of the blog post")]
 
 
-class FilteredPosts(BaseEntity, DocMixin):
+class FilteredPosts(BaseEntity):
     total_posts: Annotated[int, Field(description="Total number of posts available after filtering")]
     total_pages: Annotated[int, Field(description="Total number of pages available after filtering")]
     page_number: PageNumber
@@ -77,7 +69,7 @@ class FilteredPosts(BaseEntity, DocMixin):
     tags: TagInfos
 
 
-class TagInfo(BaseEntity, DocMixin):
+class TagInfo(BaseEntity):
     tag: Annotated[str, Field(description="Tag id")]
     name: Annotated[str, Field(description="Human-readable name of the tag")]
     count: Annotated[int, Field(description="Number of posts associated with the tag")]

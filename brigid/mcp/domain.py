@@ -32,6 +32,7 @@ def create_post_info(post: Page, render_format: RenderFormat) -> PostInfo:
             intro_body = post.intro
         case RenderFormat.html:
             render_context = render_page_intro(post)
+            assert render_context.content
             intro_body = render_context.content
         case _:
             raise ValueError(f"Unsupported render format: {render_format}")
@@ -41,7 +42,7 @@ def create_post_info(post: Page, render_format: RenderFormat) -> PostInfo:
     )
 
 
-def create_post(post: Page, render_format: RenderFormat) -> PostInfo:
+def create_post(post: Page, render_format: RenderFormat) -> Post:
     meta = create_post_meta(post)
 
     match render_format:
@@ -49,6 +50,7 @@ def create_post(post: Page, render_format: RenderFormat) -> PostInfo:
             body = post.body
         case RenderFormat.html:
             render_context = render_page(post)
+            assert render_context.content
             body = render_context.content
         case _:
             raise ValueError(f"Unsupported render format: {render_format}")

@@ -1,6 +1,8 @@
 import fastapi
 import fastmcp
 
+from fastmcp.server.http import StarletteWithLifespan
+
 from brigid.core import utils
 from brigid.library.storage import storage
 from brigid.mcp.tools import create_tools
@@ -32,20 +34,29 @@ def construct_instructions() -> str:
         ),
         "The posts in this blog is organized by tags. Use them to find content related to specific topics.",
         "The posts in this blog connected to similar posts, like in a graph. Use this to find related content.",
-        "Some posts in this blog are organized into series. Use them to explore complex topics step by step and to read posts in order.",
-        "Some posts in this blog are ogranized into collections. Use them to explore posts highlighted by the author by specific properties.",
-        "Besides posts, the blog contains static pages. You can look on them as on the important sections/collections of the blog.",
+        (
+            "Some posts in this blog are organized into series. "
+            "Use them to explore complex topics step by step and to read posts in order."
+        ),
+        (
+            "Some posts in this blog are ogranized into collections. "
+            "Use them to explore posts highlighted by the author by specific properties."
+        ),
+        (
+            "Besides posts, the blog contains static pages. "
+            "You can look on them as on the important sections/collections of the blog."
+        ),
     ]
 
     source = [instruction for instruction in source if instruction]
 
-    return "\n".join(source)
+    return "\n".join(source)  # type: ignore
 
 
 # We create MCP instance dymanically because:
 # - we need site configs that are loaded at runtime
 # - we may need to construct multiple MCPs (per language) in the future
-def create_mcp(app: fastapi.FastAPI) -> fastapi.FastAPI:
+def create_mcp(app: fastapi.FastAPI) -> StarletteWithLifespan:
 
     site = storage.get_site()
     site_i18n = site.languages[site.default_language]

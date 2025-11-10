@@ -1,5 +1,6 @@
 prod_url = "https://example.com"
-local_url = "https://precedentless-heartbreakingly-ma.ngrok-free.dev/"
+local_url = "http://localhost:8000/"
+# local_url = "https://precedentless-heartbreakingly-ma.ngrok-free.dev/"
 default_language = 'en'
 allowed_languages = ['en', 'ru']
 posts_per_page = 5
