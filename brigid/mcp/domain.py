@@ -1,6 +1,6 @@
 from brigid.library.entities import Page
 from brigid.library.storage import storage
-from brigid.markdown_render.markdown_render import render_page
+from brigid.markdown_render.markdown_render import render_page, render_page_intro
 from brigid.mcp.entities import Language, Post, PostInfo, PostMeta, RenderFormat, TagInfo
 
 
@@ -24,7 +24,8 @@ def create_post_info(post: Page, render_format: RenderFormat) -> PostInfo:
         case RenderFormat.markdown:
             intro_body = post.intro
         case RenderFormat.html:
-            intro_body = render_page(post)  # TODO: render only intro
+            render_context = render_page_intro(post)
+            intro_body = render_context.content
         case _:
             raise ValueError(f"Unsupported render format: {render_format}")
 
@@ -40,7 +41,8 @@ def create_post(post: Page, render_format: RenderFormat) -> PostInfo:
         case RenderFormat.markdown:
             body = post.body
         case RenderFormat.html:
-            body = render_page(post)
+            render_context = render_page(post)
+            body = render_context.content
         case _:
             raise ValueError(f"Unsupported render format: {render_format}")
 

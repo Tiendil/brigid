@@ -10,7 +10,7 @@ from brigid.mcp.entities import (
     Language,
     PageNumber,
     Post,
-    RenderFormat,
+    RenderFormatType,
     RequiredTags,
     Slug,
     TagInfo,
@@ -51,7 +51,7 @@ def create_tools(mcp: fastmcp.FastMCP) -> None:
         page_number: PageNumber,
         required_tags: RequiredTags,
         excluded_tags: ExcludedTags,
-        render_format: RenderFormat,
+        render_format: RenderFormatType
     ) -> FilteredPosts:
         all_posts = storage.get_posts(language=language, require_tags=required_tags, exclude_tags=excluded_tags)
 
@@ -81,12 +81,15 @@ def create_tools(mcp: fastmcp.FastMCP) -> None:
             "",
             "Recommendations:",
             "",
-            "- Prefer `html` as the render format for the content that will be displayed to the user.",
+            "- Prefer `html` as the render format when you need working links to other posts or resources.",
+            "- Prefer `html` as the render format when you need to display the post content 'as it rendered' directly to the user.",
+            "- Prefer `markdown` as the render format when you need 'just this post content'."
+            "- Prefer `markdown` as the render format when you do automatic processing of the post content.",
         ]
     )
 
     @mcp.tool(name="get_post", description=get_post_description)
-    def get_post(language: Language, slug: Slug, render_format: RenderFormat) -> Post | None:
+    def get_post(language: Language, slug: Slug, render_format: RenderFormatType) -> Post | None:
         if language not in site.allowed_languages:
             # TODO: send notification or error?
             return None
