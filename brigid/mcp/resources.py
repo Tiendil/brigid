@@ -1,14 +1,10 @@
-
 import fastmcp
-from pydantic import Field
-
-from typing import Literal, Annotated
 
 from brigid.library.entities import Page
 from brigid.library.storage import storage
 from brigid.markdown_render.markdown_render import render_page
-from brigid.mcp.entities import PageInfo, Language, Slug
-from brigid.mcp import utils, domain
+from brigid.mcp import domain
+from brigid.mcp.entities import Language, PageInfo, Slug
 
 
 # TODO: we may want to switch resource for tools, since tools provide data sceme
@@ -42,12 +38,9 @@ def create_resources(mcp: fastmcp.FastMCP) -> None:
 
         return storage.get_page(id=article.pages[language])
 
-    @mcp.resource(uri="blog://posts/{language}/{slug}.md",
-                  name="post_markdown",
-                  mime_type="text/markdown")
+    @mcp.resource(uri="blog://posts/{language}/{slug}.md", name="post_markdown", mime_type="text/markdown")
     def post_markdown(language: Language, slug: Slug) -> str | None:
-        """Markdown source of the blog post with the front-matter.
-        """
+        """Markdown source of the blog post with the front-matter."""
 
         # TODO: front-matter from the file is generally not full — it doesn't contain default values
         #       maybe we should reconstruct it form the actual page info?
@@ -57,12 +50,9 @@ def create_resources(mcp: fastmcp.FastMCP) -> None:
 
         return page.path.read_text(encoding="utf-8")
 
-    @mcp.resource(uri="blog://posts/{language}/{slug}.html",
-                  name="post_html",
-                  mime_type="text/html")
+    @mcp.resource(uri="blog://posts/{language}/{slug}.html", name="post_html", mime_type="text/html")
     def post_html(language: Language, slug: Slug) -> str | None:
-        """HTML-rendered content of the blog post.
-        """
+        """HTML-rendered content of the blog post."""
 
         if (page := get_page(language=language, slug=slug)) is None:
             return None
@@ -71,27 +61,27 @@ def create_resources(mcp: fastmcp.FastMCP) -> None:
 
         return render_context.content
 
-    post_meta_description = '\n'.join([
-        "JSON metadata of the blog post.",
-        "",
-        "Return data description:",
-        "",
-        PageInfo.format_specification()
-    ])
+    post_meta_description = "\n".join(
+        ["JSON metadata of the blog post.", "", "Return data description:", "", PageInfo.format_specification()]
+    )
 
-    @mcp.resource(uri="blog://posts/{language}/{slug}/meta.json",
-                  name="post_meta",
-                  description=post_meta_description,
-                  mime_type="application/json")
+    @mcp.resource(
+        uri="blog://posts/{language}/{slug}/meta.json",
+        name="post_meta",
+        description=post_meta_description,
+        mime_type="application/json",
+    )
     def post_meta(language: Language, slug: Slug) -> PageInfo:
         if (page := get_page(language=language, slug=slug)) is None:
             return None
 
         return domain.page_info(page)
 
-    @mcp.resource(uri="blog://tags/{language}/meta.json",
-                  name="tags_list",
-                  description="JSON dict of all tags used in the blog with verbose names. Keys are tag identifiers, values are translated tag names.",
-                  mime_type="application/json")
+    @mcp.resource(
+        uri="blog://tags/{language}/meta.json",
+        name="tags_list",
+        description="JSON dict of all tags used in the blog with verbose names. Keys are tag identifiers, values are translated tag names.",
+        mime_type="application/json",
+    )
     def tags_list(language: Language) -> dict[str, str]:
         return site.languages[language].tags_translations

@@ -1,6 +1,6 @@
 from brigid.library.entities import Page
-from brigid.mcp.entities import PageInfo
 from brigid.library.storage import storage
+from brigid.mcp.entities import PageInfo
 
 
 def page_info(page: Page) -> PageInfo:
