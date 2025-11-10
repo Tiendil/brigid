@@ -50,7 +50,6 @@ python-frontmatter = "1.1.*"
 feedgenerator = "2.2.*"
 beautifulsoup4 = "4.13.*"
 html5lib = "1.1.*"
-tabulate = "0.9.*"
 
 sentry-sdk = "2.37.*"
 typer = "0.17.*"

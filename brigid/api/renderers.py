@@ -16,7 +16,6 @@ from brigid.library.similarity import get_similar_pages
 from brigid.library.storage import storage
 
 
-# TODO: check index page behavior with tags
 def parse_tags(raw_tags: str) -> tuple[int, set[str], set[str]]:  # noqa: CCR001, CFQ001
     required = set()
     excluded = set()

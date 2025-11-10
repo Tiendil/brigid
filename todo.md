@@ -7,3 +7,6 @@
 - [ ] image and files resources?
 - [ ] Completion: https://modelcontextprotocol.io/specification/draft/server/utilities/completion
 - [ ] return number of filtered posts in MCP response
+- [ ] User Elicitation if the post for the language is not found
+- [ ] unify page getting code with the api renderers?
+- [ ] Annotations for tools

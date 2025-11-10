@@ -16,13 +16,10 @@ from brigid.mcp.entities import (
     TagInfo,
 )
 
-# TODO: User Elicitation if the post for the language is not found
-# TODO: unify page getting code with the api renderers?
+# TODO: unify tools code with the api renderers
 # TODO: should we render markdown in a special format for MCP? To support backlinks, images as resources, etc.?
 # TODO: should we add an instruction about the markdown format used in the blog?
 # TODO: add mcp url constructors, like with http urls?
-# TODO: maybe we should has on unviersal resource, that returns
-#       all info and representations about the post with meta info?
 
 
 def create_tools(mcp: fastmcp.FastMCP) -> None:
@@ -43,8 +40,6 @@ def create_tools(mcp: fastmcp.FastMCP) -> None:
         ]
     )
 
-    # TODO: unify with api.renderes.py:render_index
-    # TODO: add annotations
     @mcp.tool(name="get_posts", description=get_posts_description)
     def get_posts(
         language: Language,
@@ -74,7 +69,6 @@ def create_tools(mcp: fastmcp.FastMCP) -> None:
             tags=domain.create_tag_infos(language, tags_count),
         )
 
-    # TODO: description
     get_post_description = "\n".join(
         [
             "Returns the full content of a blog post identified by its slug in the specified language.",
