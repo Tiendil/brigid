@@ -1,4 +1,5 @@
 import os
+import warnings
 
 import fastapi
 import fastmcp
@@ -62,18 +63,22 @@ def create_mcp(app: fastapi.FastAPI) -> StarletteWithLifespan:
     site = storage.get_site()
     site_i18n = site.languages[site.default_language]
 
-    # There are issues with continuing session after server restart
-    # For example, OpenAI does not handle it well
-    # TODO: try to rollback to stateful sessions in the future
-    if "FASTMCP_STATELESS_HTTP" not in os.environ:
-        os.environ["FASTMCP_STATELESS_HTTP"] = "1"
-
     # TODO: website_url, icons (fastmcp 2.14.0+)
+
+    # hide warning about stateless_http
+    # details: https://github.com/jlowin/fastmcp/issues/996#issuecomment-3262162607
+    warnings.filterwarnings(
+        "ignore",
+        category=DeprecationWarning,
+        module=r"fastmcp\.server\.server",
+        lineno=293)
+
     mcp = fastmcp.FastMCP(
         name=site_i18n.title,
         instructions=construct_instructions(),
         version=utils.version(),
         auth=None,
+        stateless_http=True,
         strict_input_validation=False,  # allow Pydantic to be flexible
     )
 
