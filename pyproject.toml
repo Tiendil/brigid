@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "brigid"
-version = "0.15.0"
+version = "0.15.1"
 description = "Static site generator."
 readme = "README.md"
 repository = "https://github.com/Tiendil/brigid"
@@ -141,4 +141,4 @@ packages = ["brigid"]
 
 [project]
 name = "brigid"
-version = "0.15.0"
+version = "0.15.1"
