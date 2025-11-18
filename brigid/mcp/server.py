@@ -1,4 +1,3 @@
-import os
 import warnings
 
 import fastapi
@@ -67,11 +66,7 @@ def create_mcp(app: fastapi.FastAPI) -> StarletteWithLifespan:
 
     # hide warning about stateless_http
     # details: https://github.com/jlowin/fastmcp/issues/996#issuecomment-3262162607
-    warnings.filterwarnings(
-        "ignore",
-        category=DeprecationWarning,
-        module=r"fastmcp\.server\.server",
-        lineno=293)
+    warnings.filterwarnings("ignore", category=DeprecationWarning, module=r"fastmcp\.server\.server", lineno=293)
 
     mcp = fastmcp.FastMCP(
         name=site_i18n.title,
