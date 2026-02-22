@@ -54,7 +54,7 @@
       "author": [{
           "@type": "Person",
           "name": "{{meta_info.author}}"
-          {% if has_author_page(language) %}
+          {% if has_author_page(current_url.language) %}
           , "url": "{{current_url.to_author().url()}}"
           {% endif %}
       }]
@@ -78,8 +78,10 @@
     {% endif %}
       "author": [{
           "@type": "Person",
-          "name": "{{meta_info.author}}",
-          "url": "{{current_url.to_author().url()}}"
+          "name": "{{meta_info.author}}"
+          {% if has_author_page(current_url.language) %}
+          , "url": "{{current_url.to_author().url()}}"
+          {% endif %}
         }]
     }
     </script>

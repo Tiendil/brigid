@@ -101,7 +101,7 @@ class UrlsAuthor(UrlsBase):
     __slots__ = ()
 
     def url(self) -> str:
-        return normalize_url(f"{_base_url()}/{self.language}/about")
+        return normalize_url(f"{_base_url()}/{self.language}/posts/about")
 
 
 class UrlsFeedsAtom(UrlsBase):
