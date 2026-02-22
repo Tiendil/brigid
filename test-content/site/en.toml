@@ -2,6 +2,10 @@ title = "Test/Example site"
 subtitle = "Site to test theme, css, layout, rendering rules, etc."
 author = "Aliaksei Yaletski (Tiendil)"
 
+footer_extra = [
+  "<a href='https://example.com'>Example extra link</a>",
+]
+
 [[menu]]
   type = "blog"
   name = "Blog"

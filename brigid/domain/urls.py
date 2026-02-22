@@ -96,11 +96,12 @@ class UrlsRoot(UrlsBase):
         return normalize_url(f"{_base_url()}/{self.language}")
 
 
+# TODO: this is a temporary solution, we should explicitly define urls for authors
 class UrlsAuthor(UrlsBase):
     __slots__ = ()
 
     def url(self) -> str:
-        return normalize_url(f"{_base_url()}/{self.language}/about")
+        return normalize_url(f"{_base_url()}/{self.language}/posts/about")
 
 
 class UrlsFeedsAtom(UrlsBase):

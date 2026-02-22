@@ -43,19 +43,21 @@
     {
       "@context": "https://schema.org",
       "@type": "BlogPosting",
-    "headline": "{{meta_info.title}}",
-    {% if meta_info.seo_image_url %}
+      "headline": "{{meta_info.title}}",
+      {% if meta_info.seo_image_url %}
       "image": [
         "{{meta_info.seo_image_url}}"
-      ],
-    {% endif %}
+        ],
+      {% endif %}
       "datePublished": "{{meta_info.published_at.isoformat()}}",
-    {# TODO: add dateModified #}
+      {# TODO: add dateModified #}
       "author": [{
           "@type": "Person",
-          "name": "{{meta_info.author}}",
-          "url": "{{current_url.to_author().url()}}"
-        }]
+          "name": "{{meta_info.author}}"
+          {% if has_author_page(current_url.language) %}
+          , "url": "{{current_url.to_author().url()}}"
+          {% endif %}
+      }]
     }
     </script>
   {% endmacro %}
@@ -76,8 +78,10 @@
     {% endif %}
       "author": [{
           "@type": "Person",
-          "name": "{{meta_info.author}}",
-          "url": "{{current_url.to_author().url()}}"
+          "name": "{{meta_info.author}}"
+          {% if has_author_page(current_url.language) %}
+          , "url": "{{current_url.to_author().url()}}"
+          {% endif %}
         }]
     }
     </script>
