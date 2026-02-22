@@ -68,3 +68,21 @@ def page_series_info(page: Page) -> PageSeriesInfo:
 @jinjaglobal
 def page_title(page: Page, short: bool = False) -> str:
     return l_utils.page_title(page=page, short=short)
+
+
+@jinjaglobal
+def has_article(language: str, slug: str) -> bool:
+    from brigid.library.storage import storage
+
+    if not storage.has_article(slug=slug):
+        return False
+
+    article = storage.get_article(slug=slug)
+
+    return language in article.pages
+
+
+# TODO: this is a temporary solution, we should explicitly define urls for authors
+@jinjaglobal
+def has_author_page(language: str) -> bool:
+    return has_article(language=language, slug="about")

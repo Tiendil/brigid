@@ -113,6 +113,8 @@ class SiteLanguage(BaseEntity):
 
     menu: list[MenuItem] = pydantic.Field(default_factory=list)
 
+    footer_extra: list[str] = pydantic.Field(default_factory=list)
+
 
 class Site(BaseEntity):
     prod_url: pydantic.HttpUrl
