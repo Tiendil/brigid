@@ -4,6 +4,7 @@ import fastapi
 
 from brigid.api.default_translations import translations
 from brigid.domain.text import capitalize_first
+from brigid.domain.types import UrlPath
 
 
 def parse_accept_language(accept_language):
@@ -52,7 +53,7 @@ def choose_language(request: fastapi.Request) -> str:
     from brigid.domain.urls import strip_base_path
     from brigid.library.storage import storage
 
-    path = strip_base_path(request.url.path)
+    path = strip_base_path(UrlPath(request.url.path))
 
     for language in storage.get_site().allowed_languages:
         if path.startswith(f"{language}/") or path == language:

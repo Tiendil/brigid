@@ -4,6 +4,7 @@ from unittest import mock
 
 import pytest
 
+from brigid.domain.types import UrlPath
 from brigid.domain.urls import (
     UrlsAuthor,
     UrlsBase,
@@ -66,7 +67,7 @@ class TestStripBasePath:
             ("/long/complex/prefix/en", "/long/complex/prefix", "en"),
         ],
     )
-    def test_strip_base_path(self, path: str, prefix: str, expected: str) -> None:
+    def test_strip_base_path(self, path: UrlPath, prefix: UrlPath, expected: UrlPath) -> None:
         with mock.patch("brigid.domain.urls._base_path_prefix", return_value=prefix):
             assert strip_base_path(path) == expected
 
@@ -85,7 +86,7 @@ class TestAddBasePath:
             ("/en", "/long/complex/prefix", "/long/complex/prefix/en"),
         ],
     )
-    def test_add_base_path(self, path: str, prefix: str, expected: str) -> None:
+    def test_add_base_path(self, path: UrlPath, prefix: UrlPath, expected: UrlPath) -> None:
         with mock.patch("brigid.domain.urls._base_path_prefix", return_value=prefix):
             assert add_base_path(path) == expected
 
@@ -560,7 +561,7 @@ class TestUrlsTags(_TestUrlsBase):
 class TestUrlsStatic:
 
     def test_path(self) -> None:
-        assert UrlsStatic(url_path="favicon.ico").path() == "favicon.ico"
+        assert UrlsStatic(url_path=UrlPath("favicon.ico")).path() == "favicon.ico"
 
     @pytest.mark.parametrize(
         "base,url",
@@ -572,7 +573,7 @@ class TestUrlsStatic:
     )
     def test_favicon__prefix_variants(self, base: str, url: str) -> None:
         with mock.patch("brigid.domain.urls._base_url", return_value=base):
-            assert UrlsStatic(url_path="favicon.ico").url() == url
+            assert UrlsStatic(url_path=UrlPath("favicon.ico")).url() == url
 
 
 class TestUrlsMCP:
@@ -588,7 +589,7 @@ class TestUrlsMCP:
             ("/long/complex/prefix", "/long/complex/prefix/mcp"),
         ],
     )
-    def test_mount_path(self, set_base_url, prefix: str, path: str) -> None:
+    def test_mount_path(self, set_base_url, prefix: str, path: UrlPath) -> None:
         base_url = f"https://example.com{prefix}" if prefix else "https://example.com"
         set_base_url(base_url)
         assert UrlsMCP().mount_path() == path

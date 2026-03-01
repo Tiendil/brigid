@@ -2,6 +2,7 @@ import pathlib
 import shutil
 
 from brigid.core import logging
+from brigid.domain.types import UrlPath
 
 logger = logging.get_module_logger()
 
@@ -15,7 +16,7 @@ class BaseCache:
     def clear(self) -> None:
         raise NotImplementedError("clear")
 
-    def set(self, cache_path: str, original_path) -> None:
+    def set(self, cache_path: UrlPath, original_path) -> None:
         raise NotImplementedError("set")
 
 
@@ -28,7 +29,7 @@ class DummyCache(BaseCache):
     def clear(self) -> None:
         pass
 
-    def set(self, cache_path: str, original_path) -> None:
+    def set(self, cache_path: UrlPath, original_path) -> None:
         pass
 
 
@@ -52,10 +53,10 @@ class FileCache(BaseCache):
             else:
                 entry.unlink()
 
-    def set(self, raw_cache_path: str, original_path: str) -> None:
+    def set(self, raw_cache_path: UrlPath, original_path: str) -> None:
 
         if raw_cache_path.startswith("/"):
-            raw_cache_path = raw_cache_path[1:]
+            raw_cache_path = UrlPath(raw_cache_path[1:])
 
         cache_path = self.directory / raw_cache_path
 

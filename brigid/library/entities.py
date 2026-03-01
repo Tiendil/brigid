@@ -12,6 +12,7 @@ import pydantic
 from brigid.core.entities import BaseEntity
 from brigid.domain import urls
 from brigid.domain.entities import Environment
+from brigid.domain.types import UrlPath
 
 MORE_RE = re.compile(r"<!--\s*more\s*-->", re.IGNORECASE)
 
@@ -153,17 +154,17 @@ class Site(BaseEntity):
         raise NotImplementedError(f"Unknown environment: {settings.environment}")
 
     @cached_property
-    def url_path_prefix(self) -> str:
+    def url_path_prefix(self) -> UrlPath:
         parsed_url = urlparse(self.url)
         path = posixpath.normpath(parsed_url.path)
 
         if path in ("", ".", "/"):
-            return ""
+            return UrlPath("")
 
         if not path.startswith("/"):
             path = "/" + path
 
-        return path.rstrip("/")
+        return UrlPath(path.rstrip("/"))
 
 
 class Article(BaseEntity):

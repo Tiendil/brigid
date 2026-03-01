@@ -7,12 +7,13 @@ from sentry_sdk import capture_exception
 from brigid.api import renderers
 from brigid.api.utils import choose_language
 from brigid.domain import request_context as d_request_context
+from brigid.domain.types import UrlPath
 from brigid.domain.urls import add_base_path, mcp_url, strip_base_path
 from brigid.library.storage import storage
 
 
 def is_mcp_request(request: fastapi.Request) -> bool:
-    path = request.url.path
+    path = UrlPath(request.url.path)
     mount_path = mcp_url().mount_path()
     return path == mount_path or path.startswith(f"{mount_path}/")
 
@@ -20,9 +21,9 @@ def is_mcp_request(request: fastapi.Request) -> bool:
 async def permanent_redirects(request: fastapi.Request, call_next: Any):
     redirects = storage.get_redirects()
 
-    original_path = strip_base_path(request.url.path)
+    original_path = strip_base_path(UrlPath(request.url.path))
 
-    original_path = f"/{original_path.rstrip('/')}"
+    original_path = UrlPath(f"/{original_path.rstrip('/')}")
 
     if original_path in redirects.permanent:
         target = redirects.permanent[original_path]
@@ -31,7 +32,7 @@ async def permanent_redirects(request: fastapi.Request, call_next: Any):
             return RedirectResponse(target, status_code=301)
 
         if target.startswith("/"):
-            return RedirectResponse(add_base_path(target), status_code=301)
+            return RedirectResponse(add_base_path(UrlPath(target)), status_code=301)
 
         raise ValueError(f"Redirect target must be absolute URL or root-relative path: {target}")
 
@@ -47,13 +48,13 @@ async def process_404(request, _):  # noqa: CCR001
 
 
 async def remove_double_slashes(request: fastapi.Request, call_next: Any):
-    path = request.url.path
+    path = UrlPath(request.url.path)
 
     if "//" not in path:
         return await call_next(request)
 
     while "//" in path:
-        path = path.replace("//", "/")
+        path = UrlPath(path.replace("//", "/"))
 
     return RedirectResponse(path, status_code=301)
 
@@ -63,10 +64,10 @@ async def remove_trailing_slash(request: fastapi.Request, call_next: Any):
     if is_mcp_request(request):
         return await call_next(request)
 
-    path = request.url.path
+    path = UrlPath(request.url.path)
 
     if path != "" and path != "/" and path[-1] == "/":
-        return RedirectResponse(path[:-1], status_code=301)
+        return RedirectResponse(UrlPath(path[:-1]), status_code=301)
 
     return await call_next(request)
 
@@ -83,7 +84,7 @@ async def set_content_language(request: fastapi.Request, call_next: Any):
     if "content-language" in response.headers:
         return response
 
-    path = strip_base_path(request.url.path)
+    path = strip_base_path(UrlPath(request.url.path))
 
     for language in storage.get_site().allowed_languages:
         if path.startswith(f"{language}/") or path == language:

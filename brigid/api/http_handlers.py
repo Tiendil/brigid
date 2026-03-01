@@ -6,6 +6,7 @@ from brigid.api.sitemaps import build_sitemap_xml
 from brigid.api.static_cache import cache
 from brigid.api.utils import choose_language
 from brigid.core import errors, logging
+from brigid.domain.types import UrlPath
 from brigid.domain.urls import root_url
 from brigid.library.storage import storage
 from brigid.plugins.utils import get_plugin
@@ -29,7 +30,7 @@ async def favicon() -> FileResponse | HTMLResponse:
         return HTMLResponse(content="")
 
     path = site.path.parent / site.favicon
-    cache().set("/favicon.ico", path)
+    cache().set(UrlPath("/favicon.ico"), path)
 
     return FileResponse(path, media_type="image/x-icon")
 
@@ -52,7 +53,7 @@ async def plugin_static(request: fastapi.Request, plugin_slug: str, filename: st
     if file_info is None:
         raise errors.FileNotFound()
 
-    cache().set(request.url.path, file_info.sys_path)
+    cache().set(UrlPath(request.url.path), file_info.sys_path)
 
     return FileResponse(file_info.sys_path, media_type=file_info.media_type)
 
@@ -64,7 +65,7 @@ async def static_file(request: fastapi.Request, article_slug: str, filename: str
     # TODO: could it be a security breach?
     path = article.path.parent / filename
 
-    cache().set(request.url.path, path)
+    cache().set(UrlPath(request.url.path), path)
 
     # TODO: set media types according to file extension
     return FileResponse(path)
