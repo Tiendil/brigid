@@ -8,15 +8,15 @@ ARG USER=brigid
 
 RUN groupadd --gid $GID $USER && useradd --create-home --uid $UID --gid $USER --shell /bin/bash $USER
 
-USER $USER
-
 WORKDIR /repository
 
 # copied code will be replaced by mounted volume in docker-compose
 # but we need to copy it to install cli utils from pyproject.toml
-COPY ./ ./
+COPY --chown=$USER:$USER ./ ./
 
-RUN poetry install --no-interaction --no-ansi
+USER $USER
+
+RUN poetry install --with dev --no-interaction --no-ansi
 
 USER $USER
 CMD []

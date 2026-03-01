@@ -129,7 +129,7 @@ class TestUrlsAuthor(_TestUrlsBase):
         return UrlsAuthor(language=self.base_language)
 
     def test_url_method_redefined(self, url: UrlsBase) -> None:
-        assert url.url() == f"{base_url}/{self.base_language}/about"
+        assert url.url() == f"{base_url}/{self.base_language}/posts/about"
 
 
 class TestUrlsFeedsAtom(_TestUrlsBase):

@@ -338,7 +338,7 @@ goto_on_failure = "fix_runtime_help"
 
 set -e
 
-docker run --rm brigid:check-runnable-in-prod brigid --help
+./bin/utils.sh poetry run brigid --help
 ```
 
 ## Fix runtime checks: help
@@ -370,7 +370,7 @@ goto_on_failure = "fix_runtime_print_configs"
 
 set -e
 
-docker run --rm brigid:check-runnable-in-prod brigid print-configs
+./bin/utils.sh poetry run brigid print-configs
 ```
 
 ## Fix runtime checks: print configs

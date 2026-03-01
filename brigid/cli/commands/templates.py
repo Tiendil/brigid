@@ -60,7 +60,7 @@ async def run_copy(destination: pathlib.Path) -> None:
 def copy(destination: pathlib.Path) -> None:
     """Copy all Jinja2 templates to the specified destination directory.
 
-    May be helpfull:
+    May be helpful:
 
     - for starting a new theme
     - for collecting all html code for tailwind to generate an optimal CSS file

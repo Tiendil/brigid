@@ -34,7 +34,7 @@ def create_tools(mcp: fastmcp.FastMCP) -> None:  # noqa: CCR001, CFQ001
             "- required_tags: A set of tags that the blog posts must have.",
             "- excluded_tags: A set of tags that the blog posts must not have.",
             "",
-            "Recomendations:",
+            "Recommendations:",
             "",
             (
                 "- Filter posts by tags gradually — add one tag at a time — "

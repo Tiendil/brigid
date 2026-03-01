@@ -54,7 +54,7 @@ def construct_instructions() -> str:
     return "\n".join(source)  # type: ignore
 
 
-# We create MCP instance dymanically because:
+# We create MCP instance dynamically because:
 # - we need site configs that are loaded at runtime
 # - we may need to construct multiple MCPs (per language) in the future
 def create_mcp(app: fastapi.FastAPI) -> StarletteWithLifespan:
