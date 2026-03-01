@@ -1,9 +1,11 @@
 import datetime
 import enum
 import pathlib
+import posixpath
 import re
 from functools import cached_property
 from typing import Literal
+from urllib.parse import urlparse
 
 import pydantic
 
@@ -149,6 +151,19 @@ class Site(BaseEntity):
             return str(self.local_url).rstrip("/")
 
         raise NotImplementedError(f"Unknown environment: {settings.environment}")
+
+    @cached_property
+    def url_path_prefix(self) -> str:
+        parsed_url = urlparse(self.url)
+        path = posixpath.normpath(parsed_url.path)
+
+        if path in ("", ".", "/"):
+            return ""
+
+        if not path.startswith("/"):
+            path = "/" + path
+
+        return path.rstrip("/")
 
 
 class Article(BaseEntity):

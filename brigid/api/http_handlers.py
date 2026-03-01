@@ -6,7 +6,7 @@ from brigid.api.sitemaps import build_sitemap_xml
 from brigid.api.static_cache import cache
 from brigid.api.utils import choose_language
 from brigid.core import errors, logging
-from brigid.domain.urls import UrlsRoot
+from brigid.domain.urls import root_url
 from brigid.library.storage import storage
 from brigid.plugins.utils import get_plugin
 
@@ -85,19 +85,20 @@ async def feed_atom(language: str) -> HTMLResponse:
 
 @router.get("/robots.txt")
 async def robots() -> PlainTextResponse:
-    # language is not important here
-    root_url = UrlsRoot(language="en")
+    site = storage.get_site()
+    root = root_url(language=site.default_language)
 
     lines = [
         "User-agent: *",
-        f"Sitemap: {root_url.to_site_map_full().url()}",
+        f"Sitemap: {root.to_site_map_full().url()}",
     ]
 
-    site = storage.get_site()
+    tags_url = root.to_filter()
 
     for language in sorted(site.allowed_languages):
         # trailing slash is important to treat the path as a prefix
-        lines.append(f"Disallow: /{language}/tags/")
+        tags_prefix_path = tags_url.to_language(language).robots_url()
+        lines.append(f"Disallow: {tags_prefix_path}")
 
     content = "\n".join(lines)
 
@@ -119,7 +120,7 @@ async def test_error() -> HTMLResponse:
 async def root(request: fastapi.Request) -> RedirectResponse:
     language = choose_language(request)
     # TODO: show info to the user that language was chosen automatically
-    return RedirectResponse(UrlsRoot(language=language).url(), status_code=302)
+    return RedirectResponse(root_url(language=language).url(), status_code=302)
 
 
 @router.get("/{language}")
@@ -129,7 +130,7 @@ async def blog_index(language: str) -> HTMLResponse:
 
 @router.get("/{language}/tags")
 async def tags_index_zero(language: str) -> RedirectResponse:
-    return RedirectResponse(UrlsRoot(language=language).url(), status_code=301)
+    return RedirectResponse(root_url(language=language).url(), status_code=301)
 
 
 @router.get("/{language}/tags/{tags:path}")

@@ -5,32 +5,40 @@ from fastapi.responses import RedirectResponse
 from sentry_sdk import capture_exception
 
 from brigid.api import renderers
-from brigid.api.utils import choose_language
+from brigid.api.utils import add_base_path, choose_language
 from brigid.domain import request_context as d_request_context
+from brigid.domain.urls import mcp_url, strip_base_path
 from brigid.library.storage import storage
 
 
 def is_mcp_request(request: fastapi.Request) -> bool:
     path = request.url.path
-    return path.startswith("/mcp/") or path == "/mcp"
+    mount_path = mcp_url().mount_path()
+    return path == mount_path or path.startswith(f"{mount_path}/")
 
 
-async def process_404(request, _):
+async def permanent_redirects(request: fastapi.Request, call_next: Any):
     redirects = storage.get_redirects()
 
-    original_path = request.url.path
+    original_path = strip_base_path(request.url.path)
 
-    # normalize path
-
-    if not original_path.startswith("/"):
-        original_path = "/" + original_path
-
-    if original_path[-1] == "/":
-        original_path = original_path[:-1]
+    original_path = f"/{original_path.rstrip('/')}"
 
     if original_path in redirects.permanent:
-        return RedirectResponse(redirects.permanent[original_path], status_code=301)
+        target = redirects.permanent[original_path]
 
+        if "://" in target:
+            return RedirectResponse(target, status_code=301)
+
+        if target.startswith("/"):
+            return RedirectResponse(add_base_path(target), status_code=301)
+
+        raise ValueError(f"Redirect target must be absolute URL or root-relative path: {target}")
+
+    return await call_next(request)
+
+
+async def process_404(request, _):  # noqa: CCR001
     language = choose_language(request)
 
     with d_request_context.init():
@@ -75,10 +83,10 @@ async def set_content_language(request: fastapi.Request, call_next: Any):
     if "content-language" in response.headers:
         return response
 
-    path = request.url.path
+    path = strip_base_path(request.url.path)
 
     for language in storage.get_site().allowed_languages:
-        if path.startswith(f"/{language}/") or path == f"/{language}":
+        if path.startswith(f"{language}/") or path == language:
             response.headers["content-language"] = language
             return response
 

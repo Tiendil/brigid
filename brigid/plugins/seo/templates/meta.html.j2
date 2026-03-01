@@ -2,7 +2,7 @@
 {% macro general_fields(meta_info, current_url) %}
   <meta charset="UTF-8">
 
-  <link rel="icon" href="/favicon.ico">
+  <link rel="icon" href="{{current_url.to_favicon().url()}}">
 
   <link rel="canonical" href="{{current_url.url()}}">
   <link rel="alternate"
@@ -73,7 +73,7 @@
     "headline": "{{meta_info.title}}",
     {% if meta_info.seo_image_url %}
       "image": [
-        "./favicon.ico"
+        "{{current_url.to_favicon().url()}}"
       ],
     {% endif %}
       "author": [{
@@ -132,7 +132,7 @@
 
   <meta property="article:author" content="{{meta_info.author}}">
 
-  <meta property="og:image" content="./favicon.ico">
+  <meta property="og:image" content="{{current_url.to_favicon().url()}}">
 
   <meta property="og:url" content="{{current_url.url()}}">
 

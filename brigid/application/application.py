@@ -13,6 +13,7 @@ from brigid.application.settings import settings
 from brigid.core import logging, sentry
 from brigid.library import discovering
 from brigid.library.settings import settings as library_settings
+from brigid.library.storage import storage
 from brigid.mcp.server import create_mcp
 
 logger = logging.get_module_logger()
@@ -21,25 +22,25 @@ logger = logging.get_module_logger()
 def initialize_api(app: fastapi.FastAPI) -> None:
     logger.info("initialize_api")
 
-    app.include_router(api_http_handlers.router)
+    prefix = storage.get_site().url_path_prefix
+    app.include_router(api_http_handlers.router, prefix=prefix)
 
     app.middleware("http")(api_middlewares.request_context)
     app.middleware("http")(api_middlewares.remove_double_slashes)
     app.middleware("http")(api_middlewares.remove_trailing_slash)
+    app.middleware("http")(api_middlewares.permanent_redirects)
     app.middleware("http")(api_middlewares.set_content_language)
 
     app.exception_handler(404)(api_middlewares.process_404)
     app.exception_handler(Exception)(api_middlewares.process_expected_error)
 
-    if api_settings.cache_directory:
-        cache = api_static_cache.FileCache(directory=api_settings.cache_directory)
-        api_static_cache.set_cache(cache)
-
     logger.info("api_initialized")
 
 
-@contextlib.asynccontextmanager
-async def use_sentry() -> AsyncGenerator[None, None]:
+def initialize_sentry() -> None:
+    if not settings.sentry.enabled:
+        return
+
     logger.info("sentry_enabled")
 
     sentry.initialize(
@@ -50,9 +51,19 @@ async def use_sentry() -> AsyncGenerator[None, None]:
 
     logger.info("sentry_initialized")
 
-    yield
 
-    logger.info("sentry_disabled")
+@sentry.capture
+def initialize_cache() -> None:
+    if not api_settings.cache_directory:
+        return
+
+    cache = api_static_cache.FileCache(directory=api_settings.cache_directory)
+    api_static_cache.set_cache(cache)
+
+
+@sentry.capture
+def initialize_content() -> None:
+    discovering.load(directory=library_settings.directory)
 
 
 def create_app() -> fastapi.FastAPI:  # noqa: CCR001
@@ -60,15 +71,13 @@ def create_app() -> fastapi.FastAPI:  # noqa: CCR001
 
     logger.info("create_app")
 
+    initialize_sentry()
+    initialize_cache()
+    initialize_content()
+
     @contextlib.asynccontextmanager
     async def lifespan(app: fastapi.FastAPI) -> AsyncGenerator[None, None]:
         async with contextlib.AsyncExitStack() as stack:
-            if settings.sentry.enabled:
-                await stack.enter_async_context(use_sentry())
-
-            # TODO: must be skipped in tests?
-            discovering.load(directory=library_settings.directory)
-
             mcp_app = create_mcp(app)
 
             await app.router.startup()

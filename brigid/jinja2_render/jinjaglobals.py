@@ -5,7 +5,7 @@ from typing import Any
 from markupsafe import Markup
 
 from brigid.domain import request_context as d_request_context
-from brigid.domain.urls import UrlsPlugin, UrlsRoot
+from brigid.domain.urls import UrlsPlugin, root_url
 from brigid.jinja2_render.utils import jinjafilter, jinjaglobal
 from brigid.library import utils as l_utils
 from brigid.library.entities import Page, PageSeriesInfo
@@ -36,9 +36,7 @@ def image_info(path: pathlib.Path) -> ImageInfo:
     return files.image_info(path)
 
 
-@jinjaglobal
-def root_url(language: str) -> UrlsRoot:
-    return UrlsRoot(language=language)
+root_url = jinjaglobal(root_url)
 
 
 @jinjaglobal
