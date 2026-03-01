@@ -15,7 +15,6 @@ from brigid.domain.urls import (
     UrlsStatic,
     UrlsTags,
     add_base_path,
-    mcp_url,
     normalize_url,
     root_url,
     strip_base_path,
@@ -106,8 +105,18 @@ class _TestUrlsBase:
     def test_base_initialized(self, url: UrlsBase) -> None:
         assert url.language == self.base_language
 
-    def test_url_method_redefined(self, url: UrlsBase) -> None:
-        assert isinstance(url.url(), str)
+    @pytest.mark.parametrize(
+        "base_url,expected_url",
+        [
+            ("https://example.com", "https://example.com"),
+            ("https://example.com/blog", "https://example.com/blog"),
+            ("https://example.com/long/complex/prefix", "https://example.com/long/complex/prefix"),
+        ],
+    )
+    def test_url_method_redefined(self, url: UrlsBase, base_url: str, expected_url: str) -> None:
+        del expected_url
+        with mock.patch("brigid.domain.urls._base_url", return_value=base_url):
+            assert isinstance(url.url(), str)
 
     def test_path_method_redefined(self, url: UrlsBase) -> None:
         assert isinstance(url.path(), str)
@@ -173,7 +182,7 @@ class TestUrlsBase(_TestUrlsBase):
     def _consruct_url(self) -> UrlsBase:
         return UrlsBase(language=self.base_language)
 
-    def test_url_method_redefined(self, url: UrlsBase) -> None:
+    def test_url_method_redefined(self, url: UrlsBase) -> None:  # type: ignore[override]
         with pytest.raises(NotImplementedError):
             url.url()
 
@@ -259,7 +268,7 @@ class TestUrlsPost(_TestUrlsBase):
             ("https://example.com/long/complex/prefix", "https://example.com/long/complex/prefix/en/posts/some-slug"),
         ],
     )
-    def test_url_method_redefined(self, url: UrlsPost, base_url: str, expected_url: str) -> None:  # type: ignore
+    def test_url_method_redefined(self, url: UrlsBase, base_url: str, expected_url: str) -> None:
         with mock.patch("brigid.domain.urls._base_url", return_value=base_url):
             assert url.url() == expected_url
 
@@ -297,7 +306,7 @@ class TestUrlsTags(_TestUrlsBase):
             ),
         ],
     )
-    def test_url_method_redefined(self, url: UrlsTags, base_url: str, expected_url: str) -> None:  # type: ignore
+    def test_url_method_redefined(self, url: UrlsBase, base_url: str, expected_url: str) -> None:
         with mock.patch("brigid.domain.urls._base_url", return_value=base_url):
             assert url.url() == expected_url
 
@@ -579,21 +588,7 @@ class TestUrlsMCP:
             ("/long/complex/prefix", "/long/complex/prefix/mcp"),
         ],
     )
-    def test_mount_path(self, prefix: str, path: str) -> None:
-        site = storage.get_site()
-        original_local_url = site.local_url
-        original_prod_url = site.prod_url
-
+    def test_mount_path(self, set_base_url, prefix: str, path: str) -> None:
         base_url = f"https://example.com{prefix}" if prefix else "https://example.com"
-
-        try:
-            site.local_url = base_url
-            site.prod_url = base_url
-            site.__dict__.pop("url", None)
-            site.__dict__.pop("url_path_prefix", None)
-            assert UrlsMCP().mount_path() == path
-        finally:
-            site.local_url = original_local_url
-            site.prod_url = original_prod_url
-            site.__dict__.pop("url", None)
-            site.__dict__.pop("url_path_prefix", None)
+        set_base_url(base_url)
+        assert UrlsMCP().mount_path() == path

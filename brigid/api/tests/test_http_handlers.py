@@ -3,8 +3,6 @@ import pytest
 from fastapi.testclient import TestClient
 
 from brigid.domain import request_context
-from brigid.library.tests.fixtures import set_base_url  # noqa: F401
-
 
 ############################################################################
 # ATTENTION: this tests do not cover some cases of request_context usage

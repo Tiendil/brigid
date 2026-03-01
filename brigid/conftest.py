@@ -9,6 +9,7 @@ from fastapi.testclient import TestClient
 
 from brigid.application import application
 from brigid.domain import request_context
+from brigid.library.tests.fixtures import *  # noqa
 from brigid.library.storage import storage
 
 

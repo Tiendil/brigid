@@ -5,7 +5,6 @@ from fastapi.testclient import TestClient
 from brigid.api import middlewares
 from brigid.domain import request_context
 from brigid.library.entities import Redirects
-from brigid.library.tests.fixtures import set_base_url  # noqa: F401
 
 
 class TestRedirects:

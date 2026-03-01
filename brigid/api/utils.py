@@ -49,8 +49,8 @@ def to_integer(text: str) -> int | None:
 
 
 def choose_language(request: fastapi.Request) -> str:
-    from brigid.library.storage import storage
     from brigid.domain.urls import strip_base_path
+    from brigid.library.storage import storage
 
     path = strip_base_path(request.url.path)
 
