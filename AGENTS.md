@@ -10,6 +10,25 @@ You MUST run the next commands on the start of your work session:
 
 - `donna -p llm -r <project-root> artifacts view '*:intro'` — to get an introduction to the project and its context.
 
+## Environment
+
+All development-related operations MUST be performed in Docker containers, see `./docker-compose.yml` for details.
+
+You MUST not perform any development-related operations directly on the host machine.
+
+Most important commands have script shortcuts in `./bin` directory.
+
+Command you are allowed to use:
+
+- `./bin/tests.sh` — run ALL tests via pytest.
+- `./bin/utils.sh` — run utils in the backend environment, for example `/bin/utils.sh poetry run pytest brigid`
+- `./bin/dev-check-spelling.sh` — check code spelling with `codespell` tool. Both for frontend and backend code.
+- `./bin/dev-check-formatting.sh` — check code formatting. Both for frontend and backend code.
+- `./bin/dev-check-runtime.sh` — check if code starts without errors — very basic smoke tests.
+- `./bin/dev-check-semantics.sh` — check code semantics (types, linting, etc.). Both for frontend and backend code.
+
+If you need to do complex "test & lint & fix" activities, you MUST use the `donna-do` skill to run the code polish workflow.
+
 ## Resticted changes / operations
 
 You ABSOLUTELY MUST NOT perform the following operations without explicit instructions to do so:

@@ -13,3 +13,7 @@ echo "run flake8"
 echo "run mypy"
 
 ./bin/utils.sh poetry run mypy --show-traceback .
+
+echo "check poetry config"
+
+./bin/utils.sh poetry check
