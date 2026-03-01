@@ -50,11 +50,12 @@ def to_integer(text: str) -> int | None:
 
 def choose_language(request: fastapi.Request) -> str:
     from brigid.library.storage import storage
+    from brigid.domain.urls import strip_base_path
 
-    path = request.url.path
+    path = strip_base_path(request.url.path)
 
     for language in storage.get_site().allowed_languages:
-        if path.startswith(f"/{language}/") or path == f"/{language}":
+        if path.startswith(f"{language}/") or path == language:
             return language
 
     accept_language = request.headers.get("accept-language", "")

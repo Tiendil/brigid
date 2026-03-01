@@ -3,6 +3,8 @@ import pytest
 from fastapi.testclient import TestClient
 
 from brigid.domain import request_context
+from brigid.library.tests.fixtures import set_base_url  # noqa: F401
+
 
 ############################################################################
 # ATTENTION: this tests do not cover some cases of request_context usage
@@ -77,6 +79,27 @@ Disallow: /ru/tags/
         response = client.get("/robots.txt")
         assert response.text == expected_content.strip()
 
+    @pytest.mark.parametrize(
+        "prefix",
+        [
+            "/blog",
+            "/long/complex/prefix",
+        ],
+    )
+    @pytest.mark.asyncio
+    async def test_content__prefixed(self, client: TestClient, set_base_url, prefix: str) -> None:
+        set_base_url(f"https://example.com{prefix}")
+
+        expected_content = f"""
+User-agent: *
+Sitemap: https://example.com{prefix}/sitemap.xml
+Disallow: {prefix}/en/tags/
+Disallow: {prefix}/ru/tags/
+        """
+
+        response = client.get("/robots.txt")
+        assert response.text == expected_content.strip()
+
 
 class TestError:
 
@@ -99,6 +122,21 @@ class TestRoot:
         response = client.get("/")
         assert response.status_code == 302
         assert response.headers["location"] == "http://0.0.0.0:8000/en"
+
+    @pytest.mark.parametrize(
+        "prefix",
+        [
+            "/blog",
+            "/long/complex/prefix",
+        ],
+    )
+    @pytest.mark.asyncio
+    async def test_works__prefixed(self, client: TestClient, set_base_url, prefix: str) -> None:
+        set_base_url(f"https://example.com{prefix}")
+
+        response = client.get("/")
+        assert response.status_code == 302
+        assert response.headers["location"] == f"https://example.com{prefix}/en"
 
 
 class TestIndexRoot:

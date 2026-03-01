@@ -106,6 +106,7 @@ Consider the following for production deployment:
 
 - Process Management: Use a process manager like systemd, supervisord, or Docker to ensure reliable, long-term operation.
 - Reverse Proxy: Set up a reverse proxy such as Nginx or Caddy to enhance performance and security.
+- Reverse Proxy Prefix Mode: You MAY forward prefixed paths to Brigid without stripping the prefix (for example `/blog/*` stays `/blog/*` upstream) when `prod_url` uses the same prefix.
 
 ### Design principles
 

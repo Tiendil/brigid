@@ -14,6 +14,7 @@ from brigid.domain.urls import (
     UrlsSiteMapFull,
     UrlsStatic,
     UrlsTags,
+    add_base_path,
     mcp_url,
     normalize_url,
     root_url,
@@ -69,6 +70,25 @@ class TestStripBasePath:
     def test_strip_base_path(self, path: str, prefix: str, expected: str) -> None:
         with mock.patch("brigid.domain.urls._base_path_prefix", return_value=prefix):
             assert strip_base_path(path) == expected
+
+
+class TestAddBasePath:
+
+    @pytest.mark.parametrize(
+        "path,prefix,expected",
+        [
+            ("", "", "/"),
+            ("/en", "", "/en"),
+            ("en", "", "/en"),
+            ("/", "/blog", "/blog"),
+            ("/en", "/blog", "/blog/en"),
+            ("en", "/blog", "/blog/en"),
+            ("/en", "/long/complex/prefix", "/long/complex/prefix/en"),
+        ],
+    )
+    def test_add_base_path(self, path: str, prefix: str, expected: str) -> None:
+        with mock.patch("brigid.domain.urls._base_path_prefix", return_value=prefix):
+            assert add_base_path(path) == expected
 
 
 class _TestUrlsBase:

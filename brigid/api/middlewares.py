@@ -5,9 +5,9 @@ from fastapi.responses import RedirectResponse
 from sentry_sdk import capture_exception
 
 from brigid.api import renderers
-from brigid.api.utils import add_base_path, choose_language
+from brigid.api.utils import choose_language
 from brigid.domain import request_context as d_request_context
-from brigid.domain.urls import mcp_url, strip_base_path
+from brigid.domain.urls import add_base_path, mcp_url, strip_base_path
 from brigid.library.storage import storage
 
 

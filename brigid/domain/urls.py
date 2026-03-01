@@ -32,6 +32,24 @@ def strip_base_path(path: str) -> str:
     return path.lstrip("/")
 
 
+def add_base_path(path: str) -> str:
+    prefix = _base_path_prefix()
+
+    if path == "/":
+        path = ""
+
+    if not prefix and not path:
+        return "/"
+
+    if not prefix:
+        return f"/{path.lstrip('/')}"
+
+    if not path:
+        return prefix
+
+    return f"{prefix.rstrip('/')}/{path.lstrip('/')}"
+
+
 def _build_url(path: str) -> str:
     return normalize_url(f"{_base_url()}/{path.lstrip('/')}")
 
