@@ -3,23 +3,22 @@ import pytest
 from fastapi.testclient import TestClient
 
 from brigid.api import middlewares
-from brigid.domain import request_context
 from brigid.library.entities import Redirects
+from brigid.library.storage import storage
 
 
 class TestRedirects:
 
     @pytest.fixture
     def set_redirects(self):
-        current_storage = request_context.get("storage")
-        original_redirects = current_storage.get_redirects()
+        original_redirects = storage.get_redirects()
 
         def _set(redirects: Redirects) -> None:
-            current_storage.set_redirects(redirects)
+            storage.set_redirects(redirects)
 
         yield _set
 
-        current_storage.set_redirects(original_redirects)
+        storage.set_redirects(original_redirects)
 
     @pytest.mark.asyncio
     async def test_external_target_passthrough(self, client: TestClient, set_base_url, set_redirects) -> None:

@@ -25,11 +25,11 @@ def initialize_api(app: fastapi.FastAPI) -> None:
     prefix = storage.get_site().url_path_prefix
     app.include_router(api_http_handlers.router, prefix=prefix)
 
-    app.middleware("http")(api_middlewares.request_context)
-    app.middleware("http")(api_middlewares.remove_double_slashes)
-    app.middleware("http")(api_middlewares.remove_trailing_slash)
-    app.middleware("http")(api_middlewares.permanent_redirects)
     app.middleware("http")(api_middlewares.set_content_language)
+    app.middleware("http")(api_middlewares.permanent_redirects)
+    app.middleware("http")(api_middlewares.remove_trailing_slash)
+    app.middleware("http")(api_middlewares.remove_double_slashes)
+    app.middleware("http")(api_middlewares.request_context)
 
     app.exception_handler(404)(api_middlewares.process_404)
     app.exception_handler(Exception)(api_middlewares.process_expected_error)

@@ -1,11 +1,11 @@
 import pytest
 
-from brigid.domain import request_context
+from brigid.library.storage import storage
 
 
 @pytest.fixture
 def set_base_url():
-    site = request_context.get("storage").get_site()
+    site = storage.get_site()
     original_local_url = site.local_url
 
     def _set(url: str) -> None:

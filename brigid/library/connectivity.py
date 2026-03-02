@@ -28,7 +28,6 @@ class Connectivity:
             return
 
         with request_context.init():
-            request_context.set("storage", storage)
             render_page(storage.get_page(page_id))
 
         self._processed_pages.add(page_id)

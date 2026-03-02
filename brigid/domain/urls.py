@@ -3,16 +3,16 @@ import posixpath
 from typing import Any, Iterable
 from urllib.parse import urlparse, urlunparse
 
-from brigid.domain import request_context
 from brigid.domain.types import UrlPath
+from brigid.library.storage import storage
 
 
 def _base_url() -> str:
-    return request_context.get("storage").get_site().url  # type: ignore
+    return storage.get_site().url
 
 
 def _base_path_prefix() -> UrlPath:
-    return request_context.get("storage").get_site().url_path_prefix  # type: ignore
+    return storage.get_site().url_path_prefix
 
 
 def strip_base_path(path: UrlPath) -> UrlPath:
@@ -288,8 +288,7 @@ class UrlsTags(UrlsBase):
         return self._is_same_index(current_url) and self.page - 1 == current_url.page  # type: ignore
 
     def _get_total_pages(self) -> int:
-        storage = request_context.get("storage")  # type: ignore
-        posts_per_page = storage.get_site().posts_per_page  # type: ignore
+        posts_per_page = storage.get_site().posts_per_page
 
         all_pages = storage.get_posts(
             language=self.language,

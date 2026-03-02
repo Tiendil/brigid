@@ -43,7 +43,6 @@ async def process_404(request, _):  # noqa: CCR001
     language = choose_language(request)
 
     with d_request_context.init():
-        d_request_context.set("storage", storage)
         return renderers.render_page(language, "404", status_code=404)
 
 
@@ -100,11 +99,9 @@ async def process_expected_error(request, error):
     language = choose_language(request)
 
     with d_request_context.init():
-        d_request_context.set("storage", storage)
         return renderers.render_page(language, "500", status_code=500)
 
 
 async def request_context(request: fastapi.Request, call_next: Any):
     with d_request_context.init():
-        d_request_context.set("storage", storage)
         return await call_next(request)

@@ -2,7 +2,7 @@ import fastapi
 import pytest
 from fastapi.testclient import TestClient
 
-from brigid.domain import request_context
+from brigid.library.storage import storage
 
 ############################################################################
 # ATTENTION: this tests do not cover some cases of request_context usage
@@ -51,7 +51,7 @@ class TestFeedAtom:
 
     @pytest.mark.asyncio
     async def test_works(self, client: TestClient) -> None:
-        for language in request_context.get("storage").get_site().allowed_languages:
+        for language in storage.get_site().allowed_languages:
             response = client.get(f"/{language}/feeds/atom")
             assert response.status_code == 200
             assert response.headers["content-type"] == "application/atom+xml; charset=utf-8"
@@ -141,7 +141,7 @@ class TestIndexRoot:
 
     @pytest.mark.asyncio
     async def test_works(self, client: TestClient) -> None:
-        for language in request_context.get("storage").get_site().allowed_languages:
+        for language in storage.get_site().allowed_languages:
             response = client.get(f"/{language}")
             assert response.status_code == 200
             assert response.headers["content-type"] == "text/html; charset=utf-8"
@@ -151,7 +151,7 @@ class TestIndexRootWithEmptyFilter:
 
     @pytest.mark.asyncio
     async def test_works(self, client: TestClient) -> None:
-        for language in request_context.get("storage").get_site().allowed_languages:
+        for language in storage.get_site().allowed_languages:
             response = client.get(f"/{language}/tags")
             assert response.status_code == 301
             assert response.headers["location"] == f"http://0.0.0.0:8000/{language}"
@@ -161,7 +161,7 @@ class TestIndexWithFilter:
 
     @pytest.mark.asyncio
     async def test_works(self, client: TestClient) -> None:
-        for language in request_context.get("storage").get_site().allowed_languages:
+        for language in storage.get_site().allowed_languages:
             response = client.get(f"/{language}/tags/example/-wide")
             assert response.status_code == 200
             assert response.headers["content-type"] == "text/html; charset=utf-8"
@@ -171,7 +171,7 @@ class TestPost:
 
     @pytest.mark.asyncio
     async def test_works(self, client: TestClient) -> None:
-        for language in request_context.get("storage").get_site().allowed_languages:
+        for language in storage.get_site().allowed_languages:
             response = client.get(f"/{language}/posts/post-in-two-languages")
             assert response.status_code == 200
             assert response.headers["content-type"] == "text/html; charset=utf-8"

@@ -9,7 +9,6 @@ from fastapi.testclient import TestClient
 
 from brigid.application import application
 from brigid.domain import request_context
-from brigid.library.storage import storage
 from brigid.library.tests.fixtures import *  # noqa
 
 
@@ -28,7 +27,6 @@ def event_loop() -> Generator[asyncio.AbstractEventLoop, asyncio.AbstractEventLo
 @pytest.fixture(autouse=True)
 def reset_request_context():
     with request_context.init():
-        request_context.set("storage", storage)
         yield
 
 
