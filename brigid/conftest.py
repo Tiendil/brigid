@@ -32,7 +32,7 @@ def reset_request_context():
 
 @pytest_asyncio.fixture(scope="session", autouse=True)
 async def app(mark_tests_running) -> AsyncGenerator[fastapi.FastAPI, None]:
-    # we want to guarantie that there will be no hidden initializations
+    # we want to guarantee that there will be no hidden initializations
     # of applications or settings => we import application module in the fixture
     from brigid.application import application
 
