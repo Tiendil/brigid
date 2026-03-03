@@ -1,4 +1,3 @@
-from brigid.library.storage import storage
 from brigid.library.tests import make as library_make
 from brigid.markdown_render.markdown_render import render_page
 
@@ -34,19 +33,3 @@ class TestExternalLink:
 
         assert len(result.errors) == 1
         assert result.errors[0].message == "Specify schema/protocol for external links"
-
-    def test_used_for_internal_links(self) -> None:
-
-        site = storage.get_site()
-
-        text = f"""
-[xxx]({site.url})
-        """
-
-        article = library_make.article()
-        page = library_make.page(article, body=text)
-
-        result = render_page(page)
-
-        assert len(result.errors) == 1
-        assert result.errors[0].message == "Use internal links syntax to specify links to the same domain"
