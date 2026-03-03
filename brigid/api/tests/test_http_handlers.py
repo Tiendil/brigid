@@ -132,9 +132,9 @@ class TestRoot:
     async def test_works__prefixed(self, client: TestClient, set_base_url, prefix: str) -> None:
         set_base_url(f"https://example.com{prefix}")
 
-        response = client.get("/")
-        assert response.status_code == 302
-        assert response.headers["location"] == f"https://example.com{prefix}/en"
+        response = client.get(prefix)
+        assert response.status_code == 301
+        assert response.headers["location"] == f"{prefix}/"
 
 
 class TestIndexRoot:

@@ -7,6 +7,22 @@ from brigid.library.entities import Redirects
 from brigid.library.storage import storage
 
 
+def make_request(path: str) -> fastapi.Request:
+    return fastapi.Request(
+        {
+            "type": "http",
+            "method": "GET",
+            "path": path,
+            "headers": [],
+            "query_string": b"",
+            "client": ("test", 123),
+            "server": ("test", 80),
+            "scheme": "http",
+            "root_path": "",
+        }
+    )
+
+
 class TestRedirects:
 
     @pytest.fixture
@@ -60,19 +76,7 @@ class TestContentLanguageMiddleware:
         async def call_next(_: fastapi.Request) -> fastapi.Response:
             return fastapi.Response(status_code=200)
 
-        request = fastapi.Request(
-            {
-                "type": "http",
-                "method": "GET",
-                "path": "/blog/en",
-                "headers": [],
-                "query_string": b"",
-                "client": ("test", 123),
-                "server": ("test", 80),
-                "scheme": "http",
-                "root_path": "",
-            }
-        )
+        request = make_request("/blog/en")
 
         response = await middlewares.set_content_language(request, call_next)
         assert response.headers["content-language"] == "en"
@@ -110,3 +114,37 @@ class TestRemoveTrailingSlashMiddleware:
         response = client.get("/blog/en/")
         assert response.status_code == 301
         assert response.headers["location"] == "/blog/en"
+
+    @pytest.mark.asyncio
+    async def test_does_not_redirect_prefixed_root(self, set_base_url) -> None:
+        set_base_url("https://example.com/blog")
+
+        async def call_next(_: fastapi.Request) -> fastapi.Response:
+            return fastapi.Response(status_code=204)
+
+        response = await middlewares.remove_trailing_slash(make_request("/blog/"), call_next)
+        assert response.status_code == 204
+
+
+class TestPrefixedRootToSlashMiddleware:
+
+    @pytest.mark.asyncio
+    async def test_redirects_prefixed_root_to_slash(self, set_base_url) -> None:
+        set_base_url("https://example.com/blog")
+
+        async def call_next(_: fastapi.Request) -> fastapi.Response:
+            raise NotImplementedError("call_next should not be called for prefix root redirect")
+
+        response = await middlewares.prefixed_root_to_slash(make_request("/blog"), call_next)
+        assert response.status_code == 301
+        assert response.headers["location"] == "/blog/"
+
+    @pytest.mark.asyncio
+    async def test_passes_prefixed_root_with_slash(self, set_base_url) -> None:
+        set_base_url("https://example.com/blog")
+
+        async def call_next(_: fastapi.Request) -> fastapi.Response:
+            return fastapi.Response(status_code=204)
+
+        response = await middlewares.prefixed_root_to_slash(make_request("/blog/"), call_next)
+        assert response.status_code == 204
