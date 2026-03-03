@@ -126,25 +126,35 @@ class TestRemoveTrailingSlashMiddleware:
         assert response.status_code == 204
 
 
-class TestPrefixedRootToSlashMiddleware:
+class TestRootToLanguageMiddleware:
 
+    @pytest.mark.parametrize(
+        "base_url,request_path,status,location",
+        [
+            ("https://example.com/blog", "/blog", 302, "https://example.com/blog/en"),
+            ("https://example.com/blog", "/blog/", 302, "https://example.com/blog/en"),
+            ("https://example.com", "/", 302, "https://example.com/en"),
+            ("https://example.com/", "/", 302, "https://example.com/en"),
+            ("https://example.com/blog", "/blog/en", 204, None),
+            ("https://example.com", "/en", 204, None),
+        ],
+    )
     @pytest.mark.asyncio
-    async def test_redirects_prefixed_root_to_slash(self, set_base_url) -> None:
-        set_base_url("https://example.com/blog")
-
-        async def call_next(_: fastapi.Request) -> fastapi.Response:
-            raise NotImplementedError("call_next should not be called for prefix root redirect")
-
-        response = await middlewares.prefixed_root_to_slash(make_request("/blog"), call_next)
-        assert response.status_code == 301
-        assert response.headers["location"] == "/blog/"
-
-    @pytest.mark.asyncio
-    async def test_passes_prefixed_root_with_slash(self, set_base_url) -> None:
-        set_base_url("https://example.com/blog")
+    async def test_works(
+        self,
+        set_base_url,
+        base_url: str,
+        request_path: str,
+        status: int,
+        location: str | None,
+    ) -> None:
+        set_base_url(base_url)
 
         async def call_next(_: fastapi.Request) -> fastapi.Response:
             return fastapi.Response(status_code=204)
 
-        response = await middlewares.prefixed_root_to_slash(make_request("/blog/"), call_next)
-        assert response.status_code == 204
+        response = await middlewares.root_to_language(make_request(request_path), call_next)
+        assert response.status_code == status
+
+        if location is not None:
+            assert response.headers["location"] == location

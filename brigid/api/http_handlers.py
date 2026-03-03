@@ -4,7 +4,6 @@ from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse, Red
 from brigid.api import renderers
 from brigid.api.sitemaps import build_sitemap_xml
 from brigid.api.static_cache import cache
-from brigid.api.utils import choose_language
 from brigid.core import errors, logging
 from brigid.domain.types import UrlPath
 from brigid.domain.urls import root_url
@@ -115,13 +114,6 @@ async def robots() -> PlainTextResponse:
 async def test_error() -> HTMLResponse:
     1 / 0
     return HTMLResponse(content="This should not be shown")
-
-
-@router.get("/")
-async def root(request: fastapi.Request) -> RedirectResponse:
-    language = choose_language(request)
-    # TODO: show info to the user that language was chosen automatically
-    return RedirectResponse(root_url(language=language).url(), status_code=302)
 
 
 @router.get("/{language}")

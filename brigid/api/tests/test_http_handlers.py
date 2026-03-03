@@ -113,10 +113,10 @@ class TestError:
         assert response.status_code == 500
 
 
-class TestRoot:
+class TestRootBehaivor:
 
     @pytest.mark.asyncio
-    async def test_works(self, client: TestClient) -> None:
+    async def test_no_prefix(self, client: TestClient) -> None:
         response = client.get("/")
         assert response.status_code == 302
         assert response.headers["location"] == "http://0.0.0.0:8000/en"
@@ -129,12 +129,27 @@ class TestRoot:
         ],
     )
     @pytest.mark.asyncio
-    async def test_works__prefixed(self, client: TestClient, set_base_url, prefix: str) -> None:
+    async def test_works__has_prefix_no_slash(self, client: TestClient, set_base_url, prefix: str) -> None:
         set_base_url(f"https://example.com{prefix}")
 
         response = client.get(prefix)
-        assert response.status_code == 301
-        assert response.headers["location"] == f"{prefix}/"
+        assert response.status_code == 302
+        assert response.headers["location"] == f"https://example.com{prefix}/en"
+
+    @pytest.mark.parametrize(
+        "prefix",
+        [
+            "/blog",
+            "/long/complex/prefix",
+        ],
+    )
+    @pytest.mark.asyncio
+    async def test_works__has_prefix_with_slash(self, client: TestClient, set_base_url, prefix: str) -> None:
+        set_base_url(f"https://example.com{prefix}")
+
+        response = client.get(f"{prefix}/")
+        assert response.status_code == 302
+        assert response.headers["location"] == f"https://example.com{prefix}/en"
 
 
 class TestIndexRoot:

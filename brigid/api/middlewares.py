@@ -8,7 +8,7 @@ from brigid.api import renderers
 from brigid.api.utils import choose_language
 from brigid.domain import request_context as d_request_context
 from brigid.domain.types import UrlPath
-from brigid.domain.urls import add_base_path, mcp_url, strip_base_path
+from brigid.domain.urls import add_base_path, mcp_url, root_url, strip_base_path
 from brigid.library.storage import storage
 
 
@@ -58,18 +58,17 @@ async def remove_double_slashes(request: fastapi.Request, call_next: Any):
     return RedirectResponse(path, status_code=301)
 
 
-async def prefixed_root_to_slash(request: fastapi.Request, call_next: Any):
+async def root_to_language(request: fastapi.Request, call_next: Any):
     path = UrlPath(request.url.path)
-
     prefix = storage.get_site().url_path_prefix
 
-    if prefix and path == prefix:
-        # We need to explicitly redirect roots with prefix to the same path with trailing slash
-        # to simplify handling of "/" in FastAPi
-        # because Starlet don't want to handle pair (prefix, route) of ("", "")
-        return RedirectResponse(f"{prefix}/", status_code=301)
+    if path not in (prefix, f"{prefix}/"):
+        return await call_next(request)
 
-    return await call_next(request)
+    language = choose_language(request)
+
+    # TODO: show info to the user that language was chosen automatically
+    return RedirectResponse(root_url(language=language).url(), status_code=302)
 
 
 async def remove_trailing_slash(request: fastapi.Request, call_next: Any):
