@@ -98,6 +98,7 @@ def create_app() -> fastapi.FastAPI:  # noqa: CCR001
         docs_url=None,
         redoc_url=None,
         openapi_url=None,
+        redirect_slashes=False,
     )
 
     initialize_api(app)

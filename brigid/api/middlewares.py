@@ -65,7 +65,9 @@ async def remove_trailing_slash(request: fastapi.Request, call_next: Any):
 
     path = UrlPath(request.url.path)
 
-    if path != "" and path != "/" and path[-1] == "/":
+    prefix = storage.get_site().url_path_prefix
+
+    if path != prefix and path[-1] == "/":
         return RedirectResponse(UrlPath(path[:-1]), status_code=301)
 
     return await call_next(request)
