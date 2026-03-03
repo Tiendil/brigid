@@ -140,27 +140,21 @@ class TestRoot:
 class TestIndexRoot:
 
     @pytest.mark.asyncio
-    async def test_works(self, client: TestClient) -> None:
+    async def test_only_language(self, client: TestClient) -> None:
         for language in storage.get_site().allowed_languages:
             response = client.get(f"/{language}")
             assert response.status_code == 200
             assert response.headers["content-type"] == "text/html; charset=utf-8"
 
-
-class TestIndexRootWithEmptyFilter:
-
     @pytest.mark.asyncio
-    async def test_works(self, client: TestClient) -> None:
+    async def test_empty_filter(self, client: TestClient) -> None:
         for language in storage.get_site().allowed_languages:
             response = client.get(f"/{language}/tags")
             assert response.status_code == 301
             assert response.headers["location"] == f"http://0.0.0.0:8000/{language}"
 
-
-class TestIndexWithFilter:
-
     @pytest.mark.asyncio
-    async def test_works(self, client: TestClient) -> None:
+    async def test_with_filter(self, client: TestClient) -> None:
         for language in storage.get_site().allowed_languages:
             response = client.get(f"/{language}/tags/example/-wide")
             assert response.status_code == 200
