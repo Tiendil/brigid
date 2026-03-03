@@ -4,9 +4,9 @@ from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse, Red
 from brigid.api import renderers
 from brigid.api.sitemaps import build_sitemap_xml
 from brigid.api.static_cache import cache
-from brigid.api.utils import choose_language
 from brigid.core import errors, logging
-from brigid.domain.urls import UrlsRoot
+from brigid.domain.types import UrlPath
+from brigid.domain.urls import root_url
 from brigid.library.storage import storage
 from brigid.plugins.utils import get_plugin
 
@@ -29,7 +29,7 @@ async def favicon() -> FileResponse | HTMLResponse:
         return HTMLResponse(content="")
 
     path = site.path.parent / site.favicon
-    cache().set("/favicon.ico", path)
+    cache().set(UrlPath("/favicon.ico"), path)
 
     return FileResponse(path, media_type="image/x-icon")
 
@@ -52,7 +52,7 @@ async def plugin_static(request: fastapi.Request, plugin_slug: str, filename: st
     if file_info is None:
         raise errors.FileNotFound()
 
-    cache().set(request.url.path, file_info.sys_path)
+    cache().set(UrlPath(request.url.path), file_info.sys_path)
 
     return FileResponse(file_info.sys_path, media_type=file_info.media_type)
 
@@ -64,7 +64,7 @@ async def static_file(request: fastapi.Request, article_slug: str, filename: str
     # TODO: could it be a security breach?
     path = article.path.parent / filename
 
-    cache().set(request.url.path, path)
+    cache().set(UrlPath(request.url.path), path)
 
     # TODO: set media types according to file extension
     return FileResponse(path)
@@ -85,19 +85,20 @@ async def feed_atom(language: str) -> HTMLResponse:
 
 @router.get("/robots.txt")
 async def robots() -> PlainTextResponse:
-    # language is not important here
-    root_url = UrlsRoot(language="en")
+    site = storage.get_site()
+    root = root_url(language=site.default_language)
 
     lines = [
         "User-agent: *",
-        f"Sitemap: {root_url.to_site_map_full().url()}",
+        f"Sitemap: {root.to_site_map_full().url()}",
     ]
 
-    site = storage.get_site()
+    tags_url = root.to_filter()
 
     for language in sorted(site.allowed_languages):
         # trailing slash is important to treat the path as a prefix
-        lines.append(f"Disallow: /{language}/tags/")
+        tags_prefix_path = tags_url.to_language(language).robots_url()
+        lines.append(f"Disallow: {tags_prefix_path}")
 
     content = "\n".join(lines)
 
@@ -115,13 +116,6 @@ async def test_error() -> HTMLResponse:
     return HTMLResponse(content="This should not be shown")
 
 
-@router.get("/")
-async def root(request: fastapi.Request) -> RedirectResponse:
-    language = choose_language(request)
-    # TODO: show info to the user that language was chosen automatically
-    return RedirectResponse(UrlsRoot(language=language).url(), status_code=302)
-
-
 @router.get("/{language}")
 async def blog_index(language: str) -> HTMLResponse:
     return renderers.render_index(language=language, raw_tags="")
@@ -129,7 +123,7 @@ async def blog_index(language: str) -> HTMLResponse:
 
 @router.get("/{language}/tags")
 async def tags_index_zero(language: str) -> RedirectResponse:
-    return RedirectResponse(UrlsRoot(language=language).url(), status_code=301)
+    return RedirectResponse(root_url(language=language).url(), status_code=301)
 
 
 @router.get("/{language}/tags/{tags:path}")

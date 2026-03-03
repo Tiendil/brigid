@@ -5,19 +5,16 @@ from typing import Any, TypedDict
 
 # TODO: these imports may cause circular dependencies, fix them
 from brigid.domain.urls import UrlsBase
-from brigid.library.storage import Storage
 
 
 class Variable(enum.StrEnum):
     language = "language"
     url = "url"
-    storage = "storage"
 
 
 class RequestContextType(TypedDict):
     language: str
     url: UrlsBase
-    storage: Storage
 
 
 request_context: contextvars.ContextVar[RequestContextType] = contextvars.ContextVar("request_context")

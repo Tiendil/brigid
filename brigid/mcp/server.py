@@ -5,6 +5,7 @@ import fastmcp
 from fastmcp.server.http import StarletteWithLifespan
 
 from brigid.core import utils
+from brigid.domain.urls import mcp_url
 from brigid.library.storage import storage
 from brigid.mcp.tools import create_tools
 
@@ -54,7 +55,7 @@ def construct_instructions() -> str:
     return "\n".join(source)  # type: ignore
 
 
-# We create MCP instance dymanically because:
+# We create MCP instance dynamically because:
 # - we need site configs that are loaded at runtime
 # - we may need to construct multiple MCPs (per language) in the future
 def create_mcp(app: fastapi.FastAPI) -> StarletteWithLifespan:
@@ -80,6 +81,7 @@ def create_mcp(app: fastapi.FastAPI) -> StarletteWithLifespan:
     create_tools(mcp)
 
     mcp_app = mcp.http_app(path="/")
-    app.mount("/mcp", mcp_app)
+    mount_path = mcp_url().mount_path()
+    app.mount(mount_path, mcp_app)
 
     return mcp_app

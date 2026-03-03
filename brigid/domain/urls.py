@@ -3,11 +3,56 @@ import posixpath
 from typing import Any, Iterable
 from urllib.parse import urlparse, urlunparse
 
-from brigid.domain import request_context
+from brigid.domain.types import UrlPath
+from brigid.library.storage import storage
 
 
 def _base_url() -> str:
-    return request_context.get("storage").get_site().url  # type: ignore
+    return storage.get_site().url
+
+
+def _base_path_prefix() -> UrlPath:
+    return storage.get_site().url_path_prefix
+
+
+def strip_base_path(path: UrlPath) -> UrlPath:
+    prefix = _base_path_prefix()
+
+    if not prefix:
+        return UrlPath(path.lstrip("/"))
+
+    if not path:
+        raise NotImplementedError("Unexpected empty path")
+
+    if path[0] != "/":
+        path = UrlPath("/" + path)
+
+    if path == prefix or path.startswith(prefix + "/"):
+        path = UrlPath(path[len(prefix) :])
+
+    return UrlPath(path.lstrip("/"))
+
+
+def add_base_path(path: UrlPath) -> UrlPath:
+    prefix = _base_path_prefix()
+
+    if path == "/":
+        path = UrlPath("")
+
+    if not prefix and not path:
+        return UrlPath("/")
+
+    if not prefix:
+        return UrlPath(f"/{path.lstrip('/')}")
+
+    if not path:
+        return prefix
+
+    return UrlPath(f"{prefix.rstrip('/')}/{path.lstrip('/')}")
+
+
+def _build_url(path: UrlPath) -> str:
+    return normalize_url(f"{_base_url()}/{path.lstrip('/')}")
 
 
 def normalize_url(url: str) -> str:
@@ -45,8 +90,23 @@ class UrlsBase:
     def __init__(self, language: str) -> None:
         self.language = language
 
+    def path(self) -> UrlPath:
+        raise NotImplementedError("path")
+
     def url(self) -> str:
-        raise NotImplementedError("url")
+        return _build_url(self.path())
+
+    def _robots_url_path(self, path: UrlPath) -> UrlPath:
+        prefix = _base_path_prefix().strip("/")
+        normalized_path = path.strip("/")
+
+        if prefix:
+            return UrlPath(f"/{prefix}/{normalized_path}/")
+
+        return UrlPath(f"/{normalized_path}/")
+
+    def robots_url(self) -> UrlPath:
+        return self._robots_url_path(self.path())
 
     def file_url(self, relative_path: str) -> str:
         raise NotImplementedError("file_url")
@@ -82,6 +142,9 @@ class UrlsBase:
     def to_plugin(self, plugin: str) -> "UrlsPlugin":
         return UrlsPlugin(plugin=plugin, language=self.language)
 
+    def to_favicon(self) -> "UrlsStatic":
+        return UrlsStatic(url_path=UrlPath("favicon.ico"))
+
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, self.__class__):
             return False
@@ -92,30 +155,30 @@ class UrlsBase:
 class UrlsRoot(UrlsBase):
     __slots__ = ()
 
-    def url(self) -> str:
-        return normalize_url(f"{_base_url()}/{self.language}")
+    def path(self) -> UrlPath:
+        return UrlPath(self.language)
 
 
 # TODO: this is a temporary solution, we should explicitly define urls for authors
 class UrlsAuthor(UrlsBase):
     __slots__ = ()
 
-    def url(self) -> str:
-        return normalize_url(f"{_base_url()}/{self.language}/posts/about")
+    def path(self) -> UrlPath:
+        return UrlPath(f"{self.language}/posts/about")
 
 
 class UrlsFeedsAtom(UrlsBase):
     __slots__ = ()
 
-    def url(self) -> str:
-        return normalize_url(f"{_base_url()}/{self.language}/feeds/atom")
+    def path(self) -> UrlPath:
+        return UrlPath(f"{self.language}/feeds/atom")
 
 
 class UrlsSiteMapFull(UrlsBase):
     __slots__ = ()
 
-    def url(self) -> str:
-        return normalize_url(f"{_base_url()}/sitemap.xml")
+    def path(self) -> UrlPath:
+        return UrlPath("sitemap.xml")
 
 
 class UrlsPlugin(UrlsBase):
@@ -126,7 +189,33 @@ class UrlsPlugin(UrlsBase):
         self.plugin_slug = plugin
 
     def file_url(self, relative_path: str) -> str:
-        return normalize_url(f"{_base_url()}/static/plugins/{self.plugin_slug}/{relative_path}")
+        return _build_url(UrlPath(f"static/plugins/{self.plugin_slug}/{relative_path}"))
+
+
+class UrlsStatic:
+    __slots__ = ("url_path",)
+
+    def __init__(self, url_path: UrlPath) -> None:
+        self.url_path = url_path
+
+    def path(self) -> UrlPath:
+        return self.url_path
+
+    def url(self) -> str:
+        return _build_url(self.path())
+
+
+class UrlsMCP:
+    __slots__ = ()
+
+    def path(self) -> UrlPath:
+        return UrlPath("mcp")
+
+    def mount_path(self) -> UrlPath:
+        from brigid.library.storage import storage
+
+        prefix = storage.get_site().url_path_prefix
+        return UrlPath(f"{prefix}/{self.path()}") if prefix else UrlPath(f"/{self.path()}")
 
 
 class UrlsPost(UrlsBase):
@@ -136,11 +225,11 @@ class UrlsPost(UrlsBase):
         super().__init__(**kwargs)
         self.slug = slug
 
-    def url(self) -> str:
-        return normalize_url(f"{_base_url()}/{self.language}/posts/{self.slug}")
+    def path(self) -> UrlPath:
+        return UrlPath(f"{self.language}/posts/{self.slug}")
 
     def file_url(self, relative_path: str) -> str:
-        return normalize_url(f"{_base_url()}/static/posts/{self.slug}/{relative_path}")
+        return _build_url(UrlPath(f"static/posts/{self.slug}/{relative_path}"))
 
     def __eq__(self, other: Any) -> bool:
         if not super().__eq__(other):
@@ -199,8 +288,7 @@ class UrlsTags(UrlsBase):
         return self._is_same_index(current_url) and self.page - 1 == current_url.page  # type: ignore
 
     def _get_total_pages(self) -> int:
-        storage = request_context.get("storage")  # type: ignore
-        posts_per_page = storage.get_site().posts_per_page  # type: ignore
+        posts_per_page = storage.get_site().posts_per_page
 
         all_pages = storage.get_posts(
             language=self.language,
@@ -224,7 +312,7 @@ class UrlsTags(UrlsBase):
         # because there are infinite number of them
         return bool(self.selected_tags)
 
-    def url(self) -> str:
+    def path(self) -> UrlPath:
         tags = list(self.required_tags | self.excluded_tags)
 
         tags.sort()
@@ -235,11 +323,17 @@ class UrlsTags(UrlsBase):
             tags.append(str(self.page))
 
         if not tags:
-            return normalize_url(f"{_base_url()}/{self.language}")
+            return UrlPath(self.language)
 
         tags_path = "/".join(tags)
 
-        return normalize_url(f"{_base_url()}/{self.language}/tags/{tags_path}")
+        return UrlPath(f"{self.language}/tags/{tags_path}")
+
+    def robots_url(self) -> UrlPath:
+        if not self.selected_tags and self.page == 1:
+            return self._robots_url_path(UrlPath(f"{self.language}/tags"))
+
+        return super().robots_url()
 
     def first_page(self) -> "UrlsTags":
         return UrlsTags(
@@ -293,3 +387,11 @@ class UrlsTags(UrlsBase):
             required_tags=self.required_tags - set(tags),
             excluded_tags=self.excluded_tags - set(tags),
         )
+
+
+def root_url(language: str) -> UrlsRoot:
+    return UrlsRoot(language=language)
+
+
+def mcp_url() -> UrlsMCP:
+    return UrlsMCP()

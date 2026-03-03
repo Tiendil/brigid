@@ -4,15 +4,21 @@ from unittest import mock
 
 import pytest
 
+from brigid.domain.types import UrlPath
 from brigid.domain.urls import (
     UrlsAuthor,
     UrlsBase,
     UrlsFeedsAtom,
+    UrlsMCP,
     UrlsPost,
     UrlsRoot,
     UrlsSiteMapFull,
+    UrlsStatic,
     UrlsTags,
+    add_base_path,
     normalize_url,
+    root_url,
+    strip_base_path,
 )
 from brigid.library.storage import storage
 
@@ -45,6 +51,46 @@ class TestNormalizeUrl:
         assert normalize_url(url_in) == url_out
 
 
+class TestStripBasePath:
+
+    @pytest.mark.parametrize(
+        "path,prefix,expected",
+        [
+            ("", "", ""),
+            ("/", "", ""),
+            ("/en", "", "en"),
+            ("en", "", "en"),
+            ("/blog", "/blog", ""),
+            ("/blog/en", "/blog", "en"),
+            ("blog/en", "/blog", "en"),
+            ("/en", "/blog", "en"),
+            ("/long/complex/prefix/en", "/long/complex/prefix", "en"),
+        ],
+    )
+    def test_strip_base_path(self, path: UrlPath, prefix: UrlPath, expected: UrlPath) -> None:
+        with mock.patch("brigid.domain.urls._base_path_prefix", return_value=prefix):
+            assert strip_base_path(path) == expected
+
+
+class TestAddBasePath:
+
+    @pytest.mark.parametrize(
+        "path,prefix,expected",
+        [
+            ("", "", "/"),
+            ("/en", "", "/en"),
+            ("en", "", "/en"),
+            ("/", "/blog", "/blog"),
+            ("/en", "/blog", "/blog/en"),
+            ("en", "/blog", "/blog/en"),
+            ("/en", "/long/complex/prefix", "/long/complex/prefix/en"),
+        ],
+    )
+    def test_add_base_path(self, path: UrlPath, prefix: UrlPath, expected: UrlPath) -> None:
+        with mock.patch("brigid.domain.urls._base_path_prefix", return_value=prefix):
+            assert add_base_path(path) == expected
+
+
 class _TestUrlsBase:
 
     base_language = "en"
@@ -60,8 +106,24 @@ class _TestUrlsBase:
     def test_base_initialized(self, url: UrlsBase) -> None:
         assert url.language == self.base_language
 
-    def test_url_method_redefined(self, url: UrlsBase) -> None:
-        assert isinstance(url.url(), str)
+    @pytest.mark.parametrize(
+        "base_url,expected_url",
+        [
+            ("https://example.com", "https://example.com"),
+            ("https://example.com/blog", "https://example.com/blog"),
+            ("https://example.com/long/complex/prefix", "https://example.com/long/complex/prefix"),
+        ],
+    )
+    def test_url_method_redefined(self, url: UrlsBase, base_url: str, expected_url: str) -> None:
+        del expected_url
+        with mock.patch("brigid.domain.urls._base_url", return_value=base_url):
+            assert isinstance(url.url(), str)
+
+    def test_path_method_redefined(self, url: UrlsBase) -> None:
+        assert isinstance(url.path(), str)
+
+    def test_robots_url_method_redefined(self, url: UrlsBase) -> None:
+        assert url.robots_url() == f"/{url.path()}/"
 
     def test_file_url(self, url: UrlsBase) -> None:
         with pytest.raises(NotImplementedError):
@@ -100,6 +162,18 @@ class _TestUrlsBase:
     def test_site_map_full(self, url: UrlsBase) -> None:
         assert url.to_site_map_full() == UrlsSiteMapFull(language=self.base_language)
 
+    @pytest.mark.parametrize(
+        "base_url,expected_url",
+        [
+            ("https://example.com", "https://example.com/favicon.ico"),
+            ("https://example.com/blog", "https://example.com/blog/favicon.ico"),
+            ("https://example.com/long/complex/prefix", "https://example.com/long/complex/prefix/favicon.ico"),
+        ],
+    )
+    def test_to_favicon(self, url: UrlsBase, base_url: str, expected_url: str) -> None:
+        with mock.patch("brigid.domain.urls._base_url", return_value=base_url):
+            assert url.to_favicon().url() == expected_url
+
     def test_noindex(self, url: UrlsBase) -> None:
         assert not url.is_noindex()
 
@@ -109,9 +183,17 @@ class TestUrlsBase(_TestUrlsBase):
     def _consruct_url(self) -> UrlsBase:
         return UrlsBase(language=self.base_language)
 
-    def test_url_method_redefined(self, url: UrlsBase) -> None:
+    def test_url_method_redefined(self, url: UrlsBase) -> None:  # type: ignore[override]
         with pytest.raises(NotImplementedError):
             url.url()
+
+    def test_path_method_redefined(self, url: UrlsBase) -> None:
+        with pytest.raises(NotImplementedError):
+            url.path()
+
+    def test_robots_url_method_redefined(self, url: UrlsBase) -> None:
+        with pytest.raises(NotImplementedError):
+            url.robots_url()
 
 
 class TestUrlsRoot(_TestUrlsBase):
@@ -119,8 +201,20 @@ class TestUrlsRoot(_TestUrlsBase):
     def _consruct_url(self) -> UrlsRoot:
         return UrlsRoot(language=self.base_language)
 
-    def test_url_method_redefined(self, url: UrlsBase) -> None:
-        assert url.url() == f"{base_url}/{self.base_language}"
+    def test_root_url_constructor(self) -> None:
+        assert root_url(self.base_language) == UrlsRoot(language=self.base_language)
+
+    @pytest.mark.parametrize(
+        "base_url,expected_url",
+        [
+            ("https://example.com", "https://example.com/en"),
+            ("https://example.com/blog", "https://example.com/blog/en"),
+            ("https://example.com/long/complex/prefix", "https://example.com/long/complex/prefix/en"),
+        ],
+    )
+    def test_url_method_redefined(self, url: UrlsBase, base_url: str, expected_url: str) -> None:
+        with mock.patch("brigid.domain.urls._base_url", return_value=base_url):
+            assert url.url() == expected_url
 
 
 class TestUrlsAuthor(_TestUrlsBase):
@@ -128,8 +222,17 @@ class TestUrlsAuthor(_TestUrlsBase):
     def _consruct_url(self) -> UrlsAuthor:
         return UrlsAuthor(language=self.base_language)
 
-    def test_url_method_redefined(self, url: UrlsBase) -> None:
-        assert url.url() == f"{base_url}/{self.base_language}/about"
+    @pytest.mark.parametrize(
+        "base_url,expected_url",
+        [
+            ("https://example.com", "https://example.com/en/posts/about"),
+            ("https://example.com/blog", "https://example.com/blog/en/posts/about"),
+            ("https://example.com/long/complex/prefix", "https://example.com/long/complex/prefix/en/posts/about"),
+        ],
+    )
+    def test_url_method_redefined(self, url: UrlsBase, base_url: str, expected_url: str) -> None:
+        with mock.patch("brigid.domain.urls._base_url", return_value=base_url):
+            assert url.url() == expected_url
 
 
 class TestUrlsFeedsAtom(_TestUrlsBase):
@@ -137,8 +240,17 @@ class TestUrlsFeedsAtom(_TestUrlsBase):
     def _consruct_url(self) -> UrlsFeedsAtom:
         return UrlsFeedsAtom(language=self.base_language)
 
-    def test_url_method_redefined(self, url: UrlsBase) -> None:
-        assert url.url() == f"{base_url}/{self.base_language}/feeds/atom"
+    @pytest.mark.parametrize(
+        "base_url,expected_url",
+        [
+            ("https://example.com", "https://example.com/en/feeds/atom"),
+            ("https://example.com/blog", "https://example.com/blog/en/feeds/atom"),
+            ("https://example.com/long/complex/prefix", "https://example.com/long/complex/prefix/en/feeds/atom"),
+        ],
+    )
+    def test_url_method_redefined(self, url: UrlsBase, base_url: str, expected_url: str) -> None:
+        with mock.patch("brigid.domain.urls._base_url", return_value=base_url):
+            assert url.url() == expected_url
 
 
 class TestUrlsPost(_TestUrlsBase):
@@ -149,12 +261,28 @@ class TestUrlsPost(_TestUrlsBase):
     def test_initialized(self, url: UrlsPost) -> None:
         assert url.slug == "some-slug"
 
-    def test_url_method_redefined(self, url: UrlsPost) -> None:  # type: ignore
-        assert url.url() == f"{base_url}/{self.base_language}/posts/some-slug"
+    @pytest.mark.parametrize(
+        "base_url,expected_url",
+        [
+            ("https://example.com", "https://example.com/en/posts/some-slug"),
+            ("https://example.com/blog", "https://example.com/blog/en/posts/some-slug"),
+            ("https://example.com/long/complex/prefix", "https://example.com/long/complex/prefix/en/posts/some-slug"),
+        ],
+    )
+    def test_url_method_redefined(self, url: UrlsBase, base_url: str, expected_url: str) -> None:
+        with mock.patch("brigid.domain.urls._base_url", return_value=base_url):
+            assert url.url() == expected_url
 
     def test_file_url(self, url: UrlsPost) -> None:  # type: ignore
         filepath = "images/some-image.png"
         assert url.file_url(filepath) == f"{base_url}/static/posts/some-slug/{filepath}"
+
+    @mock.patch("brigid.domain.urls._base_url", return_value="https://example.com/blog")
+    def test_file_url__prefix_blog(self, _):
+        assert (
+            UrlsPost(language=self.base_language, slug="some-slug").file_url("images/some-image.png")
+            == "https://example.com/blog/static/posts/some-slug/images/some-image.png"
+        )
 
 
 class TestUrlsTags(_TestUrlsBase):
@@ -168,28 +296,104 @@ class TestUrlsTags(_TestUrlsBase):
         assert url.excluded_tags == {"c", "b", "e"}
         assert url.selected_tags == {"a", "b", "c", "d", "e"}
 
-    def test_url_method_redefined(self, url: UrlsTags) -> None:  # type: ignore
-        assert url.url() == f"{base_url}/{self.base_language}/tags/a/-b/-c/d/-e/13"
+    @pytest.mark.parametrize(
+        "base_url,expected_url",
+        [
+            ("https://example.com", "https://example.com/en/tags/a/-b/-c/d/-e/13"),
+            ("https://example.com/blog", "https://example.com/blog/en/tags/a/-b/-c/d/-e/13"),
+            (
+                "https://example.com/long/complex/prefix",
+                "https://example.com/long/complex/prefix/en/tags/a/-b/-c/d/-e/13",
+            ),
+        ],
+    )
+    def test_url_method_redefined(self, url: UrlsBase, base_url: str, expected_url: str) -> None:
+        with mock.patch("brigid.domain.urls._base_url", return_value=base_url):
+            assert url.url() == expected_url
 
-    def test_url_method__empty(self) -> None:
+    @pytest.mark.parametrize(
+        "base_url,expected_url",
+        [
+            ("https://example.com", "https://example.com/en"),
+            ("https://example.com/blog", "https://example.com/blog/en"),
+            ("https://example.com/long/complex/prefix", "https://example.com/long/complex/prefix/en"),
+        ],
+    )
+    def test_url_method__empty(self, base_url: str, expected_url: str) -> None:
         url = UrlsTags(language=self.base_language, page=1, required_tags=(), excluded_tags=())
+        with mock.patch("brigid.domain.urls._base_url", return_value=base_url):
+            assert url.url() == expected_url
 
-        assert url.url() == f"{base_url}/{self.base_language}"
-
-    def test_url_method__only_required(self) -> None:
+    @pytest.mark.parametrize(
+        "base_url,expected_url",
+        [
+            ("https://example.com", "https://example.com/en/tags/a/b"),
+            ("https://example.com/blog", "https://example.com/blog/en/tags/a/b"),
+            ("https://example.com/long/complex/prefix", "https://example.com/long/complex/prefix/en/tags/a/b"),
+        ],
+    )
+    def test_url_method__only_required(self, base_url: str, expected_url: str) -> None:
         url = UrlsTags(language=self.base_language, page=1, required_tags=("a", "b"), excluded_tags=())
+        with mock.patch("brigid.domain.urls._base_url", return_value=base_url):
+            assert url.url() == expected_url
 
-        assert url.url() == f"{base_url}/{self.base_language}/tags/a/b"
-
-    def test_url_method__only_excluded(self) -> None:
+    @pytest.mark.parametrize(
+        "base_url,expected_url",
+        [
+            ("https://example.com", "https://example.com/en/tags/-a/-b"),
+            ("https://example.com/blog", "https://example.com/blog/en/tags/-a/-b"),
+            ("https://example.com/long/complex/prefix", "https://example.com/long/complex/prefix/en/tags/-a/-b"),
+        ],
+    )
+    def test_url_method__only_excluded(self, base_url: str, expected_url: str) -> None:
         url = UrlsTags(language=self.base_language, page=1, required_tags=(), excluded_tags=("a", "b"))
+        with mock.patch("brigid.domain.urls._base_url", return_value=base_url):
+            assert url.url() == expected_url
 
-        assert url.url() == f"{base_url}/{self.base_language}/tags/-a/-b"
-
-    def test_url_method__only_page(self) -> None:
+    @pytest.mark.parametrize(
+        "base_url,expected_url",
+        [
+            ("https://example.com", "https://example.com/en/tags/13"),
+            ("https://example.com/blog", "https://example.com/blog/en/tags/13"),
+            ("https://example.com/long/complex/prefix", "https://example.com/long/complex/prefix/en/tags/13"),
+        ],
+    )
+    def test_url_method__only_page(self, base_url: str, expected_url: str) -> None:
         url = UrlsTags(language=self.base_language, page=13, required_tags=(), excluded_tags=())
+        with mock.patch("brigid.domain.urls._base_url", return_value=base_url):
+            assert url.url() == expected_url
 
-        assert url.url() == f"{base_url}/{self.base_language}/tags/13"
+    def test_robots_url__empty(self) -> None:
+        url = UrlsTags(language=self.base_language, page=1, required_tags=(), excluded_tags=())
+        assert url.robots_url() == f"/{self.base_language}/tags/"
+
+    @pytest.mark.parametrize(
+        "path_prefix,expected_url",
+        [
+            ("/blog", "/blog/en/tags/"),
+            ("/long/complex/prefix", "/long/complex/prefix/en/tags/"),
+        ],
+    )
+    def test_robots_url__empty__prefixed(self, path_prefix: str, expected_url: str) -> None:
+        with mock.patch("brigid.domain.urls._base_path_prefix", return_value=path_prefix):
+            url = UrlsTags(language=self.base_language, page=1, required_tags=(), excluded_tags=())
+            assert url.robots_url() == expected_url
+
+    def test_robots_url__not_empty(self) -> None:
+        url = UrlsTags(language=self.base_language, page=1, required_tags=("sample",), excluded_tags=())
+        assert url.robots_url() == f"/{self.base_language}/tags/sample/"
+
+    @pytest.mark.parametrize(
+        "path_prefix,expected_url",
+        [
+            ("/blog", "/blog/en/tags/sample/"),
+            ("/long/complex/prefix", "/long/complex/prefix/en/tags/sample/"),
+        ],
+    )
+    def test_robots_url__not_empty__prefixed(self, path_prefix: str, expected_url: str) -> None:
+        with mock.patch("brigid.domain.urls._base_path_prefix", return_value=path_prefix):
+            url = UrlsTags(language=self.base_language, page=1, required_tags=("sample",), excluded_tags=())
+            assert url.robots_url() == expected_url
 
     @mock.patch("brigid.domain.urls.UrlsTags.total_pages", 100500)
     def test_is_same_index(self, url: UrlsTags) -> None:
@@ -352,3 +556,40 @@ class TestUrlsTags(_TestUrlsBase):
         pages = (len(all_pages) + posts_per_page - 1) // posts_per_page
 
         assert pages == url.total_pages
+
+
+class TestUrlsStatic:
+
+    def test_path(self) -> None:
+        assert UrlsStatic(url_path=UrlPath("favicon.ico")).path() == "favicon.ico"
+
+    @pytest.mark.parametrize(
+        "base,url",
+        [
+            ("https://example.com", "https://example.com/favicon.ico"),
+            ("https://example.com/blog", "https://example.com/blog/favicon.ico"),
+            ("https://example.com/long/complex/prefix", "https://example.com/long/complex/prefix/favicon.ico"),
+        ],
+    )
+    def test_favicon__prefix_variants(self, base: str, url: str) -> None:
+        with mock.patch("brigid.domain.urls._base_url", return_value=base):
+            assert UrlsStatic(url_path=UrlPath("favicon.ico")).url() == url
+
+
+class TestUrlsMCP:
+
+    def test_path(self) -> None:
+        assert UrlsMCP().path() == "mcp"
+
+    @pytest.mark.parametrize(
+        "prefix,path",
+        [
+            ("", "/mcp"),
+            ("/blog", "/blog/mcp"),
+            ("/long/complex/prefix", "/long/complex/prefix/mcp"),
+        ],
+    )
+    def test_mount_path(self, set_base_url, prefix: str, path: UrlPath) -> None:
+        base_url = f"https://example.com{prefix}" if prefix else "https://example.com"
+        set_base_url(base_url)
+        assert UrlsMCP().mount_path() == path

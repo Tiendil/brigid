@@ -18,13 +18,11 @@ def validate() -> list[Error]:
 
     for global_validator in global_validators:
         with request_context.init():
-            request_context.set("storage", storage)
             errors.extend(global_validator())
 
     for page in storage.all_entities():
         for page_validator in page_validators:
             with request_context.init():
-                request_context.set("storage", storage)
                 errors.extend(page_validator(page))
 
     return errors

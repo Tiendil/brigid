@@ -2,7 +2,7 @@ import fastapi
 import pytest
 from fastapi.testclient import TestClient
 
-from brigid.domain import request_context
+from brigid.library.storage import storage
 
 ############################################################################
 # ATTENTION: this tests do not cover some cases of request_context usage
@@ -51,7 +51,7 @@ class TestFeedAtom:
 
     @pytest.mark.asyncio
     async def test_works(self, client: TestClient) -> None:
-        for language in request_context.get("storage").get_site().allowed_languages:
+        for language in storage.get_site().allowed_languages:
             response = client.get(f"/{language}/feeds/atom")
             assert response.status_code == 200
             assert response.headers["content-type"] == "application/atom+xml; charset=utf-8"
@@ -77,6 +77,27 @@ Disallow: /ru/tags/
         response = client.get("/robots.txt")
         assert response.text == expected_content.strip()
 
+    @pytest.mark.parametrize(
+        "prefix",
+        [
+            "/blog",
+            "/long/complex/prefix",
+        ],
+    )
+    @pytest.mark.asyncio
+    async def test_content__prefixed(self, client: TestClient, set_base_url, prefix: str) -> None:
+        set_base_url(f"https://example.com{prefix}")
+
+        expected_content = f"""
+User-agent: *
+Sitemap: https://example.com{prefix}/sitemap.xml
+Disallow: {prefix}/en/tags/
+Disallow: {prefix}/ru/tags/
+        """
+
+        response = client.get("/robots.txt")
+        assert response.text == expected_content.strip()
+
 
 class TestError:
 
@@ -92,40 +113,64 @@ class TestError:
         assert response.status_code == 500
 
 
-class TestRoot:
+class TestRootBehaivor:
 
     @pytest.mark.asyncio
-    async def test_works(self, client: TestClient) -> None:
+    async def test_no_prefix(self, client: TestClient) -> None:
         response = client.get("/")
         assert response.status_code == 302
         assert response.headers["location"] == "http://0.0.0.0:8000/en"
+
+    @pytest.mark.parametrize(
+        "prefix",
+        [
+            "/blog",
+            "/long/complex/prefix",
+        ],
+    )
+    @pytest.mark.asyncio
+    async def test_works__has_prefix_no_slash(self, client: TestClient, set_base_url, prefix: str) -> None:
+        set_base_url(f"https://example.com{prefix}")
+
+        response = client.get(prefix)
+        assert response.status_code == 302
+        assert response.headers["location"] == f"https://example.com{prefix}/en"
+
+    @pytest.mark.parametrize(
+        "prefix",
+        [
+            "/blog",
+            "/long/complex/prefix",
+        ],
+    )
+    @pytest.mark.asyncio
+    async def test_works__has_prefix_with_slash(self, client: TestClient, set_base_url, prefix: str) -> None:
+        set_base_url(f"https://example.com{prefix}")
+
+        response = client.get(f"{prefix}/")
+        assert response.status_code == 302
+        assert response.headers["location"] == f"https://example.com{prefix}/en"
 
 
 class TestIndexRoot:
 
     @pytest.mark.asyncio
-    async def test_works(self, client: TestClient) -> None:
-        for language in request_context.get("storage").get_site().allowed_languages:
+    async def test_only_language(self, client: TestClient) -> None:
+        for language in storage.get_site().allowed_languages:
             response = client.get(f"/{language}")
             assert response.status_code == 200
             assert response.headers["content-type"] == "text/html; charset=utf-8"
 
-
-class TestIndexRootWithEmptyFilter:
-
     @pytest.mark.asyncio
-    async def test_works(self, client: TestClient) -> None:
-        for language in request_context.get("storage").get_site().allowed_languages:
+    async def test_empty_filter(self, client: TestClient) -> None:
+        for language in storage.get_site().allowed_languages:
             response = client.get(f"/{language}/tags")
             assert response.status_code == 301
             assert response.headers["location"] == f"http://0.0.0.0:8000/{language}"
 
-
-class TestIndexWithFilter:
-
     @pytest.mark.asyncio
-    async def test_works(self, client: TestClient) -> None:
-        for language in request_context.get("storage").get_site().allowed_languages:
+    async def test_with_filter(self, client: TestClient) -> None:
+        for language in storage.get_site().allowed_languages:
             response = client.get(f"/{language}/tags/example/-wide")
             assert response.status_code == 200
             assert response.headers["content-type"] == "text/html; charset=utf-8"
@@ -135,7 +180,7 @@ class TestPost:
 
     @pytest.mark.asyncio
     async def test_works(self, client: TestClient) -> None:
-        for language in request_context.get("storage").get_site().allowed_languages:
+        for language in storage.get_site().allowed_languages:
             response = client.get(f"/{language}/posts/post-in-two-languages")
             assert response.status_code == 200
             assert response.headers["content-type"] == "text/html; charset=utf-8"

@@ -1,19 +1,18 @@
 import asyncio
 import os
-from typing import Any, AsyncGenerator, Generator
+from typing import AsyncGenerator, Generator
 
 import fastapi
 import pytest
 import pytest_asyncio
 from fastapi.testclient import TestClient
 
-from brigid.application import application
 from brigid.domain import request_context
-from brigid.library.storage import storage
+from brigid.library.tests.fixtures import *  # noqa
 
 
 @pytest.fixture(scope="session", autouse=True)
-def mark_tests_running():
+def mark_tests_running() -> None:
     os.environ["BRIGID_TESTS_RUNNING"] = "True"
 
 
@@ -27,12 +26,15 @@ def event_loop() -> Generator[asyncio.AbstractEventLoop, asyncio.AbstractEventLo
 @pytest.fixture(autouse=True)
 def reset_request_context():
     with request_context.init():
-        request_context.set("storage", storage)
         yield
 
 
 @pytest_asyncio.fixture(scope="session", autouse=True)
-async def app(mark_tests_running: Any) -> AsyncGenerator[fastapi.FastAPI, None]:
+async def app(mark_tests_running) -> AsyncGenerator[fastapi.FastAPI, None]:
+    # we want to guarantee that there will be no hidden initializations
+    # of applications or settings => we import application module in the fixture
+    from brigid.application import application
+
     async with application.with_app() as app:
         yield app
 
