@@ -30,6 +30,12 @@ jobs:
       - name: Build containers
         run: docker compose build brigid
 
+      - name: print env
+        run: env
+
+      - name: print docker env
+        run: ./bin/utils.sh env
+
       - name: Check code formatting
         run: ./bin/dev-check-formatting.sh
 
