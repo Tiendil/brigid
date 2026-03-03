@@ -58,6 +58,20 @@ async def remove_double_slashes(request: fastapi.Request, call_next: Any):
     return RedirectResponse(path, status_code=301)
 
 
+async def prefixed_root_to_slash(request: fastapi.Request, call_next: Any):
+    path = UrlPath(request.url.path)
+
+    prefix = storage.get_site().url_path_prefix
+
+    if prefix and path == prefix:
+        # We need to explicitly redirect roots with prefix to the same path with trailing slash
+        # to simplify handling of "/" in FastAPi
+        # because Starlet don't want to handle pair (prefix, route) of ("", "")
+        return RedirectResponse(f"{prefix}/", status_code=301)
+
+    return await call_next(request)
+
+
 async def remove_trailing_slash(request: fastapi.Request, call_next: Any):
 
     if is_mcp_request(request):
@@ -67,10 +81,10 @@ async def remove_trailing_slash(request: fastapi.Request, call_next: Any):
 
     prefix = storage.get_site().url_path_prefix
 
-    if path != prefix and path[-1] == "/":
-        return RedirectResponse(UrlPath(path[:-1]), status_code=301)
+    if path == prefix or path == f"{prefix}/" or path[-1] != "/":
+        return await call_next(request)
 
-    return await call_next(request)
+    return RedirectResponse(UrlPath(path[:-1]), status_code=301)
 
 
 async def set_content_language(request: fastapi.Request, call_next: Any):

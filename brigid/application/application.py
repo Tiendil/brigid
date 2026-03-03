@@ -28,6 +28,7 @@ def initialize_api(app: fastapi.FastAPI) -> None:
     app.middleware("http")(api_middlewares.set_content_language)
     app.middleware("http")(api_middlewares.permanent_redirects)
     app.middleware("http")(api_middlewares.remove_trailing_slash)
+    app.middleware("http")(api_middlewares.prefixed_root_to_slash)
     app.middleware("http")(api_middlewares.remove_double_slashes)
     app.middleware("http")(api_middlewares.request_context)
 
