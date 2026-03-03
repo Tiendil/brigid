@@ -119,8 +119,6 @@ def create_app() -> fastapi.FastAPI:  # noqa: CCR001
 
 @contextlib.asynccontextmanager
 async def with_app() -> AsyncGenerator[fastapi.FastAPI, None]:
+    app = create_app()
     async with app.router.lifespan_context(app):
         yield app
-
-
-app = create_app()
