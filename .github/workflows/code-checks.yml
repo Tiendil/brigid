@@ -18,8 +18,9 @@ jobs:
 
   run-dev-checks:
     timeout-minutes: 20
-    environment: release
     runs-on: ubuntu-22.04
+    env:
+      BRIGID_LIBRARY_DIRECTORY: "./test-content"
 
     steps:
       - name: Checkout
