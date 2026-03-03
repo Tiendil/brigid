@@ -14,7 +14,6 @@ from brigid.library.tests.fixtures import *  # noqa
 @pytest.fixture(scope="session", autouse=True)
 def mark_tests_running() -> None:
     os.environ["BRIGID_TESTS_RUNNING"] = "True"
-    os.environ.setdefault("BRIGID_LIBRARY_DIRECTORY", "./test-content")
 
 
 @pytest.fixture(scope="session", autouse=True)

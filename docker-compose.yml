@@ -28,6 +28,9 @@ services:
     ports:
       - "8000:8000"
 
+    environment:
+      - BRIGID_LIBRARY_DIRECTORY  # pass if exists on the host
+
   mcp-inspector:
     image: ghcr.io/modelcontextprotocol/inspector:latest
 
