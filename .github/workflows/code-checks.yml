@@ -41,15 +41,5 @@ jobs:
       - name: Run tests
         run: ./bin/tests.sh
 
-  run-prod-checks:
-    timeout-minutes: 20
-    runs-on: ubuntu-22.04
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.branch_ref }}
-
       - name: Check brigid cli is runnable in prod
         run: ./bin/dev-check-runtime.sh
