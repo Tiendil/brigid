@@ -4,6 +4,7 @@ import enum
 import pydantic
 
 from brigid.core.entities import BaseEntity
+from brigid.domain.html import strip_html
 from brigid.domain.urls import UrlsBase
 from brigid.library.entities import Article, Page, PageSimilarityScore
 
@@ -36,6 +37,11 @@ class MetaInfo(BaseEntity):
     published_at: datetime.datetime | None
 
     seo_image_url: str | None
+
+    @pydantic.field_validator("site_title", "title", "seo_description")
+    @classmethod
+    def strip_html_from_text(cls, value: str) -> str:
+        return strip_html(value)
 
 
 class IndexInfo(BaseEntity):
