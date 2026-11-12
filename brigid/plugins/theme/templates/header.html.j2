@@ -4,11 +4,11 @@
 
   <header>
     <div class="brigid-blog-title">
-      <a href="{{root_url(language).url()}}">{{site.languages[language].title}}</a>
+      <a href="{{root_url(language).url()}}">{{site.languages[language].title|safe}}</a>
       {{languages_links(language, none)}}
     </div>
 
-    <div>{{site.languages[language].subtitle}}</div>
+    <div>{{site.languages[language].subtitle|safe}}</div>
 
     <nav>
 
