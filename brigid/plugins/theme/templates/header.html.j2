@@ -10,6 +10,10 @@
 
     <div>{{site.languages[language].subtitle|safe}}</div>
 
+    {% if site.languages[language].status is not none %}
+      <div>{{site.languages[language].status|safe}}</div>
+    {% endif %}
+
     <nav>
 
       {% for item in site.languages[language].menu %}

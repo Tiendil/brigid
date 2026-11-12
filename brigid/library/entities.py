@@ -107,6 +107,7 @@ class License(BaseEntity):
 class SiteLanguage(BaseEntity):
     title: str
     subtitle: str
+    status: str | None = None
     author: str
     license: License | None = None
 

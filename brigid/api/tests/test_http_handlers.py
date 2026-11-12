@@ -250,3 +250,38 @@ class TestSiteHtml:
 
         for script in soup.select('script[type="application/ld+json"]'):
             assert json.loads(script.get_text())["headline"] == headline
+
+    @pytest.mark.parametrize("path", ["/en", "/en/posts/post-in-two-languages"])
+    @pytest.mark.asyncio
+    async def test_status_follows_subtitle_without_affecting_metadata(
+        self, client: TestClient, monkeypatch: pytest.MonkeyPatch, path: str
+    ) -> None:
+        site = storage.get_site()
+        config = site.languages["en"]
+        assert config.status is None
+
+        original_response = client.get(path)
+        assert original_response.status_code == 200
+        original = BeautifulSoup(original_response.text, "html.parser")
+        assert len(original.select("header > div")) == 2
+        assert original.head is not None
+
+        data = config.model_dump()
+        data["status"] = "<strong>A short notice &amp; updates.</strong>"
+        monkeypatch.setitem(site.languages, "en", type(config)(**data))
+
+        response = client.get(path)
+        assert response.status_code == 200
+        soup = BeautifulSoup(response.text, "html.parser")
+        subtitle = soup.select_one("header > div:nth-of-type(2)")
+        assert subtitle is not None
+        status = subtitle.find_next_sibling()
+        assert status is not None
+        assert status.name == "div"
+        assert status.find("strong") is not None
+        assert status.get_text() == "A short notice & updates."
+        assert soup.head == original.head
+
+        other_language = client.get("/ru")
+        assert other_language.status_code == 200
+        assert "A short notice" not in other_language.text
